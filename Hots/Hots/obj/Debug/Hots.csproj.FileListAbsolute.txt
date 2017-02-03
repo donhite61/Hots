@@ -1,0 +1,9 @@
+D:\Dad\Documents\CSharp\2017\Hots\Hots\obj\Debug\Hots.csprojResolveAssemblyReference.cache
+D:\Dad\Documents\CSharp\2017\Hots\Hots\obj\Debug\Hots.Form1.resources
+D:\Dad\Documents\CSharp\2017\Hots\Hots\obj\Debug\Hots.Properties.Resources.resources
+D:\Dad\Documents\CSharp\2017\Hots\Hots\obj\Debug\Hots.csproj.GenerateResource.Cache
+D:\Dad\Documents\CSharp\2017\Hots\Hots\bin\Debug\Hots.exe.config
+D:\Dad\Documents\CSharp\2017\Hots\Hots\bin\Debug\Hots.exe
+D:\Dad\Documents\CSharp\2017\Hots\Hots\bin\Debug\Hots.pdb
+D:\Dad\Documents\CSharp\2017\Hots\Hots\obj\Debug\Hots.exe
+D:\Dad\Documents\CSharp\2017\Hots\Hots\obj\Debug\Hots.pdb
