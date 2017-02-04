@@ -9,6 +9,7 @@ namespace Hots
 {
     interface IIncomingOrder
     {
+        int mysqlId { get; set; }
         string HiteId { get; set; }
         string AlternateId { get; set; }
         DateTime TimeIn { get; set; }
@@ -20,10 +21,13 @@ namespace Hots
         Boolean PrePaid { get; set; }
         string LabLabel { get; set; }
         string Catalog { get; set; }
+        string Fullfillment { get; set; }
+        string ServiceTime { get; set; }
 
         string CusId { get; set; }
         string CusName { get; set; }
-        string CusAddress { get; set; }
+        string CusAddress1 { get; set; }
+        string CusAddress2 { get; set; }
         string CusCity { get; set; }
         string CusState { get; set; }
         string CusZip { get; set; }
@@ -61,6 +65,7 @@ namespace Hots
 
     class RoesIncomingOrder : IIncomingOrder
     {
+        public int mysqlId { get; set; }
         public string HiteId { get; set; }
         public string AlternateId { get; set; }
         public DateTime TimeIn { get; set; }
@@ -72,10 +77,13 @@ namespace Hots
         public Boolean PrePaid { get; set; }
         public string LabLabel { get; set; }
         public string Catalog { get; set; }
+        public string Fullfillment { get; set; }
+        public string ServiceTime { get; set; }
 
         public string CusId { get; set; }
         public string CusName { get; set; }
-        public string CusAddress { get; set; }
+        public string CusAddress1 { get; set; }
+        public string CusAddress2 { get; set; }
         public string CusCity { get; set; }
         public string CusState { get; set; }
         public string CusZip { get; set; }
@@ -134,6 +142,7 @@ namespace Hots
                         break;
                     case "<OrderItems>":
                         ItemsList = fillOrderItems();
+                        ItemsList = addUpIdenticalItems(ItemsList);
                         break;
                     case "<OrderOptions>":
                         OrderOptionsList = fillOrderOptions();
@@ -143,6 +152,23 @@ namespace Hots
                 }
                 i++;
             }
+        }
+
+        private List<OrderItems> addUpIdenticalItems(List<OrderItems> itemsList)
+        {
+            var sortedItemList = new List<OrderItems>();
+            sortedItemList = itemsList.OrderBy(o => o.Description).ToList();
+
+            for (int j = sortedItemList.Count -1; j > 0; j-- )
+            {
+                if(sortedItemList[j].Description == sortedItemList[j-1].Description)
+                {
+                    sortedItemList[j-1].Quant += sortedItemList[j].Quant;
+                    sortedItemList[j-1].LineTotal += sortedItemList[j].LineTotal;
+                    sortedItemList.RemoveAt(j);
+                }
+            }
+            return sortedItemList;
         }
 
         private List<OrderItems> fillOrderItems()
@@ -183,7 +209,9 @@ namespace Hots
                            item.LineTotal = value2;
                         break;
                     case "<OrderItemOption>":
-                        itemOptionList.Add(fillItemOptions());
+                        var itemOpt = fillItemOptions();
+                        item.Description = item.Description +"-"+ itemOpt.Label;
+                        itemOptionList.Add(itemOpt);
                         break;
                     default:
                         break;
@@ -440,7 +468,7 @@ namespace Hots
                         CusName = aLineSplit[1];
                         break;
                     case "Customer Address":
-                        CusAddress = aLineSplit[1];
+                        CusAddress1 = aLineSplit[1];
                         break;
                     case "Customer City":
                         CusCity = aLineSplit[1];
@@ -467,7 +495,7 @@ namespace Hots
             return i;
         }
 
-        public List<string> MakeOrdHdrShortList(string hiteId)
+        private List<string> MakeOrdHdrShortList(string hiteId)
         {
             var newRoesfile = Settings.RoesPofPath +@"\"+ hiteId;
             List<string> lines = new List<string>();
@@ -486,6 +514,7 @@ namespace Hots
 
     public class OrderItems
     {
+        public int mysqlId { get; set; }
         public string Id { get; set; }
         public string Description { get; set; }
         public int Quant { get; set; }
@@ -493,15 +522,19 @@ namespace Hots
         public decimal LineTotal { get; set; }
         public List<ItemOptions> OptionsList { get; set; }
     }
+
     public class ItemOptions
     {
+        public int mysqlId { get; set; }
         public string Id { get; set; }
         public string Label { get; set; }
         public int Quant { get; set; }
         public decimal Price { get; set; }
     }
+
     public class OrderOptions
     {
+        public int mysqlId { get; set; }
         public string Id { get; set; }
         public int Quant { get; set; }
         public string Label { get; set; }

@@ -19,7 +19,7 @@ namespace Hots
 
         private void but_NewRoesOrder_Click(object sender, EventArgs e)
         {
-           var RoesOrder = new RoesIncomingOrder("ROES004551.pof");
+           var RoesOrder = new RoesIncomingOrder("ReadROES004205.pof");
            // MessageBox.Show(RoesOrder);
             
         }
