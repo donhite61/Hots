@@ -12,16 +12,25 @@ namespace Hots
 {
     public partial class Form1 : Form
     {
+        public FolderWatcher fw;
         public Form1()
         {
             InitializeComponent();
+            fw = new FolderWatcher();
         }
 
         private void but_NewRoesOrder_Click(object sender, EventArgs e)
         {
-           var FullOrder = new ReadRoesIncomingOrderFile("ROES004551.pof");
-            var localDB = new LData("Local");
-            localDB.SaveNewOrderHeader(FullOrder);
+                if (but_NewRoesOrder.Text == "Start Watch")
+                {
+                    fw.StartWatching();
+                    but_NewRoesOrder.Text = "Stop Watch";
+                }
+                else
+                {
+                    fw.StopWatching();
+                    but_NewRoesOrder.Text = "Start Watch";
+                }
         }
     }
 }

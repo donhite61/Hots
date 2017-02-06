@@ -96,7 +96,7 @@ namespace Hots
                 {
                     cmd.ExecuteNonQuery();
                     UInt32 mySqlId = Convert.ToUInt32(cmd.LastInsertedId);
-                    MessageBox.Show(mySqlId.ToString());
+                    //MessageBox.Show(mySqlId.ToString());
                     SaveNewOrderItems(mySqlId, _fl);
                     SaveNewOrderOptions(mySqlId, _fl.OrderOptionsList);
                     return mySqlId;
