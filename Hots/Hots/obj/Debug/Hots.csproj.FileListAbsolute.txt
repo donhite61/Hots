@@ -7,3 +7,4 @@ D:\Dad\Documents\CSharp\2017\Hots\Hots\bin\Debug\Hots.exe
 D:\Dad\Documents\CSharp\2017\Hots\Hots\bin\Debug\Hots.pdb
 D:\Dad\Documents\CSharp\2017\Hots\Hots\obj\Debug\Hots.exe
 D:\Dad\Documents\CSharp\2017\Hots\Hots\obj\Debug\Hots.pdb
+D:\Dad\Documents\CSharp\2017\Hots\Hots\bin\Debug\MySql.Data.dll

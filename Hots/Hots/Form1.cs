@@ -19,9 +19,9 @@ namespace Hots
 
         private void but_NewRoesOrder_Click(object sender, EventArgs e)
         {
-           var RoesOrder = new RoesIncomingOrder("ReadROES004205.pof");
-           // MessageBox.Show(RoesOrder);
-            
+           var FullOrder = new ReadRoesIncomingOrderFile("ROES004551.pof");
+            var localDB = new LData("Local");
+            localDB.SaveNewOrderHeader(FullOrder);
         }
     }
 }
