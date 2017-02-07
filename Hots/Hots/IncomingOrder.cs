@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Hots
 {
-    interface IIncomingOrder
+    interface IReadIncomingOrderFile
     {
-        int mysqlId { get; set; }
+        UInt32 mysqlId { get; set; }
         string HiteId { get; set; }
         string AlternateId { get; set; }
         DateTime TimeIn { get; set; }
@@ -23,6 +23,8 @@ namespace Hots
         string Catalog { get; set; }
         string Fullfillment { get; set; }
         string ServiceTime { get; set; }
+        string OrderSystem { get; set; }
+        string Products { get; set; }
 
         string CusId { get; set; }
         string CusName { get; set; }
@@ -43,6 +45,7 @@ namespace Hots
         string BillCCZip { get; set; }
 
         string ShipMethod { get; set; }
+        decimal ShipCost { get; set; }
         string ShipTo { get; set; }
         string ShipName { get; set; }
         string ShipAddress { get; set; }
@@ -57,15 +60,15 @@ namespace Hots
         string PayCCcvv { get; set; }
         string PayCCExp { get; set; }
 
-        List<string> FileLineList { get; set; }
+        // List<string> FileLineList { get; set; }
         List<OrderItems> ItemsList { get; set; }
         List<OrderOptions> OrderOptionsList { get; set; }
 
     }
 
-    class RoesIncomingOrder : IIncomingOrder
+    class IncomingOrder : IReadIncomingOrderFile
     {
-        public int mysqlId { get; set; }
+        public uint mysqlId { get; set; }
         public string HiteId { get; set; }
         public string AlternateId { get; set; }
         public DateTime TimeIn { get; set; }
@@ -79,6 +82,8 @@ namespace Hots
         public string Catalog { get; set; }
         public string Fullfillment { get; set; }
         public string ServiceTime { get; set; }
+        public string OrderSystem { get; set; }
+        public string Products { get; set; }
 
         public string CusId { get; set; }
         public string CusName { get; set; }
@@ -99,6 +104,7 @@ namespace Hots
         public string BillCCZip { get; set; }
 
         public string ShipMethod { get; set; }
+        public decimal ShipCost { get; set; }
         public string ShipTo { get; set; }
         public string ShipName { get; set; }
         public string ShipAddress { get; set; }
@@ -113,39 +119,38 @@ namespace Hots
         public string PayCCcvv { get; set; }
         public string PayCCExp { get; set; }
 
-        public List<string> FileLineList { get; set; }
+        private List<string> FileLineList { get; set; }
         public List<OrderItems> ItemsList { get; set; }
         public List<OrderOptions> OrderOptionsList { get; set; }
         int i = 0;
 
-        public RoesIncomingOrder(string _hiteId)
+        public void FillIcomingOrderFields(List<string> FileLineList)
         {
-            FileLineList = MakeOrdHdrShortList(_hiteId);
             while (FileLineList[i] != "</Order>")
             {
                 switch (FileLineList[i])
                 {
                     case "<Order Info>":
-                        fillOrderInfo();
+                        fillOrderInfo(FileLineList);
                         break;
                     case "<Customer>":
-                        fillCustomerInfo();
+                        fillCustomerInfo(FileLineList);
                         break;
                     case "<Billing>":
-                        fillBillingInfo();
+                        fillBillingInfo(FileLineList);
                         break;
                     case "<Shipping>":
-                        fillShippingInfo();
+                        fillShippingInfo(FileLineList);
                         break;
                     case "<Payment>":
-                        fillPaymentInfo();
+                        fillPaymentInfo(FileLineList);
                         break;
                     case "<OrderItems>":
-                        ItemsList = fillOrderItems();
+                        ItemsList = fillOrderItems(FileLineList);
                         ItemsList = addUpIdenticalItems(ItemsList);
                         break;
                     case "<OrderOptions>":
-                        OrderOptionsList = fillOrderOptions();
+                        OrderOptionsList = fillOrderOptions(FileLineList);
                         break;
                     default:
                         break;
@@ -159,19 +164,19 @@ namespace Hots
             var sortedItemList = new List<OrderItems>();
             sortedItemList = itemsList.OrderBy(o => o.Description).ToList();
 
-            for (int j = sortedItemList.Count -1; j > 0; j-- )
+            for (int j = sortedItemList.Count - 1; j > 0; j--)
             {
-                if(sortedItemList[j].Description == sortedItemList[j-1].Description)
+                if (sortedItemList[j].Description == sortedItemList[j - 1].Description)
                 {
-                    sortedItemList[j-1].Quant += sortedItemList[j].Quant;
-                    sortedItemList[j-1].LineTotal += sortedItemList[j].LineTotal;
+                    sortedItemList[j - 1].Quant += sortedItemList[j].Quant;
+                    sortedItemList[j - 1].LineTotal += sortedItemList[j].LineTotal;
                     sortedItemList.RemoveAt(j);
                 }
             }
             return sortedItemList;
         }
 
-        private List<OrderItems> fillOrderItems()
+        private List<OrderItems> fillOrderItems(List<string> FileLineList)
         {
             OrderItems item = new OrderItems();
             var itemList = new List<OrderItems>();
@@ -190,7 +195,7 @@ namespace Hots
                 switch (aLineSplit[0])
                 {
                     case "Item Product Code":
-                        item.Id = aLineSplit[1];
+                        item.ItemCode = aLineSplit[1];
                         break;
                     case "Item Product Description":
                         item.Description = aLineSplit[1];
@@ -201,16 +206,16 @@ namespace Hots
                         break;
                     case "Item Price":
                         var temp = aLineSplit[1].Remove(0, 1);
-                        if (decimal.TryParse(aLineSplit[1].Remove(0,1), out Decimal value1))
-                           item.Price = value1;
+                        if (decimal.TryParse(aLineSplit[1].Remove(0, 1), out Decimal value1))
+                            item.Price = value1;
                         break;
                     case "Item Total Price":
                         if (Decimal.TryParse(aLineSplit[1], out decimal value2))
-                           item.LineTotal = value2;
+                            item.LineTotal = value2;
                         break;
                     case "<OrderItemOption>":
-                        var itemOpt = fillItemOptions();
-                        item.Description = item.Description +"-"+ itemOpt.Label;
+                        var itemOpt = fillItemOptions(FileLineList);
+                        item.Description = item.Description + "-" + itemOpt.Description;
                         itemOptionList.Add(itemOpt);
                         break;
                     default:
@@ -220,7 +225,7 @@ namespace Hots
             return itemList;
         }
 
-        private ItemOptions fillItemOptions()
+        private ItemOptions fillItemOptions(List<string> FileLineList)
         {
             ItemOptions ItemOption = new ItemOptions();
             while (FileLineList[i] != "</OrderItemOption>")
@@ -230,10 +235,10 @@ namespace Hots
                 switch (aLineSplit[0])
                 {
                     case "Item Option ID":
-                        ItemOption.Id = aLineSplit[1];
+                        ItemOption.OptCode = aLineSplit[1];
                         break;
                     case "Item Option Label":
-                        ItemOption.Label = aLineSplit[1];
+                        ItemOption.Description = aLineSplit[1];
                         break;
                     case "Item Option Quantity":
                         if (int.TryParse(aLineSplit[1], out int value))
@@ -250,7 +255,7 @@ namespace Hots
             return ItemOption;
         }
 
-        private List<OrderOptions> fillOrderOptions()
+        private List<OrderOptions> fillOrderOptions(List<string> FileLineList)
         {
             OrderOptions OrderOption = new OrderOptions();
             var list = new List<OrderOptions>();
@@ -266,10 +271,10 @@ namespace Hots
                 switch (aLineSplit[0])
                 {
                     case "Order Option ID":
-                        OrderOption.Id = aLineSplit[1];
+                        OrderOption.OptCode = aLineSplit[1];
                         break;
                     case "Order Option Label":
-                        OrderOption.Label = aLineSplit[1];
+                        OrderOption.Description = aLineSplit[1];
                         break;
                     case "Order Option Quantity":
                         if (int.TryParse(aLineSplit[1], out int value))
@@ -289,7 +294,7 @@ namespace Hots
             return list;
         }
 
-        private int fillPaymentInfo()
+        private int fillPaymentInfo(List<string> FileLineList)
         {
             while (FileLineList[i] != "</Payment>")
             {
@@ -317,7 +322,7 @@ namespace Hots
             return i;
         }
 
-        private int fillShippingInfo()
+        private int fillShippingInfo(List<string> FileLineList)
         {
             while (FileLineList[i] != "</Shipping>")
             {
@@ -328,6 +333,11 @@ namespace Hots
                 {
                     case "Shipping Method":
                         ShipMethod = aLineSplit[1];
+                        break;
+                    case "Shipping Cost":
+                        var temp = aLineSplit[1].Remove(0, 1);
+                        if (decimal.TryParse(aLineSplit[1].Remove(0, 1), out Decimal value))
+                            ShipCost = value;
                         break;
                     case "Payment Ship To":
                         ShipTo = aLineSplit[1];
@@ -360,7 +370,7 @@ namespace Hots
             return i;
         }
 
-        private int fillBillingInfo()
+        private int fillBillingInfo(List<string> FileLineList)
         {
             while (FileLineList[i] != "</Billing>")
             {
@@ -394,7 +404,7 @@ namespace Hots
             return i;
         }
 
-        private int fillOrderInfo()
+        private int fillOrderInfo(List<string> FileLineList)
         {
             string orderDate = "";
             string orderTime = "";
@@ -452,7 +462,7 @@ namespace Hots
             return i;
         }
 
-        private int fillCustomerInfo()
+        private int fillCustomerInfo(List<string> FileLineList)
         {
             while (FileLineList[i] != "</Customer>")
             {
@@ -495,27 +505,34 @@ namespace Hots
             return i;
         }
 
-        private List<string> MakeOrdHdrShortList(string hiteId)
+        public List<string> MakeListForFile(string newFilePath)
         {
-            var newRoesfile = Settings.RoesPofPath +@"\"+ hiteId;
-            List<string> lines = new List<string>();
-
-            using (StreamReader sr = new StreamReader(newRoesfile))
+            try
             {
-                string line;
-                while ((line = sr.ReadLine()) != null)
+                List<string> lines = new List<string>();
+                using (StreamReader sr = new StreamReader(newFilePath))
                 {
-                    lines.Add(line);
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        lines.Add(line);
+                    }
                 }
+                return lines;
             }
-            return lines;
+            catch(Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show("Error reading new order file from disk \r\n \r n" + ex.Message + "\r\n" + ex);
+                return null;
+            }
         }
     }
 
     public class OrderItems
     {
-        public int mysqlId { get; set; }
-        public string Id { get; set; }
+        public uint MysqlId { get; set; }
+        public uint MySqlOrderId { get; set; }
+        public string ItemCode { get; set; }
         public string Description { get; set; }
         public int Quant { get; set; }
         public decimal Price { get; set; }
@@ -525,20 +542,79 @@ namespace Hots
 
     public class ItemOptions
     {
-        public int mysqlId { get; set; }
-        public string Id { get; set; }
-        public string Label { get; set; }
+        public uint MysqlId { get; set; }
+        public uint MySqlOrderId { get; set; }
+        public string OptCode { get; set; }
+        public string Description { get; set; }
         public int Quant { get; set; }
         public decimal Price { get; set; }
     }
 
     public class OrderOptions
     {
-        public int mysqlId { get; set; }
-        public string Id { get; set; }
+        public uint MysqlId { get; set; }
+        public uint MySqlOrderId { get; set; }
+        public string OptCode { get; set; }
         public int Quant { get; set; }
-        public string Label { get; set; }
+        public string Description { get; set; }
         public decimal Price { get; set; }
         public string Text { get; set; }
+    }
+
+    public class OrderHeaderShort
+    {
+        public int mysqlId { get; set; }
+        public string HiteId { get; set; }
+        public string AlternateId { get; set; }
+        public string CusId { get; set; }
+        public string CusName { get; set; }
+        public string CusPhone { get; set; }
+        public string CusEmail { get; set; }
+        public DateTime TimeIn { get; set; }
+        public string Fullfillment { get; set; }
+        public string ServiceTime { get; set; }
+        public string OrderSystem { get; set; }
+        public string ShipMethod { get; set; }
+        public string Products { get; set; }
+    }
+
+    public class OrderDetails
+    {
+        public Decimal PreTaxTotal { get; set; }
+        public string PromoCode { get; set; }
+        public Decimal DiscAmount { get; set; }
+        public Decimal SalesTax { get; set; }
+        public Decimal TotalPrice { get; set; }
+        public Boolean PrePaid { get; set; }
+        public string LabLabel { get; set; }
+        public string Catalog { get; set; }
+
+        public string CusAddress1 { get; set; }
+        public string CusAddress2 { get; set; }
+        public string CusCity { get; set; }
+        public string CusState { get; set; }
+        public string CusZip { get; set; }
+        public string CusCountry { get; set; }
+
+        public string BillTo { get; set; }
+        public string BillCCName { get; set; }
+        public string BillCCAddress { get; set; }
+        public string BillCCCity { get; set; }
+        public string BillCCState { get; set; }
+        public string BillCCZip { get; set; }
+
+        public string ShipTo { get; set; }
+        public string ShipName { get; set; }
+        public string ShipAddress { get; set; }
+        public string ShipCity { get; set; }
+        public string ShipState { get; set; }
+        public string ShipZip { get; set; }
+        public string ShipPhone { get; set; }
+        public string ShipEmail { get; set; }
+
+        public string PayCCType { get; set; }
+        public string PayCCNumber { get; set; }
+        public string PayCCcvv { get; set; }
+        public string PayCCExp { get; set; }
     }
 }

@@ -37,7 +37,7 @@
             this.but_NewRoesOrder.Name = "but_NewRoesOrder";
             this.but_NewRoesOrder.Size = new System.Drawing.Size(239, 55);
             this.but_NewRoesOrder.TabIndex = 0;
-            this.but_NewRoesOrder.Text = "New Roes Order";
+            this.but_NewRoesOrder.Text = "Start Watch";
             this.but_NewRoesOrder.UseVisualStyleBackColor = true;
             this.but_NewRoesOrder.Click += new System.EventHandler(this.but_NewRoesOrder_Click);
             // 

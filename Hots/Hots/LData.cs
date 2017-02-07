@@ -21,27 +21,41 @@ namespace Hots
                 ConnString = "server=69.89.31.188;user=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;";
         }
 
-        public UInt32 SaveNewOrderHeader(ReadRoesIncomingOrderFile _fl)
+        public UInt32 SaveNewOrder(IncomingOrder _fl)
+        {
+            UInt32 mySqlId = SaveNewOrderHeader(_fl);
+            if (mySqlId != 0)
+            {
+                if (SaveNewOrderItems(mySqlId, _fl)) 
+                {
+                    if (SaveNewOrderOptions(mySqlId, _fl.OrderOptionsList))
+                    {
+                        return mySqlId;
+                    }
+                }
+            }
+            return 0;
+        }
+
+        public UInt32 SaveNewOrderHeader(IncomingOrder _fl)
         {
             string sql;
-            {
                 sql = "INSERT INTO orderheaders " +
-                    "(Ord_HiteId,Ord_AltId,Ord_TimeIn,Ord_PreTaxTotal,Ord_PromoCode,Ord_DiscAmount,Ord_SalesTax," +
-                    "Ord_TotalPrice,Ord_PrePaid,Ord_labLabel,Ord_Catalog,Ord_FullfillmentStore,Ord_ServiceTime," +
-                    "Ord_OrderSystem,Ord_Products,Ord_CusId,Ord_CusName,Ord_CusAddress1,Ord_CusAddress2," +
-                    "Ord_CusCity,Ord_CusState,Ord_CusZip,Ord_CusCountry,Ord_CusPhone,Ord_CusEmail,Ord_BillTo," +
-                    "Ord_BillCCName,Ord_BillCCCity,Ord_BillCCState,Ord_BillCCZip,Ord_ShipMethod,Ord_ShipCost," +
-                    "Ord_ShipTo,Ord_ShipName,Ord_ShipAddress,Ord_ShipCity,Ord_ShipState,Ord_ShipZip," +
-                    "Ord_ShipPhone,Ord_ShipEmail,Ord_PayCCType,Ord_PayCCNumber,Ord_PayCCCvv,Ord_PayCCExp)" +
+                        "(Ord_HiteId,Ord_AltId,Ord_TimeIn,Ord_PreTaxTotal,Ord_PromoCode,Ord_DiscAmount,Ord_SalesTax," +
+                        "Ord_TotalPrice,Ord_PrePaid,Ord_labLabel,Ord_Catalog,Ord_FullfillmentStore,Ord_ServiceTime," +
+                        "Ord_OrderSystem,Ord_Products,Ord_CusId,Ord_CusName,Ord_CusAddress1,Ord_CusAddress2," +
+                        "Ord_CusCity,Ord_CusState,Ord_CusZip,Ord_CusCountry,Ord_CusPhone,Ord_CusEmail,Ord_BillTo," +
+                        "Ord_BillCCName,Ord_BillCCCity,Ord_BillCCState,Ord_BillCCZip,Ord_ShipMethod,Ord_ShipCost," +
+                        "Ord_ShipTo,Ord_ShipName,Ord_ShipAddress,Ord_ShipCity,Ord_ShipState,Ord_ShipZip," +
+                        "Ord_ShipPhone,Ord_ShipEmail,Ord_PayCCType,Ord_PayCCNumber,Ord_PayCCCvv,Ord_PayCCExp)" +
 
-                    "VALUES(?HiteId,?AltId,?Timein,?PreTaxTotal,?PromoCode,?DiscAmount,?SalesTax," +
-                    "?TotalPrice,?PrePaid,?LabLabel,?Catalog,?Fullfillment,?ServiceTime," +
-                    "?OrderSystem,?Products,?CusId,?CusName,?CusAddress1,?CusAddress2," +
-                    "?CusCity,?CusState,?CusZip,?CusCountry,?CusPhone,?CusEmail,?BillTo," +
-                    "?BillCCName,?BillCCCity,?BillCCState,?BillCCZip,?ShipMethod,?ShipCost," +
-                    "?ShipTo,?ShipName,?ShipAddress,?ShipCity,?ShipState,?ShipZip,?ShipPhone," +
-                    "?ShipEmail,?PayCCType,?PayCCNumber,?Paycvv,?PayCCExp)"; 
-            }               
+                        "VALUES(?HiteId,?AltId,?Timein,?PreTaxTotal,?PromoCode,?DiscAmount,?SalesTax," +
+                        "?TotalPrice,?PrePaid,?LabLabel,?Catalog,?Fullfillment,?ServiceTime," +
+                        "?OrderSystem,?Products,?CusId,?CusName,?CusAddress1,?CusAddress2," +
+                        "?CusCity,?CusState,?CusZip,?CusCountry,?CusPhone,?CusEmail,?BillTo," +
+                        "?BillCCName,?BillCCCity,?BillCCState,?BillCCZip,?ShipMethod,?ShipCost," +
+                        "?ShipTo,?ShipName,?ShipAddress,?ShipCity,?ShipState,?ShipZip,?ShipPhone," +
+                        "?ShipEmail,?PayCCType,?PayCCNumber,?Paycvv,?PayCCExp)"; 
 
             using (var conn = new MySqlConnection(ConnString))
             using (var cmd = new MySqlCommand(sql, conn))
@@ -90,101 +104,114 @@ namespace Hots
                 cmd.Parameters.AddWithValue("@?PayCCNumber", _fl.PayCCNumber);
                 cmd.Parameters.AddWithValue("@?Paycvv", _fl.PayCCcvv);
                 cmd.Parameters.AddWithValue("@?PayCCExp", _fl.PayCCExp);
-
-                conn.Open();
                 try
                 {
+                    conn.Open();
                     cmd.ExecuteNonQuery();
                     UInt32 mySqlId = Convert.ToUInt32(cmd.LastInsertedId);
-                    //MessageBox.Show(mySqlId.ToString());
-                    SaveNewOrderItems(mySqlId, _fl);
-                    SaveNewOrderOptions(mySqlId, _fl.OrderOptionsList);
                     return mySqlId;
                 }
                 catch (MySqlException ex)
                 {
-                    MessageBox.Show("Unknown error occured updating store database \r\n \r n" + ex.Number + "\r\n" + ex);
+                    MessageBox.Show("MySql error occured adding Order Header \r\n \r n" + ex.Number + "\r\n" + ex);
                     return 0;
                 }
             }
         }
 
-        private void SaveNewOrderItems(uint mySqlId, ReadRoesIncomingOrderFile _fl)
+        private Boolean SaveNewOrderItems(uint mySqlId, IncomingOrder _fl)
         {
             using (var conn = new MySqlConnection(ConnString))
             {
-                foreach (OrderItems item in _fl.ItemsList)
+                try
                 {
-                    MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand();
-                    cmd.Connection = conn;
-                    cmd.CommandText = "INSERT INTO orderitems(OrdItem_OrdHdrId,OrdItem_ItemCode,OrdItem_Description," +
-                                                             "OrdItem_Quant,OrdItem_Price,OrdItem_LineTotal)" +
-                                                       "Values(?OrdHdrId,?ItemCode,?Description,?Quant,?Price,?Total)";
-                    item.MySqlOrderId = mySqlId;
-                    cmd.Parameters.AddWithValue("?OrdHdrId", mySqlId);
-                    cmd.Parameters.AddWithValue("?ItemCode", Convert.ToString(item.ItemCode));
-                    cmd.Parameters.AddWithValue("?Description", Convert.ToString(item.Description));
-                    cmd.Parameters.AddWithValue("?Quant", Convert.ToInt32(item.Quant));
-                    cmd.Parameters.AddWithValue("?Price", Convert.ToDecimal(item.Price));
-                    cmd.Parameters.AddWithValue("?Total", Convert.ToDecimal(item.LineTotal));
                     conn.Open();
-                    cmd.ExecuteNonQuery();
-                    conn.Close();
-
-                    SaveNewOrderItemOptions(mySqlId, item);
-
+                    foreach (OrderItems item in _fl.ItemsList)
+                    {
+                        MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand();
+                        cmd.Connection = conn;
+                        cmd.CommandText = "INSERT INTO orderitems(OrdItem_OrdHdrId,OrdItem_ItemCode,OrdItem_Description," +
+                                                                 "OrdItem_Quant,OrdItem_Price,OrdItem_LineTotal)" +
+                                                           "Values(?OrdHdrId,?ItemCode,?Description,?Quant,?Price,?Total)";
+                        item.MySqlOrderId = mySqlId;
+                        cmd.Parameters.AddWithValue("?OrdHdrId", mySqlId);
+                        cmd.Parameters.AddWithValue("?ItemCode", Convert.ToString(item.ItemCode));
+                        cmd.Parameters.AddWithValue("?Description", Convert.ToString(item.Description));
+                        cmd.Parameters.AddWithValue("?Quant", Convert.ToInt32(item.Quant));
+                        cmd.Parameters.AddWithValue("?Price", Convert.ToDecimal(item.Price));
+                        cmd.Parameters.AddWithValue("?Total", Convert.ToDecimal(item.LineTotal));
+                        cmd.ExecuteNonQuery();
+                        SaveNewOrderItemOptions(mySqlId, item, conn);
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    MessageBox.Show("MySql error occured adding Order items \r\n \r n" + ex.Number + "\r\n" + ex);
+                    return false;
                 }
             }
-            
+            return true;
         }
 
-        private void SaveNewOrderItemOptions(uint mySqlId, OrderItems item)
+        private Boolean SaveNewOrderItemOptions(uint mySqlId, OrderItems item, MySqlConnection conn)
         {
-            using (var conn = new MySqlConnection(ConnString))
+            try
             {
                 foreach (ItemOptions iOption in item.OptionsList)
                 {
                     MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand();
                     cmd.Connection = conn;
                     cmd.CommandText = "INSERT INTO orderitemoptions(OrdItmOpt_OrdHdrId,OrdItmOpt_OptCode,OrdItmOpt_Description," +
-                                                             "OrdItmOpt_Quant,OrdItmOpt_Price)" +
-                                                       "Values(?OrdHdrId,?OptCode,?Description,?Quant,?Price)";
+                                                            "OrdItmOpt_Quant,OrdItmOpt_Price)" +
+                                                            "Values(?OrdHdrId,?OptCode,?Description,?Quant,?Price)";
                     iOption.MySqlOrderId = mySqlId;
                     cmd.Parameters.AddWithValue("?OrdHdrId", mySqlId);
                     cmd.Parameters.AddWithValue("?OptCode", Convert.ToString(iOption.OptCode));
                     cmd.Parameters.AddWithValue("?Description", Convert.ToString(iOption.Description));
                     cmd.Parameters.AddWithValue("?Quant", Convert.ToInt32(iOption.Quant));
                     cmd.Parameters.AddWithValue("?Price", Convert.ToDecimal(iOption.Price));
-                    conn.Open();
                     cmd.ExecuteNonQuery();
-                    conn.Close();
                 }
             }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show("MySql error occured adding Order Item Options \r\n \r n" + ex.Number + "\r\n" + ex);
+                return false;
+            }
+            return true;
         }
 
-        private void SaveNewOrderOptions(uint mySqlId, List<OrderOptions> options)
+        private Boolean SaveNewOrderOptions(uint mySqlId, List<OrderOptions> options)
         {
             using (var conn = new MySqlConnection(ConnString))
             {
-                foreach (OrderOptions option in options)
+                try
                 {
-                    MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand();
-                    cmd.Connection = conn;
-                    cmd.CommandText = "INSERT INTO orderoptions(OrdOpt_OrdHdrId,OrdOpt_OptCode,OrdOpt_Description," +
-                                                             "OrdOpt_Quant,OrdOpt_Price,OrdOpt_Text)" +
-                                                       "Values(?OrdHdrId,?OptCode,?Description,?Quant,?Price,?Text)";
-                    option.MySqlOrderId = mySqlId;
-                    cmd.Parameters.AddWithValue("?OrdHdrId", mySqlId);
-                    cmd.Parameters.AddWithValue("?OptCode", Convert.ToString(option.OptCode));
-                    cmd.Parameters.AddWithValue("?Description", Convert.ToString(option.Description));
-                    cmd.Parameters.AddWithValue("?Quant", Convert.ToInt32(option.Quant));
-                    cmd.Parameters.AddWithValue("?Price", Convert.ToDecimal(option.Price));
-                    cmd.Parameters.AddWithValue("?Text", Convert.ToString(option.Text));
                     conn.Open();
-                    cmd.ExecuteNonQuery();
-                    conn.Close();
+                    foreach (OrderOptions option in options)
+                    {
+                        MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand();
+                        cmd.Connection = conn;
+                        cmd.CommandText = "INSERT INTO orderoptions(OrdOpt_OrdHdrId,OrdOpt_OptCode,OrdOpt_Description," +
+                                                                 "OrdOpt_Quant,OrdOpt_Price,OrdOpt_Text)" +
+                                                           "Values(?OrdHdrId,?OptCode,?Description,?Quant,?Price,?Text)";
+                        option.MySqlOrderId = mySqlId;
+                        cmd.Parameters.AddWithValue("?OrdHdrId", mySqlId);
+                        cmd.Parameters.AddWithValue("?OptCode", Convert.ToString(option.OptCode));
+                        cmd.Parameters.AddWithValue("?Description", Convert.ToString(option.Description));
+                        cmd.Parameters.AddWithValue("?Quant", Convert.ToInt32(option.Quant));
+                        cmd.Parameters.AddWithValue("?Price", Convert.ToDecimal(option.Price));
+                        cmd.Parameters.AddWithValue("?Text", Convert.ToString(option.Text));
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+                catch (MySqlException ex)
+                {
+                    MessageBox.Show("MySql error occured adding Order Item Options \r\n \r n" + ex.Number + "\r\n" + ex);
+                    return false;
                 }
             }
+            return true;
         }
     }
 }

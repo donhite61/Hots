@@ -41,9 +41,15 @@ namespace Hots
             String FilePath = Path.GetFullPath(e.FullPath);
             if (FileIsReady(FilePath))
             {
-                var FullOrder = new ReadRoesIncomingOrderFile(Filename);
+                System.Windows.Forms.MessageBox.Show("Order found " + FilePath);
+                var Io = new IncomingOrder();
+                
+                var fileList = Io.MakeListForFile(FilePath);
+                Io.FillIcomingOrderFields(fileList);
                 var localDB = new LData("Local");
-                localDB.SaveNewOrderHeader(FullOrder);
+                var result = localDB.SaveNewOrder(Io);
+                if (result != 0)
+                    System.Windows.Forms.MessageBox.Show("Order added " + result);
             }
             else
             {
