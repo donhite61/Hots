@@ -13,6 +13,7 @@ namespace Hots
         public static string RoesPofPath = @"C:\DonsScripts\Hots Folder System\WatchedFolder\NewOrders\RoesIn";
         public static string DakisLabworksPath = @"C:\DonsScripts\Hots Folder System\WatchedFolder\NewOrders\DakisIn";
         public static string DakisOrderPath = @"C:\DonsScripts\Hots Folder System\DakisOutput";
+        public static string RoesOrderPath = @"C:\DonsScripts\Hots Folder System\RoesOutput";
 
     }
 }

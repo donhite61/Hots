@@ -57,7 +57,7 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="LData.cs" />
-    <Compile Include="IncomingOrder.cs" />
+    <Compile Include="ReadIncomingOrderFile.cs" />
     <Compile Include="OrdHdrShort.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

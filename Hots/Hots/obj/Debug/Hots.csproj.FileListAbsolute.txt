@@ -8,3 +8,13 @@ D:\Dad\Documents\CSharp\2017\Hots\Hots\bin\Debug\Hots.pdb
 D:\Dad\Documents\CSharp\2017\Hots\Hots\obj\Debug\Hots.exe
 D:\Dad\Documents\CSharp\2017\Hots\Hots\obj\Debug\Hots.pdb
 D:\Dad\Documents\CSharp\2017\Hots\Hots\bin\Debug\MySql.Data.dll
+C:\Csharp\Hots\Hots\bin\Debug\Hots.exe.config
+C:\Csharp\Hots\Hots\bin\Debug\Hots.exe
+C:\Csharp\Hots\Hots\bin\Debug\Hots.pdb
+C:\Csharp\Hots\Hots\bin\Debug\MySql.Data.dll
+C:\Csharp\Hots\Hots\obj\Debug\Hots.csprojResolveAssemblyReference.cache
+C:\Csharp\Hots\Hots\obj\Debug\Hots.Form1.resources
+C:\Csharp\Hots\Hots\obj\Debug\Hots.Properties.Resources.resources
+C:\Csharp\Hots\Hots\obj\Debug\Hots.csproj.GenerateResource.Cache
+C:\Csharp\Hots\Hots\obj\Debug\Hots.exe
+C:\Csharp\Hots\Hots\obj\Debug\Hots.pdb
