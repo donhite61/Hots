@@ -14,7 +14,6 @@ namespace Hots
     public partial class Form1 : Form
     {
         public FolderWatcher fw;
-        public ReadWrite rw;
         public Form1()
         {
             InitializeComponent();
@@ -22,132 +21,240 @@ namespace Hots
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            rw = new ReadWrite();
-            rw.ReadINI();
-            CheckPaths();
+            but_StartWatch.Enabled = false;
+            Settings.ReadINI();
+            FillFormFromSettings();
+            CheckPathsRoes();
+            CheckPathsDakis();
+            CheckPathsDGift();
         }
 
-        private void CheckPaths()
+        private void FillFormFromSettings()
         {
-            but_NewRoesOrder.Enabled = true;
-            if (Directory.Exists(Settings.FileWatcherNewPath))
-            {
-                txtBox_WchFldr.Text = Settings.FileWatcherNewPath;
-                txtBox_WchFldr.BackColor = Color.White;
-            }
-            else
-            {
-                but_NewRoesOrder.Enabled = false;
-                txtBox_WchFldr.BackColor = Color.Pink;
-            }
+            txtBox_WchRoes.Text = Settings.WchRoes;
+            txtBox_RoesExt.Text = Settings.RoesExt;
+            txtBox_ReadRoes.Text = Settings.ReadRoes;
+            txtBox_OutRoes.Text = Settings.OutRoes;
+            txtBox_ProdSubRoes.Text = Settings.ProdSubRoes;
+            txtBox_WaitForRoes.Text = Settings.WaitForRoes;
+            chkBox_RoesActivate.Checked = Settings.RoesActivate;
+            chkBox_RoesWaitIsFldr.Checked = Settings.RoesWaitIsFldr;
 
-            if (Directory.Exists(Settings.FileWatcherReadPath))
-            {
-                txtBox_ReadFldr.Text = Settings.FileWatcherReadPath;
-                txtBox_ReadFldr.BackColor = Color.White;
-            }
-            else
-            {
-                but_NewRoesOrder.Enabled = false;
-                txtBox_ReadFldr.BackColor = Color.Pink;
-            }
+            txtBox_WchDakis.Text = Settings.WchDakis;
+            txtBox_DakisExt.Text = Settings.DakisExt;
+            txtBox_ReadDakis.Text = Settings.ReadDakis;
+            txtBox_OutDakis.Text = Settings.OutDakis;
+            txtBox_ProdSubDakis.Text = Settings.ProdSubDakis;
+            txtBox_WaitForDakis.Text = Settings.WaitForDakis;
+            chkBox_DakisActivate.Checked = Settings.DakisActivate;
+            chkBox_DakisWaitIsFldr.Checked = Settings.DakisWaitIsFldr;
 
-            if (Directory.Exists(Settings.DakisWatchPath))
-            {
-                txtBox_WchDakis.Text = Settings.DakisWatchPath;
-                txtBox_WchDakis.BackColor = Color.White;
-            }
-            else
-            {
-                but_NewRoesOrder.Enabled = false;
-                txtBox_WchDakis.BackColor = Color.Pink;
-            }
+            txtBox_WchDGift.Text = Settings.WchDGift;
+            txtBox_DGiftExt.Text = Settings.DGiftExt;
+            txtBox_ReadDGift.Text = Settings.ReadDGift;
+            txtBox_OutDGift.Text = Settings.OutDGift;
+            txtBox_ProdSubDGift.Text = Settings.ProdSubDGift;
+            txtBox_WaitForDGift.Text = Settings.WaitForDGift;
+            chkBox_DGiftActivate.Checked = Settings.DGiftActivate;
+            chkBox_DGiftWaitIsFldr.Checked = Settings.DGiftWaitIsFldr;
+        }
 
-            if (Directory.Exists(Settings.DakisOrderPath))
+        private bool CheckPathsRoes()
+        {
+            if (Directory.Exists(Settings.WchRoes))
             {
-                txtBox_DakisOutput.Text = Settings.DakisOrderPath;
-                txtBox_DakisOutput.BackColor = Color.White;
-            }
-            else
-            {
-                but_NewRoesOrder.Enabled = false;
-                txtBox_DakisOutput.BackColor = Color.Pink;
-            }
-
-            if (Directory.Exists(Settings.RoesWatchPath))
-            {
-                txtBox_WchRoes.Text = Settings.RoesWatchPath;
+                txtBox_WchRoes.Text = Settings.WchRoes;
                 txtBox_WchRoes.BackColor = Color.White;
             }
             else
             {
-                but_NewRoesOrder.Enabled = false;
+                chkBox_RoesActivate.Checked = false;
                 txtBox_WchRoes.BackColor = Color.Pink;
             }
 
-            if (Directory.Exists(Settings.RoesOrderPath))
+            if (Directory.Exists(Settings.ReadRoes))
             {
-                txtBox_RoesOutput.Text = Settings.RoesOrderPath;
-                txtBox_RoesOutput.BackColor = Color.White;
+                txtBox_ReadRoes.Text = Settings.ReadRoes;
+                txtBox_ReadRoes.BackColor = Color.White;
             }
             else
             {
-                but_NewRoesOrder.Enabled = false;
-                txtBox_RoesOutput.BackColor = Color.Pink;
+                chkBox_RoesActivate.Checked = false;
+                txtBox_ReadRoes.BackColor = Color.Pink;
             }
-        }
 
-        private void but_SetFldr_Click(object sender, EventArgs e)
-        {
-            var fDB = new FolderBrowserDialog();
-            if (sender.ToString().Contains("Watched Dakis") ||
-                sender.ToString().Contains("Watched Roes") ||
-                sender.ToString().Contains("Read Folder"))
-                    fDB.SelectedPath = txtBox_WchFldr.Text;
-
-            DialogResult result = fDB.ShowDialog();
-            if (result == DialogResult.OK)
+            if (Directory.Exists(Settings.OutRoes))
             {
-                if (sender.ToString().Contains("Watched Folder"))
-                    txtBox_WchFldr.Text = fDB.SelectedPath;
-                else if (sender.ToString().Contains("Watched Dakis"))
-                    txtBox_WchDakis.Text = fDB.SelectedPath;
-                else if (sender.ToString().Contains("Dakis Output"))
-                    txtBox_DakisOutput.Text = fDB.SelectedPath;
-                else if (sender.ToString().Contains("Watched Roes"))
-                    txtBox_WchRoes.Text = fDB.SelectedPath;
-                else if (sender.ToString().Contains("Roes Output"))
-                    txtBox_RoesOutput.Text = fDB.SelectedPath;
-                else if (sender.ToString().Contains("Read Folder"))
-                    txtBox_ReadFldr.Text = fDB.SelectedPath;
+                txtBox_OutRoes.Text = Settings.OutRoes;
+                txtBox_OutRoes.BackColor = Color.White;
             }
+            else
+            {
+                chkBox_RoesActivate.Checked = false;
+                txtBox_OutRoes.BackColor = Color.Pink;
+            }
+
+            return chkBox_RoesActivate.Checked;
         }
+
+        private bool CheckPathsDakis()
+        {
+            if (Directory.Exists(Settings.WchDakis))
+            {
+                txtBox_WchDakis.Text = Settings.WchDakis;
+                txtBox_WchDakis.BackColor = Color.White;
+            }
+            else
+            {
+                chkBox_DakisActivate.Checked = false;
+                txtBox_WchDakis.BackColor = Color.Pink;
+            }
+
+            if (Directory.Exists(Settings.ReadDakis))
+            {
+                txtBox_ReadDakis.Text = Settings.ReadDakis;
+                txtBox_ReadDakis.BackColor = Color.White;
+            }
+            else
+            {
+                chkBox_DakisActivate.Checked = false;
+                txtBox_ReadDakis.BackColor = Color.Pink;
+            }
+
+            if (Directory.Exists(Settings.OutDakis))
+            {
+                txtBox_OutDakis.Text = Settings.OutDakis;
+                txtBox_OutDakis.BackColor = Color.White;
+            }
+            else
+            {
+                chkBox_DakisActivate.Checked = false;
+                txtBox_OutDakis.BackColor = Color.Pink;
+            }
+
+            return chkBox_DakisActivate.Checked;
+        }
+
+        private bool CheckPathsDGift()
+        {
+            if (Directory.Exists(Settings.WchDGift))
+            {
+                txtBox_WchDGift.Text = Settings.WchDGift;
+                txtBox_WchDGift.BackColor = Color.White;
+            }
+            else
+            {
+                chkBox_DGiftActivate.Checked = false;
+                txtBox_WchDGift.BackColor = Color.Pink;
+            }
+
+            if (Directory.Exists(Settings.ReadDGift))
+            {
+                txtBox_ReadDGift.Text = Settings.ReadDGift;
+                txtBox_ReadDGift.BackColor = Color.White;
+            }
+            else
+            {
+                chkBox_DGiftActivate.Checked = false;
+                txtBox_ReadDGift.BackColor = Color.Pink;
+            }
+
+            if (Directory.Exists(Settings.OutDGift))
+            {
+                txtBox_OutDGift.Text = Settings.OutDGift;
+                txtBox_OutDGift.BackColor = Color.White;
+            }
+            else
+            {
+                chkBox_DGiftActivate.Checked = false;
+                txtBox_OutDGift.BackColor = Color.Pink;
+            }
+
+            return chkBox_DGiftActivate.Checked;
+        }
+
 
         private void but_StartWatch_Click(object sender, EventArgs e)
         {
             fw = new FolderWatcher();
-            if (but_NewRoesOrder.Text == "Start Watch")
+            if (but_StartWatch.Text == "Start Watch")
             {
                 fw.StartWatching();
-                but_NewRoesOrder.Text = "Stop Watch";
+                but_StartWatch.Text = "Stop Watch";
             }
             else
             {
                 fw.StopWatching();
-                but_NewRoesOrder.Text = "Start Watch";
+                but_StartWatch.Text = "Start Watch";
             }
         }
 
         private void but_Save_Click(object sender, EventArgs e)
         {
-            Settings.FileWatcherNewPath = txtBox_WchFldr.Text;
-            Settings.DakisWatchPath = txtBox_WchDakis.Text;
-            Settings.DakisOrderPath = txtBox_DakisOutput.Text;
-            Settings.RoesWatchPath = txtBox_WchRoes.Text;
-            Settings.RoesOrderPath = txtBox_RoesOutput.Text;
-            Settings.FileWatcherReadPath = txtBox_ReadFldr.Text;
-            rw.WriteINI();
-            CheckPaths();
+            Settings.WchRoes = txtBox_WchRoes.Text;
+            Settings.RoesExt = txtBox_RoesExt.Text;
+            Settings.ReadRoes = txtBox_ReadRoes.Text;
+            Settings.OutRoes = txtBox_OutRoes.Text;
+            Settings.ProdSubRoes = txtBox_ProdSubRoes.Text;
+            Settings.WaitForRoes = txtBox_WaitForRoes.Text;
+            chkBox_RoesActivate.Checked = (true) ?
+                        Settings.RoesActivate = true:
+                        Settings.RoesActivate = false;
+            chkBox_RoesWaitIsFldr.Checked = (true) ?
+                        Settings.RoesWaitIsFldr = true:
+                        Settings.RoesWaitIsFldr = false;
+
+            Settings.WchDakis = txtBox_WchDakis.Text;
+            Settings.DakisExt = txtBox_DakisExt.Text;
+            Settings.ReadDakis = txtBox_ReadDakis.Text;
+            Settings.OutDakis = txtBox_OutDakis.Text;
+            Settings.ProdSubDakis = txtBox_ProdSubDakis.Text;
+            Settings.WaitForDakis = txtBox_WaitForDakis.Text;
+            chkBox_DakisActivate.Checked = (true) ?
+                        Settings.DakisActivate = true :
+                        Settings.DakisActivate = false;
+            chkBox_DakisWaitIsFldr.Checked = (true) ?
+                        Settings.DakisWaitIsFldr = true :
+                        Settings.DakisWaitIsFldr = false;
+
+            Settings.WchDGift = txtBox_WchDGift.Text;
+            Settings.DGiftExt = txtBox_DGiftExt.Text;
+            Settings.ReadDGift = txtBox_ReadDGift.Text;
+            Settings.OutDGift = txtBox_OutDGift.Text;
+            Settings.ProdSubDGift = txtBox_ProdSubDGift.Text;
+            Settings.WaitForDGift = txtBox_WaitForDGift.Text;
+            chkBox_DGiftActivate.Checked = (true) ?
+                        Settings.DGiftActivate = true :
+                        Settings.DGiftActivate = false;
+            chkBox_DGiftWaitIsFldr.Checked = (true) ?
+                        Settings.DGiftWaitIsFldr = true :
+                        Settings.DGiftWaitIsFldr = false;
+
+            Settings.WriteINI();
+            CheckPathsRoes();
+            CheckPathsDakis();
+            CheckPathsDGift();
+        }
+
+        private void but_Roes_Click(object sender, EventArgs e)
+        {
+            var fDB = new FolderBrowserDialog();
+            DialogResult result = fDB.ShowDialog();
+            if (result == DialogResult.OK)
+            {
+                if (sender.ToString().Contains("Watched Folder"))
+                    txtBox_WchRoes.Text = fDB.SelectedPath;
+                else if (sender.ToString().Contains("Read Folder"))
+                    txtBox_ReadRoes.Text = fDB.SelectedPath;
+                else if (sender.ToString().Contains("Output Folder"))
+                    txtBox_OutRoes.Text = fDB.SelectedPath;
+            }
+        }
+
+        private void chkBox_RoesActivate_CheckedChanged(object sender, EventArgs e)
+        {
+            //if (!CheckPathsRoes())
+            //    chkBox_RoesActivate.Checked = false;
         }
     }
 }
