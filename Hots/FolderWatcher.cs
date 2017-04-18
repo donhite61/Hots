@@ -13,7 +13,7 @@ namespace Hots
 
         public FolderWatcher()
         {
-            fwatch = new FileSystemWatcher(Settings.WchRoes);
+            fwatch = new FileSystemWatcher(Settings.WchRoot);
 
             fwatch.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
           | NotifyFilters.FileName | NotifyFilters.DirectoryName;

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.but_StartWatch = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tab_NewOrders = new System.Windows.Forms.TabPage();
@@ -77,16 +78,46 @@
             this.txtBox_ReadDGift = new System.Windows.Forms.TextBox();
             this.but_ReadFldrDGift = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.but_SetWchGen = new System.Windows.Forms.Button();
+            this.txtBox_WchRoot = new System.Windows.Forms.TextBox();
             this.but_Save = new System.Windows.Forms.Button();
+            this.led_RoesOn = new System.Windows.Forms.PictureBox();
+            this.led_RoesOff = new System.Windows.Forms.PictureBox();
+            this.led_RoesErr = new System.Windows.Forms.PictureBox();
+            this.led_DakisOff = new System.Windows.Forms.PictureBox();
+            this.led_DakisOn = new System.Windows.Forms.PictureBox();
+            this.led_dakisErr = new System.Windows.Forms.PictureBox();
+            this.led_DGiftOff = new System.Windows.Forms.PictureBox();
+            this.led_DGiftOn = new System.Windows.Forms.PictureBox();
+            this.led_DGiftErr = new System.Windows.Forms.PictureBox();
+            this.led_PrtWzdOff = new System.Windows.Forms.PictureBox();
+            this.led_PrtWzdOn = new System.Windows.Forms.PictureBox();
+            this.led_PrtWzdErr = new System.Windows.Forms.PictureBox();
+            this.Gridview_OI = new System.Windows.Forms.DataGridView();
             this.tabControl1.SuspendLayout();
             this.tab_Roes.SuspendLayout();
             this.tab_.SuspendLayout();
             this.tabPage3.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.led_RoesOn)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_RoesOff)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_RoesErr)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_DakisOff)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_DakisOn)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_dakisErr)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_DGiftOff)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_DGiftOn)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_DGiftErr)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_PrtWzdOff)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_PrtWzdOn)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_PrtWzdErr)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Gridview_OI)).BeginInit();
             this.SuspendLayout();
             // 
             // but_StartWatch
             // 
-            this.but_StartWatch.Location = new System.Drawing.Point(287, 339);
+            this.but_StartWatch.Location = new System.Drawing.Point(287, 366);
             this.but_StartWatch.Margin = new System.Windows.Forms.Padding(2);
             this.but_StartWatch.Name = "but_StartWatch";
             this.but_StartWatch.Size = new System.Drawing.Size(92, 23);
@@ -102,10 +133,11 @@
             this.tabControl1.Controls.Add(this.tab_);
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
-            this.tabControl1.Location = new System.Drawing.Point(8, 24);
+            this.tabControl1.Controls.Add(this.tabPage1);
+            this.tabControl1.Location = new System.Drawing.Point(8, 32);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(656, 309);
+            this.tabControl1.Size = new System.Drawing.Size(968, 316);
             this.tabControl1.TabIndex = 1;
             // 
             // tab_NewOrders
@@ -113,7 +145,7 @@
             this.tab_NewOrders.Location = new System.Drawing.Point(4, 22);
             this.tab_NewOrders.Name = "tab_NewOrders";
             this.tab_NewOrders.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_NewOrders.Size = new System.Drawing.Size(648, 283);
+            this.tab_NewOrders.Size = new System.Drawing.Size(648, 290);
             this.tab_NewOrders.TabIndex = 0;
             this.tab_NewOrders.Text = "New Orders";
             this.tab_NewOrders.UseVisualStyleBackColor = true;
@@ -137,7 +169,7 @@
             this.tab_Roes.Location = new System.Drawing.Point(4, 22);
             this.tab_Roes.Name = "tab_Roes";
             this.tab_Roes.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_Roes.Size = new System.Drawing.Size(648, 283);
+            this.tab_Roes.Size = new System.Drawing.Size(648, 290);
             this.tab_Roes.TabIndex = 2;
             this.tab_Roes.Text = "Roes";
             this.tab_Roes.UseVisualStyleBackColor = true;
@@ -176,6 +208,7 @@
             this.txtBox_WaitForRoes.Name = "txtBox_WaitForRoes";
             this.txtBox_WaitForRoes.Size = new System.Drawing.Size(199, 20);
             this.txtBox_WaitForRoes.TabIndex = 10;
+            this.txtBox_WaitForRoes.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // txtBox_ProdSubRoes
             // 
@@ -183,6 +216,7 @@
             this.txtBox_ProdSubRoes.Name = "txtBox_ProdSubRoes";
             this.txtBox_ProdSubRoes.Size = new System.Drawing.Size(199, 20);
             this.txtBox_ProdSubRoes.TabIndex = 10;
+            this.txtBox_ProdSubRoes.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // chkBox_RoesActivate
             // 
@@ -193,7 +227,7 @@
             this.chkBox_RoesActivate.TabIndex = 4;
             this.chkBox_RoesActivate.Text = "Activate";
             this.chkBox_RoesActivate.UseVisualStyleBackColor = true;
-            this.chkBox_RoesActivate.CheckedChanged += new System.EventHandler(this.chkBox_RoesActivate_CheckedChanged);
+            this.chkBox_RoesActivate.Click += new System.EventHandler(this.chkBox_RoesActivate_CheckedClicked);
             // 
             // labelR1
             // 
@@ -210,6 +244,7 @@
             this.txtBox_RoesExt.Name = "txtBox_RoesExt";
             this.txtBox_RoesExt.Size = new System.Drawing.Size(84, 20);
             this.txtBox_RoesExt.TabIndex = 2;
+            this.txtBox_RoesExt.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // txtBox_OutRoes
             // 
@@ -217,6 +252,7 @@
             this.txtBox_OutRoes.Name = "txtBox_OutRoes";
             this.txtBox_OutRoes.Size = new System.Drawing.Size(491, 20);
             this.txtBox_OutRoes.TabIndex = 2;
+            this.txtBox_OutRoes.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // but_SetWchRoes
             // 
@@ -234,6 +270,7 @@
             this.txtBox_WchRoes.Name = "txtBox_WchRoes";
             this.txtBox_WchRoes.Size = new System.Drawing.Size(491, 20);
             this.txtBox_WchRoes.TabIndex = 2;
+            this.txtBox_WchRoes.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // but_SetRoesOut
             // 
@@ -251,6 +288,7 @@
             this.txtBox_ReadRoes.Name = "txtBox_ReadRoes";
             this.txtBox_ReadRoes.Size = new System.Drawing.Size(491, 20);
             this.txtBox_ReadRoes.TabIndex = 2;
+            this.txtBox_ReadRoes.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // but_ReadFldrRoes
             // 
@@ -281,7 +319,7 @@
             this.tab_.Location = new System.Drawing.Point(4, 22);
             this.tab_.Name = "tab_";
             this.tab_.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_.Size = new System.Drawing.Size(648, 283);
+            this.tab_.Size = new System.Drawing.Size(648, 290);
             this.tab_.TabIndex = 3;
             this.tab_.Text = "Dakis";
             this.tab_.UseVisualStyleBackColor = true;
@@ -311,6 +349,7 @@
             this.txtBox_WaitForDakis.Name = "txtBox_WaitForDakis";
             this.txtBox_WaitForDakis.Size = new System.Drawing.Size(199, 20);
             this.txtBox_WaitForDakis.TabIndex = 23;
+            this.txtBox_WaitForDakis.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // labelD2
             // 
@@ -327,6 +366,7 @@
             this.txtBox_ProdSubDakis.Name = "txtBox_ProdSubDakis";
             this.txtBox_ProdSubDakis.Size = new System.Drawing.Size(199, 20);
             this.txtBox_ProdSubDakis.TabIndex = 21;
+            this.txtBox_ProdSubDakis.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // chkBox_DakisActivate
             // 
@@ -337,6 +377,7 @@
             this.chkBox_DakisActivate.TabIndex = 20;
             this.chkBox_DakisActivate.Text = "Activate";
             this.chkBox_DakisActivate.UseVisualStyleBackColor = true;
+            this.chkBox_DakisActivate.Click += new System.EventHandler(this.chkBox_DakisActivate_Checked_Clicked);
             // 
             // labelD1
             // 
@@ -353,6 +394,7 @@
             this.txtBox_DakisExt.Name = "txtBox_DakisExt";
             this.txtBox_DakisExt.Size = new System.Drawing.Size(84, 20);
             this.txtBox_DakisExt.TabIndex = 15;
+            this.txtBox_DakisExt.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // txtBox_OutDakis
             // 
@@ -360,6 +402,7 @@
             this.txtBox_OutDakis.Name = "txtBox_OutDakis";
             this.txtBox_OutDakis.Size = new System.Drawing.Size(491, 20);
             this.txtBox_OutDakis.TabIndex = 16;
+            this.txtBox_OutDakis.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // but_SetWchdakis
             // 
@@ -369,6 +412,7 @@
             this.but_SetWchdakis.TabIndex = 12;
             this.but_SetWchdakis.Text = "Watched Folder";
             this.but_SetWchdakis.UseVisualStyleBackColor = true;
+            this.but_SetWchdakis.Click += new System.EventHandler(this.but_Dakis_Click);
             // 
             // txtBox_WchDakis
             // 
@@ -376,6 +420,7 @@
             this.txtBox_WchDakis.Name = "txtBox_WchDakis";
             this.txtBox_WchDakis.Size = new System.Drawing.Size(491, 20);
             this.txtBox_WchDakis.TabIndex = 17;
+            this.txtBox_WchDakis.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // but_SetDakisOut
             // 
@@ -385,6 +430,7 @@
             this.but_SetDakisOut.TabIndex = 13;
             this.but_SetDakisOut.Text = "Output Folder";
             this.but_SetDakisOut.UseVisualStyleBackColor = true;
+            this.but_SetDakisOut.Click += new System.EventHandler(this.but_Dakis_Click);
             // 
             // txtBox_ReadDakis
             // 
@@ -392,6 +438,7 @@
             this.txtBox_ReadDakis.Name = "txtBox_ReadDakis";
             this.txtBox_ReadDakis.Size = new System.Drawing.Size(491, 20);
             this.txtBox_ReadDakis.TabIndex = 18;
+            this.txtBox_ReadDakis.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // but_ReadFldrDakis
             // 
@@ -401,6 +448,7 @@
             this.but_ReadFldrDakis.TabIndex = 14;
             this.but_ReadFldrDakis.Text = "Read Folder";
             this.but_ReadFldrDakis.UseVisualStyleBackColor = true;
+            this.but_ReadFldrDakis.Click += new System.EventHandler(this.but_Dakis_Click);
             // 
             // tabPage3
             // 
@@ -421,7 +469,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(648, 283);
+            this.tabPage3.Size = new System.Drawing.Size(648, 290);
             this.tabPage3.TabIndex = 4;
             this.tabPage3.Text = "Dakis Gift";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -451,6 +499,7 @@
             this.txtBox_WaitForDGift.Name = "txtBox_WaitForDGift";
             this.txtBox_WaitForDGift.Size = new System.Drawing.Size(200, 20);
             this.txtBox_WaitForDGift.TabIndex = 23;
+            this.txtBox_WaitForDGift.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // labelDG2
             // 
@@ -467,6 +516,7 @@
             this.txtBox_ProdSubDGift.Name = "txtBox_ProdSubDGift";
             this.txtBox_ProdSubDGift.Size = new System.Drawing.Size(200, 20);
             this.txtBox_ProdSubDGift.TabIndex = 21;
+            this.txtBox_ProdSubDGift.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // chkBox_DGiftActivate
             // 
@@ -493,6 +543,7 @@
             this.txtBox_DGiftExt.Name = "txtBox_DGiftExt";
             this.txtBox_DGiftExt.Size = new System.Drawing.Size(80, 20);
             this.txtBox_DGiftExt.TabIndex = 15;
+            this.txtBox_DGiftExt.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // txtBox_OutDGift
             // 
@@ -500,6 +551,7 @@
             this.txtBox_OutDGift.Name = "txtBox_OutDGift";
             this.txtBox_OutDGift.Size = new System.Drawing.Size(488, 20);
             this.txtBox_OutDGift.TabIndex = 16;
+            this.txtBox_OutDGift.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // but_SetWchDGift
             // 
@@ -509,6 +561,7 @@
             this.but_SetWchDGift.TabIndex = 12;
             this.but_SetWchDGift.Text = "Watched Folder";
             this.but_SetWchDGift.UseVisualStyleBackColor = true;
+            this.but_SetWchDGift.Click += new System.EventHandler(this.but_DGift_Click);
             // 
             // txtBox_WchDGift
             // 
@@ -516,6 +569,7 @@
             this.txtBox_WchDGift.Name = "txtBox_WchDGift";
             this.txtBox_WchDGift.Size = new System.Drawing.Size(488, 20);
             this.txtBox_WchDGift.TabIndex = 17;
+            this.txtBox_WchDGift.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // but_SetDGiftOut
             // 
@@ -525,6 +579,7 @@
             this.but_SetDGiftOut.TabIndex = 13;
             this.but_SetDGiftOut.Text = "Output Folder";
             this.but_SetDGiftOut.UseVisualStyleBackColor = true;
+            this.but_SetDGiftOut.Click += new System.EventHandler(this.but_DGift_Click);
             // 
             // txtBox_ReadDGift
             // 
@@ -532,6 +587,7 @@
             this.txtBox_ReadDGift.Name = "txtBox_ReadDGift";
             this.txtBox_ReadDGift.Size = new System.Drawing.Size(488, 20);
             this.txtBox_ReadDGift.TabIndex = 18;
+            this.txtBox_ReadDGift.TextChanged += new System.EventHandler(this.Show_But_Saved);
             // 
             // but_ReadFldrDGift
             // 
@@ -541,33 +597,227 @@
             this.but_ReadFldrDGift.TabIndex = 14;
             this.but_ReadFldrDGift.Text = "Read Folder";
             this.but_ReadFldrDGift.UseVisualStyleBackColor = true;
+            this.but_ReadFldrDGift.Click += new System.EventHandler(this.but_DGift_Click);
             // 
             // tabPage4
             // 
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(648, 283);
+            this.tabPage4.Size = new System.Drawing.Size(648, 290);
             this.tabPage4.TabIndex = 5;
             this.tabPage4.Text = "PrintWizard";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.Gridview_OI);
+            this.tabPage1.Controls.Add(this.but_SetWchGen);
+            this.tabPage1.Controls.Add(this.txtBox_WchRoot);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
+            this.tabPage1.Size = new System.Drawing.Size(960, 290);
+            this.tabPage1.TabIndex = 6;
+            this.tabPage1.Text = "General";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // but_SetWchGen
+            // 
+            this.but_SetWchGen.Location = new System.Drawing.Point(16, 27);
+            this.but_SetWchGen.Name = "but_SetWchGen";
+            this.but_SetWchGen.Size = new System.Drawing.Size(104, 24);
+            this.but_SetWchGen.TabIndex = 18;
+            this.but_SetWchGen.Text = "Watched Root";
+            this.but_SetWchGen.UseVisualStyleBackColor = true;
+            this.but_SetWchGen.Click += new System.EventHandler(this.but_Gen_Click);
+            // 
+            // txtBox_WchRoot
+            // 
+            this.txtBox_WchRoot.Location = new System.Drawing.Point(129, 27);
+            this.txtBox_WchRoot.Name = "txtBox_WchRoot";
+            this.txtBox_WchRoot.Size = new System.Drawing.Size(488, 20);
+            this.txtBox_WchRoot.TabIndex = 19;
+            this.txtBox_WchRoot.TextChanged += new System.EventHandler(this.Show_But_Saved);
+            // 
             // but_Save
             // 
-            this.but_Save.Location = new System.Drawing.Point(528, 339);
+            this.but_Save.Location = new System.Drawing.Point(550, 360);
             this.but_Save.Name = "but_Save";
             this.but_Save.Size = new System.Drawing.Size(101, 23);
             this.but_Save.TabIndex = 3;
             this.but_Save.Text = "Save";
             this.but_Save.UseVisualStyleBackColor = true;
-            this.but_Save.Click += new System.EventHandler(this.but_Save_Click);
+            this.but_Save.Visible = false;
+            this.but_Save.Click += new System.EventHandler(this.but_Save_Clicked);
+            // 
+            // led_RoesOn
+            // 
+            this.led_RoesOn.Image = ((System.Drawing.Image)(resources.GetObject("led_RoesOn.Image")));
+            this.led_RoesOn.Location = new System.Drawing.Point(96, 8);
+            this.led_RoesOn.Margin = new System.Windows.Forms.Padding(2);
+            this.led_RoesOn.Name = "led_RoesOn";
+            this.led_RoesOn.Size = new System.Drawing.Size(14, 14);
+            this.led_RoesOn.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.led_RoesOn.TabIndex = 2;
+            this.led_RoesOn.TabStop = false;
+            this.led_RoesOn.Visible = false;
+            // 
+            // led_RoesOff
+            // 
+            this.led_RoesOff.Image = ((System.Drawing.Image)(resources.GetObject("led_RoesOff.Image")));
+            this.led_RoesOff.Location = new System.Drawing.Point(96, 8);
+            this.led_RoesOff.Margin = new System.Windows.Forms.Padding(2);
+            this.led_RoesOff.Name = "led_RoesOff";
+            this.led_RoesOff.Size = new System.Drawing.Size(14, 14);
+            this.led_RoesOff.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.led_RoesOff.TabIndex = 3;
+            this.led_RoesOff.TabStop = false;
+            // 
+            // led_RoesErr
+            // 
+            this.led_RoesErr.Image = ((System.Drawing.Image)(resources.GetObject("led_RoesErr.Image")));
+            this.led_RoesErr.Location = new System.Drawing.Point(96, 8);
+            this.led_RoesErr.Margin = new System.Windows.Forms.Padding(2);
+            this.led_RoesErr.Name = "led_RoesErr";
+            this.led_RoesErr.Size = new System.Drawing.Size(14, 14);
+            this.led_RoesErr.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.led_RoesErr.TabIndex = 2;
+            this.led_RoesErr.TabStop = false;
+            this.led_RoesErr.Visible = false;
+            // 
+            // led_DakisOff
+            // 
+            this.led_DakisOff.Image = ((System.Drawing.Image)(resources.GetObject("led_DakisOff.Image")));
+            this.led_DakisOff.Location = new System.Drawing.Point(144, 8);
+            this.led_DakisOff.Margin = new System.Windows.Forms.Padding(2);
+            this.led_DakisOff.Name = "led_DakisOff";
+            this.led_DakisOff.Size = new System.Drawing.Size(14, 14);
+            this.led_DakisOff.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.led_DakisOff.TabIndex = 3;
+            this.led_DakisOff.TabStop = false;
+            // 
+            // led_DakisOn
+            // 
+            this.led_DakisOn.Image = ((System.Drawing.Image)(resources.GetObject("led_DakisOn.Image")));
+            this.led_DakisOn.Location = new System.Drawing.Point(144, 8);
+            this.led_DakisOn.Margin = new System.Windows.Forms.Padding(2);
+            this.led_DakisOn.Name = "led_DakisOn";
+            this.led_DakisOn.Size = new System.Drawing.Size(14, 14);
+            this.led_DakisOn.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.led_DakisOn.TabIndex = 2;
+            this.led_DakisOn.TabStop = false;
+            this.led_DakisOn.Visible = false;
+            // 
+            // led_dakisErr
+            // 
+            this.led_dakisErr.Image = ((System.Drawing.Image)(resources.GetObject("led_dakisErr.Image")));
+            this.led_dakisErr.Location = new System.Drawing.Point(144, 8);
+            this.led_dakisErr.Margin = new System.Windows.Forms.Padding(2);
+            this.led_dakisErr.Name = "led_dakisErr";
+            this.led_dakisErr.Size = new System.Drawing.Size(14, 14);
+            this.led_dakisErr.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.led_dakisErr.TabIndex = 2;
+            this.led_dakisErr.TabStop = false;
+            this.led_dakisErr.Visible = false;
+            // 
+            // led_DGiftOff
+            // 
+            this.led_DGiftOff.Image = ((System.Drawing.Image)(resources.GetObject("led_DGiftOff.Image")));
+            this.led_DGiftOff.Location = new System.Drawing.Point(200, 8);
+            this.led_DGiftOff.Margin = new System.Windows.Forms.Padding(2);
+            this.led_DGiftOff.Name = "led_DGiftOff";
+            this.led_DGiftOff.Size = new System.Drawing.Size(14, 14);
+            this.led_DGiftOff.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.led_DGiftOff.TabIndex = 3;
+            this.led_DGiftOff.TabStop = false;
+            // 
+            // led_DGiftOn
+            // 
+            this.led_DGiftOn.Image = ((System.Drawing.Image)(resources.GetObject("led_DGiftOn.Image")));
+            this.led_DGiftOn.Location = new System.Drawing.Point(200, 8);
+            this.led_DGiftOn.Margin = new System.Windows.Forms.Padding(2);
+            this.led_DGiftOn.Name = "led_DGiftOn";
+            this.led_DGiftOn.Size = new System.Drawing.Size(14, 14);
+            this.led_DGiftOn.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.led_DGiftOn.TabIndex = 2;
+            this.led_DGiftOn.TabStop = false;
+            this.led_DGiftOn.Visible = false;
+            // 
+            // led_DGiftErr
+            // 
+            this.led_DGiftErr.Image = ((System.Drawing.Image)(resources.GetObject("led_DGiftErr.Image")));
+            this.led_DGiftErr.Location = new System.Drawing.Point(200, 8);
+            this.led_DGiftErr.Margin = new System.Windows.Forms.Padding(2);
+            this.led_DGiftErr.Name = "led_DGiftErr";
+            this.led_DGiftErr.Size = new System.Drawing.Size(14, 14);
+            this.led_DGiftErr.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.led_DGiftErr.TabIndex = 2;
+            this.led_DGiftErr.TabStop = false;
+            this.led_DGiftErr.Visible = false;
+            // 
+            // led_PrtWzdOff
+            // 
+            this.led_PrtWzdOff.Image = ((System.Drawing.Image)(resources.GetObject("led_PrtWzdOff.Image")));
+            this.led_PrtWzdOff.Location = new System.Drawing.Point(264, 8);
+            this.led_PrtWzdOff.Margin = new System.Windows.Forms.Padding(2);
+            this.led_PrtWzdOff.Name = "led_PrtWzdOff";
+            this.led_PrtWzdOff.Size = new System.Drawing.Size(14, 14);
+            this.led_PrtWzdOff.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.led_PrtWzdOff.TabIndex = 3;
+            this.led_PrtWzdOff.TabStop = false;
+            // 
+            // led_PrtWzdOn
+            // 
+            this.led_PrtWzdOn.Image = ((System.Drawing.Image)(resources.GetObject("led_PrtWzdOn.Image")));
+            this.led_PrtWzdOn.Location = new System.Drawing.Point(264, 8);
+            this.led_PrtWzdOn.Margin = new System.Windows.Forms.Padding(2);
+            this.led_PrtWzdOn.Name = "led_PrtWzdOn";
+            this.led_PrtWzdOn.Size = new System.Drawing.Size(14, 14);
+            this.led_PrtWzdOn.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.led_PrtWzdOn.TabIndex = 2;
+            this.led_PrtWzdOn.TabStop = false;
+            this.led_PrtWzdOn.Visible = false;
+            // 
+            // led_PrtWzdErr
+            // 
+            this.led_PrtWzdErr.Image = ((System.Drawing.Image)(resources.GetObject("led_PrtWzdErr.Image")));
+            this.led_PrtWzdErr.Location = new System.Drawing.Point(264, 8);
+            this.led_PrtWzdErr.Margin = new System.Windows.Forms.Padding(2);
+            this.led_PrtWzdErr.Name = "led_PrtWzdErr";
+            this.led_PrtWzdErr.Size = new System.Drawing.Size(14, 14);
+            this.led_PrtWzdErr.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.led_PrtWzdErr.TabIndex = 2;
+            this.led_PrtWzdErr.TabStop = false;
+            this.led_PrtWzdErr.Visible = false;
+            // 
+            // Gridview_OI
+            // 
+            this.Gridview_OI.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Gridview_OI.Location = new System.Drawing.Point(8, 56);
+            this.Gridview_OI.Name = "Gridview_OI";
+            this.Gridview_OI.Size = new System.Drawing.Size(944, 224);
+            this.Gridview_OI.TabIndex = 20;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(680, 397);
+            this.ClientSize = new System.Drawing.Size(983, 397);
+            this.Controls.Add(this.led_PrtWzdErr);
+            this.Controls.Add(this.led_DGiftErr);
             this.Controls.Add(this.but_Save);
+            this.Controls.Add(this.led_dakisErr);
+            this.Controls.Add(this.led_RoesErr);
+            this.Controls.Add(this.led_PrtWzdOn);
+            this.Controls.Add(this.led_DGiftOn);
+            this.Controls.Add(this.led_DakisOn);
+            this.Controls.Add(this.led_RoesOn);
+            this.Controls.Add(this.led_PrtWzdOff);
+            this.Controls.Add(this.led_DGiftOff);
+            this.Controls.Add(this.led_DakisOff);
+            this.Controls.Add(this.led_RoesOff);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.but_StartWatch);
             this.Margin = new System.Windows.Forms.Padding(2);
@@ -581,7 +831,23 @@
             this.tab_.PerformLayout();
             this.tabPage3.ResumeLayout(false);
             this.tabPage3.PerformLayout();
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.led_RoesOn)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_RoesOff)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_RoesErr)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_DakisOff)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_DakisOn)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_dakisErr)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_DGiftOff)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_DGiftOn)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_DGiftErr)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_PrtWzdOff)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_PrtWzdOn)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.led_PrtWzdErr)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.Gridview_OI)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -637,6 +903,22 @@
         private System.Windows.Forms.CheckBox chkBox_DGiftWaitIsFldr;
         private System.Windows.Forms.Label labelDG3;
         private System.Windows.Forms.TextBox txtBox_WaitForDGift;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.Button but_SetWchGen;
+        private System.Windows.Forms.TextBox txtBox_WchRoot;
+        private System.Windows.Forms.PictureBox led_RoesOn;
+        private System.Windows.Forms.PictureBox led_RoesOff;
+        private System.Windows.Forms.PictureBox led_RoesErr;
+        private System.Windows.Forms.PictureBox led_DakisOff;
+        private System.Windows.Forms.PictureBox led_DakisOn;
+        private System.Windows.Forms.PictureBox led_dakisErr;
+        private System.Windows.Forms.PictureBox led_DGiftOff;
+        private System.Windows.Forms.PictureBox led_DGiftOn;
+        private System.Windows.Forms.PictureBox led_DGiftErr;
+        private System.Windows.Forms.PictureBox led_PrtWzdOff;
+        private System.Windows.Forms.PictureBox led_PrtWzdOn;
+        private System.Windows.Forms.PictureBox led_PrtWzdErr;
+        private System.Windows.Forms.DataGridView Gridview_OI;
     }
 }
 

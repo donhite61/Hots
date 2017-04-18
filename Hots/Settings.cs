@@ -12,6 +12,8 @@ namespace Hots
     {
         public static string IniFile = Directory.GetCurrentDirectory() + @"\HotsSettings.ini";
 
+        public static string WchRoot { get; set; }
+
         public static string WchRoes { get; set; }
         public static string RoesExt { get; set; }
         public static string ReadRoes { get; set; }
@@ -43,9 +45,11 @@ namespace Hots
         {
             using (StreamWriter writer = new StreamWriter(Settings.IniFile))
             {
+                writer.WriteLine("WchRoot=" + Settings.WchRoot);
+
                 writer.WriteLine("WchRoes=" + Settings.WchRoes);
                 writer.WriteLine("RoesExt=" + Settings.RoesExt);
-                writer.WriteLine("ReadRoes = " + Settings.ReadRoes);
+                writer.WriteLine("ReadRoes=" + Settings.ReadRoes);
                 writer.WriteLine("OutRoes=" + Settings.OutRoes);
                 writer.WriteLine("ProdSubRoes=" + Settings.ProdSubRoes);
                 writer.WriteLine("WaitForRoes=" + Settings.WaitForRoes);
@@ -54,7 +58,7 @@ namespace Hots
 
                 writer.WriteLine("WchDakis=" + Settings.WchDakis);
                 writer.WriteLine("DakisExt=" + Settings.DakisExt);
-                writer.WriteLine("ReadDakis = " + Settings.ReadDakis);
+                writer.WriteLine("ReadDakis=" + Settings.ReadDakis);
                 writer.WriteLine("OutDakis=" + Settings.OutDakis);
                 writer.WriteLine("ProdSubDakis=" + Settings.ProdSubDakis);
                 writer.WriteLine("WaitForDakis=" + Settings.WaitForDakis);
@@ -63,7 +67,7 @@ namespace Hots
 
                 writer.WriteLine("WchDGift=" + Settings.WchDGift);
                 writer.WriteLine("DGiftExt=" + Settings.DGiftExt);
-                writer.WriteLine("ReadDGift = " + Settings.ReadDGift);
+                writer.WriteLine("ReadDGift=" + Settings.ReadDGift);
                 writer.WriteLine("OutDGift=" + Settings.OutDGift);
                 writer.WriteLine("ProdSubDGift=" + Settings.ProdSubDGift);
                 writer.WriteLine("WaitForDGift=" + Settings.WaitForDGift);
@@ -84,6 +88,9 @@ namespace Hots
                     {
                         switch (words[0])
                         {
+                            case "WchRoot":
+                                Settings.WchRoot = words[1];
+                                break;
                             case "WchRoes":
                                 Settings.WchRoes = words[1];
                                 break;
