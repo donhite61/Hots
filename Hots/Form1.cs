@@ -27,8 +27,7 @@ namespace Hots
             FillFormFromSettings();
             but_Save.Visible = false;
             var os = new OrderSysList();
-            os = os.getOSList();
-            os = os.getOSList();
+            os = os.getOrdSysList();
             var bindingList = new BindingList<OrderSystem>(os.List);
             var source = new BindingSource(bindingList, null);
             Gridview_OI.DataSource = source;

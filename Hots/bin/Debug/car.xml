@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<ArrayOfOrderSystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <OrderSystem>
+    <Name>Roes1</Name>
+    <WaitIsFldr>false</WaitIsFldr>
+    <Active>false</Active>
+  </OrderSystem>
+  <OrderSystem>
+    <Name>Dakis1</Name>
+    <WaitIsFldr>false</WaitIsFldr>
+    <Active>false</Active>
+  </OrderSystem>
+  <OrderSystem>
+    <Name>DGift1</Name>
+    <WaitIsFldr>false</WaitIsFldr>
+    <Active>false</Active>
+  </OrderSystem>
+</ArrayOfOrderSystem>

@@ -25,39 +25,40 @@ namespace Hots
 
     public class OrderSysList
     {
-        IEnumerable<string> lines;
-         string IniFile = Directory.GetCurrentDirectory() + @"\HotsSettings.ini";
+        string IniFile = Directory.GetCurrentDirectory() + @"\HotsSettings.xml";
         List<OrderSystem> osList;
         public List<OrderSystem> List { get; set; }
 
-        public OrderSysList getOSList()
+        public OrderSysList getOrdSysList()
         {
-            if (osList == null)
+            if (osList == null) // get or create blank list if not exists, else return existing list
             {
-                if (File.Exists(IniFile))
-                    lines = File.ReadLines(IniFile);
-
                 osList = new List<OrderSystem>();
-                var os = new OrderSystem();
-                osList.Add(os);
-                os = new OrderSystem();
-                os.Name = "Dakis ";
-                osList.Add(os);
-                os = new OrderSystem();
-                os.Name = "DGift";
-                osList.Add(os);
-                
+                try
+                {
+                    ReadWrite.ReadXML(osList, IniFile);
+                }
+                catch
+                {
+                    var os = new OrderSystem();
+                    osList.Add(os);
+                }
             }
-            MyClass.SerializeObject(osList, "car.xml");
             List = osList;
             return this;
         }
 
+        public void SaveOrdSysList()
+        {
+            ReadWrite.WriteXML(osList, IniFile);
+
+        }
+
 
     }
-    public static class MyClass
+    public static class ReadWrite
     {
-        public static void SerializeObject(this List<OrderSystem> list, string fileName)
+        public static void WriteXML(this List<OrderSystem> list, string fileName)
         {
             var serializer = new XmlSerializer(typeof(List<OrderSystem>));
             using (var stream = File.OpenWrite(fileName))
@@ -66,7 +67,7 @@ namespace Hots
             }
         }
 
-        public static void Deserialize(this List<OrderSystem> list, string fileName)
+        public static void ReadXML(this List<OrderSystem> list, string fileName)
         {
             var serializer = new XmlSerializer(typeof(List<OrderSystem>));
             using (var stream = File.OpenRead(fileName))
