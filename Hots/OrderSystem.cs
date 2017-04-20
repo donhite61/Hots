@@ -11,6 +11,7 @@ namespace Hots
     [Serializable]
     public class OrderSystem
     {
+        public bool Active { get; set; }
         public string Name { get; set; }
         public string WatchFldr { get; set; }
         public string Ext { get; set; }
@@ -19,7 +20,7 @@ namespace Hots
         public string PrdSubFldr { get; set; }
         public string WaitFile { get; set; }
         public bool WaitIsFldr { get; set; }
-        public bool Active { get; set; }
+       
       
     }
 
@@ -43,8 +44,44 @@ namespace Hots
                 }
                 catch
                 {
-                    var os = new OrderSystem();
-                    osList.Add(os);
+                    var osR = new OrderSystem();
+                    var osD = new OrderSystem();
+                    var osG = new OrderSystem();
+
+                    osR.Name = "Roes";
+                    osR.WatchFldr = "RoesIn";
+                    osR.Ext = "pov";
+                    osR.ReadFld = "ReadOrders";
+                    osR.OutFldr = "";
+                    osR.PrdSubFldr = "none";
+                    osR.WaitFile = "Originals";
+                    osR.WaitIsFldr = true;
+                    osR.Active = false;
+                   
+                    osD.Name = "Dakis Photo";
+                    osD.WatchFldr = "DakisIn";
+                    osD.Ext = "xml";
+                    osD.ReadFld = "ReadOrders";
+                    osD.OutFldr = "";
+                    osD.PrdSubFldr = "prints";
+                    osD.WaitFile = "metadata\\download_complete";
+                    osD.WaitIsFldr = false;
+                    osD.Active = false;
+
+                    osG.Name = "Dakis Gift";
+                    osG.WatchFldr = "Dakis Gift In";
+                    osG.Ext = "xml";
+                    osG.ReadFld = "ReadOrders";
+                    osG.OutFldr = "";
+                    osG.PrdSubFldr = "photo_products";
+                    osG.WaitFile = "metadata\\download_complete";
+                    osG.WaitIsFldr = false;
+                    osG.Active = false;
+
+                    osList.Add(osR);
+                    osList.Add(osD);
+                    osList.Add(osG);
+                    SaveOrdSysList();
                 }
             }
             return osList;
@@ -55,18 +92,24 @@ namespace Hots
             ReadWrite.WriteXML(osList, IniFile);
         }
 
-        public static void AddOrdSysToOrdSysList(OrderSystem _ordSys)
-        {
-            osList.Add(_ordSys);
-    }
-
-        public static void DelOrdSysFromOrdSysList(string _ordSysName)
-        {
-
-        }
-
         public static void UpdateOrdSysInOrdSysList(OrderSystem _ordSys)
         {
+            for (int i = 0; i == osList.Count; i++)
+            {
+                if (osList[i].Name == _ordSys.Name)
+                {
+                    osList[i].WatchFldr = _ordSys.WatchFldr;
+                    osList[i].Ext = _ordSys.Ext;
+                    osList[i].ReadFld = _ordSys.ReadFld;
+                    osList[i].OutFldr = _ordSys.OutFldr;
+                    osList[i].PrdSubFldr = _ordSys.PrdSubFldr;
+                    osList[i].WaitFile = _ordSys.WaitFile;
+                    osList[i].Active = _ordSys.Active;
+                    osList[i].WaitIsFldr = _ordSys.WaitIsFldr;
+                    SaveOrdSysList();
+                }
+
+            }
 
         }
 

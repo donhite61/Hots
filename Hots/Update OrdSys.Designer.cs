@@ -41,8 +41,6 @@
             this.but_OutputFolder = new System.Windows.Forms.Button();
             this.txtBox_ReadFolder = new System.Windows.Forms.TextBox();
             this.but_ReadFolder = new System.Windows.Forms.Button();
-            this.but_Add = new System.Windows.Forms.Button();
-            this.but_Del = new System.Windows.Forms.Button();
             this.but_Save = new System.Windows.Forms.Button();
             this.chkBox_WaitFileIsFldr = new System.Windows.Forms.CheckBox();
             this.txtBox_OrdSysName = new System.Windows.Forms.TextBox();
@@ -155,29 +153,9 @@
             this.but_ReadFolder.Text = "Read Folder";
             this.but_ReadFolder.UseVisualStyleBackColor = true;
             // 
-            // but_Add
-            // 
-            this.but_Add.Location = new System.Drawing.Point(144, 328);
-            this.but_Add.Name = "but_Add";
-            this.but_Add.Size = new System.Drawing.Size(80, 24);
-            this.but_Add.TabIndex = 25;
-            this.but_Add.Text = "Add";
-            this.but_Add.UseVisualStyleBackColor = true;
-            this.but_Add.Click += new System.EventHandler(this.but_Add_Click);
-            // 
-            // but_Del
-            // 
-            this.but_Del.Location = new System.Drawing.Point(400, 328);
-            this.but_Del.Name = "but_Del";
-            this.but_Del.Size = new System.Drawing.Size(80, 24);
-            this.but_Del.TabIndex = 25;
-            this.but_Del.Text = "Delete";
-            this.but_Del.UseVisualStyleBackColor = true;
-            this.but_Del.Click += new System.EventHandler(this.but_Del_Click);
-            // 
             // but_Save
             // 
-            this.but_Save.Location = new System.Drawing.Point(272, 328);
+            this.but_Save.Location = new System.Drawing.Point(512, 328);
             this.but_Save.Name = "but_Save";
             this.but_Save.Size = new System.Drawing.Size(80, 24);
             this.but_Save.TabIndex = 25;
@@ -199,6 +177,7 @@
             // 
             this.txtBox_OrdSysName.Location = new System.Drawing.Point(128, 56);
             this.txtBox_OrdSysName.Name = "txtBox_OrdSysName";
+            this.txtBox_OrdSysName.ReadOnly = true;
             this.txtBox_OrdSysName.Size = new System.Drawing.Size(199, 20);
             this.txtBox_OrdSysName.TabIndex = 22;
             // 
@@ -218,8 +197,6 @@
             this.ClientSize = new System.Drawing.Size(633, 377);
             this.Controls.Add(this.chkBox_WaitFileIsFldr);
             this.Controls.Add(this.but_Save);
-            this.Controls.Add(this.but_Del);
-            this.Controls.Add(this.but_Add);
             this.Controls.Add(this.labelR3);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.labelR2);
@@ -237,6 +214,7 @@
             this.Controls.Add(this.but_ReadFolder);
             this.Name = "frm_UpdOrdSys";
             this.Text = "Update Order System";
+            this.Load += new System.EventHandler(this.frm_UpdOrdSys_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -257,8 +235,6 @@
         private System.Windows.Forms.Button but_OutputFolder;
         private System.Windows.Forms.TextBox txtBox_ReadFolder;
         private System.Windows.Forms.Button but_ReadFolder;
-        private System.Windows.Forms.Button but_Add;
-        private System.Windows.Forms.Button but_Del;
         private System.Windows.Forms.Button but_Save;
         private System.Windows.Forms.CheckBox chkBox_WaitFileIsFldr;
         private System.Windows.Forms.TextBox txtBox_OrdSysName;

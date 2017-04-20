@@ -15,30 +15,23 @@ namespace Hots
         public frm_UpdOrdSys(DataGridViewRow _selectedRow)
         {
             InitializeComponent();
+            //MessageBox.Show(Convert.ToString(_selectedRow.Cells[0].Value));
+
+
+            chkBox_Active.Checked = Convert.ToBoolean(_selectedRow.Cells[0].Value);
+            txtBox_OrdSysName.Text = Convert.ToString(_selectedRow.Cells[1].Value);
+            txtBox_WatchedFolder.Text = Convert.ToString(_selectedRow.Cells[2].Value);
+            txtBox_WchdExt.Text = Convert.ToString(_selectedRow.Cells[3].Value);
+            txtBox_ReadFolder.Text = Convert.ToString(_selectedRow.Cells[4].Value);
+            txtBox_OutputFolder.Text = Convert.ToString(_selectedRow.Cells[5].Value);
+            txtBox_ProdSubFldr.Text = Convert.ToString(_selectedRow.Cells[6].Value);
+            txtBox_WaitForFile.Text = Convert.ToString(_selectedRow.Cells[7].Value);
+            chkBox_WaitFileIsFldr.Checked = Convert.ToBoolean(_selectedRow.Cells[8].Value);
         }
 
-        private void but_Add_Click(object sender, EventArgs e)
+        private void frm_UpdOrdSys_Load(object sender, EventArgs e)
         {
-            OrderSystem ordSysNew = new OrderSystem();
-            ordSysNew.Active = chkBox_Active.Checked;
-            ordSysNew.Name = txtBox_OrdSysName.Text;
-            ordSysNew.WatchFldr = txtBox_WatchedFolder.Text;
-            ordSysNew.Ext = txtBox_WchdExt.Text;
-            ordSysNew.ReadFld = txtBox_ReadFolder.Text;
-            ordSysNew.OutFldr = txtBox_OutputFolder.Text;
-            ordSysNew.PrdSubFldr= txtBox_ProdSubFldr.Text;
-            ordSysNew.WaitFile = txtBox_WaitForFile.Text;
-            ordSysNew.WaitIsFldr = chkBox_WaitFileIsFldr.Checked;
 
-            OrderSysList.AddOrdSysToOrdSysList(ordSysNew);
-            Close();
-        }
-
-        private void but_Del_Click(object sender, EventArgs e)
-        {
-            var ordSysName = txtBox_OrdSysName.Text;
-            OrderSysList.DelOrdSysFromOrdSysList(ordSysName);
-            Close();
         }
 
         private void but_Update_Click(object sender, EventArgs e)
@@ -53,9 +46,10 @@ namespace Hots
             ordSysUpdate.PrdSubFldr = txtBox_ProdSubFldr.Text;
             ordSysUpdate.WaitFile = txtBox_WaitForFile.Text;
             ordSysUpdate.WaitIsFldr = chkBox_WaitFileIsFldr.Checked;
-
             OrderSysList.UpdateOrdSysInOrdSysList(ordSysUpdate);
             Close();
         }
+
+
     }
 }

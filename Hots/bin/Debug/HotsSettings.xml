@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<ArrayOfOrderSystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <OrderSystem>
+    <Name>Roes</Name>
+    <WatchFldr>RoesIn</WatchFldr>
+    <Ext>pov</Ext>
+    <ReadFld>ReadOrders</ReadFld>
+    <OutFldr />
+    <PrdSubFldr>none</PrdSubFldr>
+    <WaitFile>Originals</WaitFile>
+    <WaitIsFldr>true</WaitIsFldr>
+    <Active>false</Active>
+  </OrderSystem>
+  <OrderSystem>
+    <Name>Dakis Photo</Name>
+    <WatchFldr>DakisIn</WatchFldr>
+    <Ext>xml</Ext>
+    <ReadFld>ReadOrders</ReadFld>
+    <OutFldr />
+    <PrdSubFldr>prints</PrdSubFldr>
+    <WaitFile>metadata\download_complete</WaitFile>
+    <WaitIsFldr>false</WaitIsFldr>
+    <Active>false</Active>
+  </OrderSystem>
+  <OrderSystem>
+    <Name>Dakis Gift</Name>
+    <WatchFldr>Dakis Gift In</WatchFldr>
+    <Ext>xml</Ext>
+    <ReadFld>ReadOrders</ReadFld>
+    <OutFldr />
+    <PrdSubFldr>photo_products</PrdSubFldr>
+    <WaitFile>metadata\download_complete</WaitFile>
+    <WaitIsFldr>false</WaitIsFldr>
+    <Active>false</Active>
+  </OrderSystem>
+</ArrayOfOrderSystem>
