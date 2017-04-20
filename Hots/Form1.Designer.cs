@@ -79,6 +79,8 @@
             this.but_ReadFldrDGift = new System.Windows.Forms.Button();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.but_NewOrdSys = new System.Windows.Forms.Button();
+            this.Gridview_OI = new System.Windows.Forms.DataGridView();
             this.but_SetWchGen = new System.Windows.Forms.Button();
             this.txtBox_WchRoot = new System.Windows.Forms.TextBox();
             this.but_Save = new System.Windows.Forms.Button();
@@ -94,12 +96,12 @@
             this.led_PrtWzdOff = new System.Windows.Forms.PictureBox();
             this.led_PrtWzdOn = new System.Windows.Forms.PictureBox();
             this.led_PrtWzdErr = new System.Windows.Forms.PictureBox();
-            this.Gridview_OI = new System.Windows.Forms.DataGridView();
             this.tabControl1.SuspendLayout();
             this.tab_Roes.SuspendLayout();
             this.tab_.SuspendLayout();
             this.tabPage3.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Gridview_OI)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.led_RoesOn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.led_RoesOff)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.led_RoesErr)).BeginInit();
@@ -112,7 +114,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.led_PrtWzdOff)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.led_PrtWzdOn)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.led_PrtWzdErr)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Gridview_OI)).BeginInit();
             this.SuspendLayout();
             // 
             // but_StartWatch
@@ -145,7 +146,7 @@
             this.tab_NewOrders.Location = new System.Drawing.Point(4, 22);
             this.tab_NewOrders.Name = "tab_NewOrders";
             this.tab_NewOrders.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_NewOrders.Size = new System.Drawing.Size(648, 290);
+            this.tab_NewOrders.Size = new System.Drawing.Size(960, 290);
             this.tab_NewOrders.TabIndex = 0;
             this.tab_NewOrders.Text = "New Orders";
             this.tab_NewOrders.UseVisualStyleBackColor = true;
@@ -169,7 +170,7 @@
             this.tab_Roes.Location = new System.Drawing.Point(4, 22);
             this.tab_Roes.Name = "tab_Roes";
             this.tab_Roes.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_Roes.Size = new System.Drawing.Size(648, 290);
+            this.tab_Roes.Size = new System.Drawing.Size(960, 290);
             this.tab_Roes.TabIndex = 2;
             this.tab_Roes.Text = "Roes";
             this.tab_Roes.UseVisualStyleBackColor = true;
@@ -319,7 +320,7 @@
             this.tab_.Location = new System.Drawing.Point(4, 22);
             this.tab_.Name = "tab_";
             this.tab_.Padding = new System.Windows.Forms.Padding(3);
-            this.tab_.Size = new System.Drawing.Size(648, 290);
+            this.tab_.Size = new System.Drawing.Size(960, 290);
             this.tab_.TabIndex = 3;
             this.tab_.Text = "Dakis";
             this.tab_.UseVisualStyleBackColor = true;
@@ -469,7 +470,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(648, 290);
+            this.tabPage3.Size = new System.Drawing.Size(960, 290);
             this.tabPage3.TabIndex = 4;
             this.tabPage3.Text = "Dakis Gift";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -604,13 +605,14 @@
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(648, 290);
+            this.tabPage4.Size = new System.Drawing.Size(960, 290);
             this.tabPage4.TabIndex = 5;
             this.tabPage4.Text = "PrintWizard";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.but_NewOrdSys);
             this.tabPage1.Controls.Add(this.Gridview_OI);
             this.tabPage1.Controls.Add(this.but_SetWchGen);
             this.tabPage1.Controls.Add(this.txtBox_WchRoot);
@@ -622,6 +624,24 @@
             this.tabPage1.TabIndex = 6;
             this.tabPage1.Text = "General";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // but_NewOrdSys
+            // 
+            this.but_NewOrdSys.Location = new System.Drawing.Point(720, 256);
+            this.but_NewOrdSys.Name = "but_NewOrdSys";
+            this.but_NewOrdSys.Size = new System.Drawing.Size(80, 24);
+            this.but_NewOrdSys.TabIndex = 21;
+            this.but_NewOrdSys.Text = "New";
+            this.but_NewOrdSys.UseVisualStyleBackColor = true;
+            this.but_NewOrdSys.Click += new System.EventHandler(this.but_NewOrdSys_Click);
+            // 
+            // Gridview_OI
+            // 
+            this.Gridview_OI.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Gridview_OI.Location = new System.Drawing.Point(8, 56);
+            this.Gridview_OI.Name = "Gridview_OI";
+            this.Gridview_OI.Size = new System.Drawing.Size(944, 184);
+            this.Gridview_OI.TabIndex = 20;
             // 
             // but_SetWchGen
             // 
@@ -792,14 +812,6 @@
             this.led_PrtWzdErr.TabStop = false;
             this.led_PrtWzdErr.Visible = false;
             // 
-            // Gridview_OI
-            // 
-            this.Gridview_OI.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Gridview_OI.Location = new System.Drawing.Point(8, 56);
-            this.Gridview_OI.Name = "Gridview_OI";
-            this.Gridview_OI.Size = new System.Drawing.Size(944, 224);
-            this.Gridview_OI.TabIndex = 20;
-            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -833,6 +845,7 @@
             this.tabPage3.PerformLayout();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.Gridview_OI)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.led_RoesOn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.led_RoesOff)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.led_RoesErr)).EndInit();
@@ -845,7 +858,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.led_PrtWzdOff)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.led_PrtWzdOn)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.led_PrtWzdErr)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Gridview_OI)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -919,6 +931,7 @@
         private System.Windows.Forms.PictureBox led_PrtWzdOn;
         private System.Windows.Forms.PictureBox led_PrtWzdErr;
         private System.Windows.Forms.DataGridView Gridview_OI;
+        private System.Windows.Forms.Button but_NewOrdSys;
     }
 }
 

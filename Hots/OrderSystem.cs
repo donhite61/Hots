@@ -23,13 +23,16 @@ namespace Hots
       
     }
 
-    public class OrderSysList
+    class OrderSysList // this class follows the "singleton" pattern (not thread safe?)
     {
-        string IniFile = Directory.GetCurrentDirectory() + @"\HotsSettings.xml";
-        List<OrderSystem> osList;
-        public List<OrderSystem> List { get; set; }
+        private static string IniFile = Directory.GetCurrentDirectory() + @"\HotsSettings.xml";
+        private static List<OrderSystem> osList;
 
-        public OrderSysList getOrdSysList()
+        protected OrderSysList()
+        {
+        }
+
+        public static List<OrderSystem> getOrdSysList()
         {
             if (osList == null) // get or create blank list if not exists, else return existing list
             {
@@ -44,13 +47,26 @@ namespace Hots
                     osList.Add(os);
                 }
             }
-            List = osList;
-            return this;
+            return osList;
         }
 
-        public void SaveOrdSysList()
+        public static void SaveOrdSysList()
         {
             ReadWrite.WriteXML(osList, IniFile);
+        }
+
+        public static void AddOrdSysToOrdSysList(OrderSystem _ordSys)
+        {
+            osList.Add(_ordSys);
+    }
+
+        public static void DelOrdSysFromOrdSysList(string _ordSysName)
+        {
+
+        }
+
+        public static void UpdateOrdSysInOrdSysList(OrderSystem _ordSys)
+        {
 
         }
 

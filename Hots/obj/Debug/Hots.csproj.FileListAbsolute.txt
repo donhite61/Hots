@@ -28,3 +28,4 @@ C:\Csharp\Hots\Hots\Hots\obj\Debug\Hots.Properties.Resources.resources
 C:\Csharp\Hots\Hots\Hots\obj\Debug\Hots.csproj.GenerateResource.Cache
 C:\Csharp\Hots\Hots\Hots\obj\Debug\Hots.exe
 C:\Csharp\Hots\Hots\Hots\obj\Debug\Hots.pdb
+C:\Csharp\Hots\Hots\Hots\obj\Debug\Hots.frm_UpdOrdSys.resources

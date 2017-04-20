@@ -15,6 +15,10 @@ namespace Hots
     {
         public FolderWatcher fw;
         FolderBrowserDialog fDB = new FolderBrowserDialog();
+
+        public frm_UpdOrdSys frm_UpdOrdSys;
+
+
         public Form1()
         {
             InitializeComponent();
@@ -26,9 +30,8 @@ namespace Hots
             Settings.ReadINI();
             FillFormFromSettings();
             but_Save.Visible = false;
-            var os = new OrderSysList();
-            os = os.getOrdSysList();
-            var bindingList = new BindingList<OrderSystem>(os.List);
+            var ordSysList = OrderSysList.getOrdSysList();
+            var bindingList = new BindingList<OrderSystem>(ordSysList);
             var source = new BindingSource(bindingList, null);
             Gridview_OI.DataSource = source;
         }
@@ -355,6 +358,20 @@ namespace Hots
                 led_DakisOn.Visible = false;
                 but_Save.Visible = true;
             }
+        }
+
+        private void but_NewOrdSys_Click(object sender, EventArgs e)
+        {
+            DataGridViewRow selectedRow = null;
+            frm_UpdOrdSys = new frm_UpdOrdSys(selectedRow);
+            frm_UpdOrdSys.FormClosed += frm_UpdOrdSys_FormClosed;
+            frm_UpdOrdSys.Show();
+        }
+
+        private void frm_UpdOrdSys_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            // todo update gridview after changes?
+
         }
     }
 }
