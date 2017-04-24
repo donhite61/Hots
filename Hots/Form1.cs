@@ -28,6 +28,10 @@ namespace Hots
         private void Form1_Load(object sender, EventArgs e)
         {
             //but_StartWatch.Enabled = false;
+            fillOrdSysGrid();
+        }
+        private void fillOrdSysGrid()
+        {
             var ordSysList = OrderSysList.getOrdSysList();
             bindingList = new BindingList<OrderSystem>(ordSysList);
             var source = new BindingSource(bindingList, null);
@@ -36,11 +40,9 @@ namespace Hots
 
         private void FillFormFromSettings()
         {
-            txtBox_WchRoot.Text = Settings.WchRoot;
-            fDB.SelectedPath = Settings.WchRoot;
+            txtBox_WchRoot.Text = Set.WchRoot;
+            fDB.SelectedPath = Set.WchRoot;
         }
-
-
 
         private void but_StartWatch_Click(object sender, EventArgs e)
         {
@@ -59,20 +61,28 @@ namespace Hots
 
         private void frm_UpdOrdSys_FormClosed(object sender, FormClosedEventArgs e)
         {
-            var ordSysList = OrderSysList.getOrdSysList();
-            bindingList = new BindingList<OrderSystem>(ordSysList);
-            var source = new BindingSource(bindingList, null);
-            Gridview_OS.DataSource = source;
-
+            fillOrdSysGrid();
         }
 
-        private void OrdSysGrid_Clicked(object sender, DataGridViewCellEventArgs e)
+        private void OrdSysGrid_DblClicked(object sender, DataGridViewCellEventArgs e)
         {
             int rowIndex = e.RowIndex;
             DataGridViewRow row = Gridview_OS.Rows[rowIndex];
-            frm_UpdOrdSys form = new frm_UpdOrdSys(row);
-            form.Show();
+            frm_UpdOrdSys editStoreForm = new frm_UpdOrdSys(row);
+            editStoreForm.FormClosed += frm_UpdOrdSys_FormClosed;
+            editStoreForm.Show();
 
+        }
+
+        private void but_SetWchGen_Click(object sender, EventArgs e)
+        {
+            var fb = new FolderBrowserDialog();
+            fb.SelectedPath = txtBox_WchRoot.Text;
+            var result = fb.ShowDialog();
+            if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fb.SelectedPath))
+            {
+
+            }
         }
     }
 }

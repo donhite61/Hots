@@ -29,3 +29,4 @@ C:\Csharp\Hots\Hots\Hots\obj\Debug\Hots.exe
 C:\Csharp\Hots\Hots\Hots\obj\Debug\Hots.pdb
 C:\Csharp\Hots\Hots\Hots\obj\Debug\Hots.frm_UpdOrdSys.resources
 C:\Csharp\Hots\Hots\Hots\obj\Debug\Hots.csprojResolveAssemblyReference.cache
+D:\Dad\Documents\CSharp\2017\Hots\Hots\obj\Debug\Hots.frm_UpdOrdSys.resources

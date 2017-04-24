@@ -15,9 +15,6 @@ namespace Hots
         public frm_UpdOrdSys(DataGridViewRow _selectedRow)
         {
             InitializeComponent();
-            //MessageBox.Show(Convert.ToString(_selectedRow.Cells[0].Value));
-
-
             chkBox_Active.Checked = Convert.ToBoolean(_selectedRow.Cells[0].Value);
             txtBox_OrdSysName.Text = Convert.ToString(_selectedRow.Cells[1].Value);
             txtBox_WatchedFolder.Text = Convert.ToString(_selectedRow.Cells[2].Value);
@@ -50,6 +47,9 @@ namespace Hots
             Close();
         }
 
-
+        private void but_Cancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
     }
 }

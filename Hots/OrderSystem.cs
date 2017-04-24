@@ -24,7 +24,7 @@ namespace Hots
       
     }
 
-    class OrderSysList // this class follows the "singleton" pattern (not thread safe?)
+    public class OrderSysList // this class follows the "singleton" pattern (not thread safe?)
     {
         private static string IniFile = Directory.GetCurrentDirectory() + @"\HotsSettings.xml";
         private static List<OrderSystem> osList;
@@ -40,7 +40,7 @@ namespace Hots
                 osList = new List<OrderSystem>();
                 try
                 {
-                    ReadWrite.ReadXML(osList, IniFile);
+                    ReadWrite.ReadOrdSys(osList, IniFile);
                 }
                 catch
                 {
@@ -89,12 +89,12 @@ namespace Hots
 
         public static void SaveOrdSysList()
         {
-            ReadWrite.WriteXML(osList, IniFile);
+            ReadWrite.WriteOrdSys(osList, IniFile);
         }
 
         public static void UpdateOrdSysInOrdSysList(OrderSystem _ordSys)
         {
-            for (int i = 0; i == osList.Count; i++)
+            for (int i = 0; i < osList.Count; i++)
             {
                 if (osList[i].Name == _ordSys.Name)
                 {
@@ -112,12 +112,21 @@ namespace Hots
             }
 
         }
-
-
     }
+
+    [Serializable]
+    public class Set
+    {
+        public static string IniFile = Directory.GetCurrentDirectory() + @"\HotsSettings.ini";
+
+        public static string WchRoot { get; set; }
+
+        public static List<OrderSystem> OrdSysList { get; set; }
+    }
+
     public static class ReadWrite
     {
-        public static void WriteXML(this List<OrderSystem> list, string fileName)
+        public static void WriteOrdSys(this List<OrderSystem> list, string fileName)
         {
             var serializer = new XmlSerializer(typeof(List<OrderSystem>));
             using (var stream = File.OpenWrite(fileName))
@@ -126,16 +135,37 @@ namespace Hots
             }
         }
 
-        public static void ReadXML(this List<OrderSystem> list, string fileName)
+        public static void ReadOrdSys(this List<OrderSystem> list, string fileName)
         {
             var serializer = new XmlSerializer(typeof(List<OrderSystem>));
             using (var stream = File.OpenRead(fileName))
             {
-                var other = (List<OrderSystem>)(serializer.Deserialize(stream));
+                var OrderSystems = (List<OrderSystem>)(serializer.Deserialize(stream));
                 list.Clear();
-                list.AddRange(other);
+                list.AddRange(OrderSystems);
             }
         }
+
+        public static void WriteSettings(this List<Set> list, string fileName)
+        {
+            var serializer = new XmlSerializer(typeof(List<Set>));
+            using (var stream = File.OpenWrite(fileName))
+            {
+                serializer.Serialize(stream, list);
+            }
+        }
+
+        public static void ReadSettings(this List<Set> list, string fileName)
+        {
+            var serializer = new XmlSerializer(typeof(List<Set>));
+            using (var stream = File.OpenRead(fileName))
+            {
+                var OrderSystems = (List<Set>)(serializer.Deserialize(stream));
+                list.Clear();
+                list.AddRange(OrderSystems);
+            }
+        }
+
     }
 
 

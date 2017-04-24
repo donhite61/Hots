@@ -1,28 +1,29 @@
 <?xml version="1.0"?>
 <ArrayOfOrderSystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <OrderSystem>
+    <Active>true</Active>
     <Name>Roes</Name>
     <WatchFldr>RoesIn</WatchFldr>
     <Ext>pov</Ext>
     <ReadFld>ReadOrders</ReadFld>
-    <OutFldr />
+    <OutFldr>C:\aaphotos</OutFldr>
     <PrdSubFldr>none</PrdSubFldr>
     <WaitFile>Originals</WaitFile>
     <WaitIsFldr>true</WaitIsFldr>
-    <Active>false</Active>
   </OrderSystem>
   <OrderSystem>
+    <Active>false</Active>
     <Name>Dakis Photo</Name>
     <WatchFldr>DakisIn</WatchFldr>
     <Ext>xml</Ext>
-    <ReadFld>ReadOrders</ReadFld>
+    <ReadFld>ReadOrdersc:\</ReadFld>
     <OutFldr />
     <PrdSubFldr>prints</PrdSubFldr>
     <WaitFile>metadata\download_complete</WaitFile>
     <WaitIsFldr>false</WaitIsFldr>
-    <Active>false</Active>
   </OrderSystem>
   <OrderSystem>
+    <Active>false</Active>
     <Name>Dakis Gift</Name>
     <WatchFldr>Dakis Gift In</WatchFldr>
     <Ext>xml</Ext>
@@ -31,6 +32,5 @@
     <PrdSubFldr>photo_products</PrdSubFldr>
     <WaitFile>metadata\download_complete</WaitFile>
     <WaitIsFldr>false</WaitIsFldr>
-    <Active>false</Active>
   </OrderSystem>
 </ArrayOfOrderSystem>
