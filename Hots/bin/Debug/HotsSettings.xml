@@ -1,36 +1,39 @@
-<?xml version="1.0"?>
-<ArrayOfOrderSystem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <OrderSystem>
-    <Active>true</Active>
-    <Name>Roes</Name>
-    <WatchFldr>RoesIn</WatchFldr>
-    <Ext>pov</Ext>
-    <ReadFld>ReadOrders</ReadFld>
-    <OutFldr>C:\aaphotos</OutFldr>
-    <PrdSubFldr>none</PrdSubFldr>
-    <WaitFile>Originals</WaitFile>
-    <WaitIsFldr>true</WaitIsFldr>
-  </OrderSystem>
-  <OrderSystem>
-    <Active>false</Active>
-    <Name>Dakis Photo</Name>
-    <WatchFldr>DakisIn</WatchFldr>
-    <Ext>xml</Ext>
-    <ReadFld>ReadOrdersc:\</ReadFld>
-    <OutFldr />
-    <PrdSubFldr>prints</PrdSubFldr>
-    <WaitFile>metadata\download_complete</WaitFile>
-    <WaitIsFldr>false</WaitIsFldr>
-  </OrderSystem>
-  <OrderSystem>
-    <Active>false</Active>
-    <Name>Dakis Gift</Name>
-    <WatchFldr>Dakis Gift In</WatchFldr>
-    <Ext>xml</Ext>
-    <ReadFld>ReadOrders</ReadFld>
-    <OutFldr />
-    <PrdSubFldr>photo_products</PrdSubFldr>
-    <WaitFile>metadata\download_complete</WaitFile>
-    <WaitIsFldr>false</WaitIsFldr>
-  </OrderSystem>
-</ArrayOfOrderSystem>
+<?xml version="1.0" encoding="utf-8"?>
+<Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <WchRoot>C:\DonsScripts\Hots Folder System\WatchedFolder\NewOrders</WchRoot>
+  <ListOrdSys>
+    <OrderSystem xsi:type="OrdSysRoes">
+      <Active>false</Active>
+      <Name>Roes</Name>
+      <WatchFldr>RoesIn</WatchFldr>
+      <Ext>pov</Ext>
+      <ReadFld>C:\DonsScripts\Hots Folder System\WatchedFolder\ReadOrders</ReadFld>
+      <OutFldr>C:\DonsScripts\Hots Folder System\RoesOutput</OutFldr>
+      <PrdSubFldr />
+      <WaitFile>Originals</WaitFile>
+      <WaitIsFldr>true</WaitIsFldr>
+    </OrderSystem>
+    <OrderSystem xsi:type="OrdSysDakis">
+      <Active>true</Active>
+      <Name>Dakis</Name>
+      <WatchFldr>DakisIn</WatchFldr>
+      <Ext>xml</Ext>
+      <ReadFld>C:\DonsScripts\Hots Folder System\WatchedFolder\ReadOrders</ReadFld>
+      <OutFldr>C:\DonsScripts\Hots Folder System\DakisOutput</OutFldr>
+      <PrdSubFldr>prints</PrdSubFldr>
+      <WaitFile>download_complete</WaitFile>
+      <WaitIsFldr>false</WaitIsFldr>
+    </OrderSystem>
+    <OrderSystem xsi:type="OrdSysDGift">
+      <Active>true</Active>
+      <Name>DGift</Name>
+      <WatchFldr>DGiftIn</WatchFldr>
+      <Ext>xml</Ext>
+      <ReadFld>C:\DonsScripts\Hots Folder System\WatchedFolder\ReadOrders</ReadFld>
+      <OutFldr>C:\DonsScripts\Hots Folder System\DakisOutput</OutFldr>
+      <PrdSubFldr>products</PrdSubFldr>
+      <WaitFile>download_complete</WaitFile>
+      <WaitIsFldr>false</WaitIsFldr>
+    </OrderSystem>
+  </ListOrdSys>
+</Settings>

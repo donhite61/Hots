@@ -11,9 +11,9 @@ namespace Hots
     {
         public FileSystemWatcher fwatch;
 
-        public FolderWatcher()
+        public FolderWatcher(string _wchRoot)
         {
-            fwatch = new FileSystemWatcher(Set.WchRoot);
+            fwatch = new FileSystemWatcher(_wchRoot);
 
             fwatch.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
           | NotifyFilters.FileName | NotifyFilters.DirectoryName;

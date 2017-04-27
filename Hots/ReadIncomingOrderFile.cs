@@ -508,7 +508,7 @@ namespace Hots
 
         private List<string> MakeListForFile(string hiteId)
         {
-            var newRoesfile = Set.WchRoes + @"\" + hiteId;
+            var newRoesfile = "Set.WchRoes" + @"\" + hiteId;
             List<string> lines = new List<string>();
 
             using (StreamReader sr = new StreamReader(newRoesfile))

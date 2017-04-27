@@ -12,9 +12,14 @@ namespace Hots
 {
     public partial class frm_UpdOrdSys : Form
     {
+        int index;
+        Settings Set = Settings.GetSettings();
+        FolderBrowserDialog fb = new FolderBrowserDialog();
+
         public frm_UpdOrdSys(DataGridViewRow _selectedRow)
         {
             InitializeComponent();
+            index = _selectedRow.Index;
             chkBox_Active.Checked = Convert.ToBoolean(_selectedRow.Cells[0].Value);
             txtBox_OrdSysName.Text = Convert.ToString(_selectedRow.Cells[1].Value);
             txtBox_WatchedFolder.Text = Convert.ToString(_selectedRow.Cells[2].Value);
@@ -33,17 +38,21 @@ namespace Hots
 
         private void but_Update_Click(object sender, EventArgs e)
         {
-            OrderSystem ordSysUpdate = new OrderSystem();
-            ordSysUpdate.Active = chkBox_Active.Checked;
-            ordSysUpdate.Name = txtBox_OrdSysName.Text;
-            ordSysUpdate.WatchFldr = txtBox_WatchedFolder.Text;
-            ordSysUpdate.Ext = txtBox_WchdExt.Text;
-            ordSysUpdate.ReadFld = txtBox_ReadFolder.Text;
-            ordSysUpdate.OutFldr = txtBox_OutputFolder.Text;
-            ordSysUpdate.PrdSubFldr = txtBox_ProdSubFldr.Text;
-            ordSysUpdate.WaitFile = txtBox_WaitForFile.Text;
-            ordSysUpdate.WaitIsFldr = chkBox_WaitFileIsFldr.Checked;
-            OrderSysList.UpdateOrdSysInOrdSysList(ordSysUpdate);
+
+            processUpdateForm();
+        }
+
+        private void processUpdateForm()
+        {
+            Set.ListOrdSys[index].Active = chkBox_Active.Checked;
+            Set.ListOrdSys[index].WatchFldr = txtBox_WatchedFolder.Text;
+            Set.ListOrdSys[index].Ext = txtBox_WchdExt.Text;
+            Set.ListOrdSys[index].ReadFld = txtBox_ReadFolder.Text;
+            Set.ListOrdSys[index].OutFldr = txtBox_OutputFolder.Text;
+            Set.ListOrdSys[index].PrdSubFldr = txtBox_ProdSubFldr.Text;
+            Set.ListOrdSys[index].WaitFile = txtBox_WaitForFile.Text;
+            Set.ListOrdSys[index].WaitIsFldr = chkBox_WaitFileIsFldr.Checked;
+            Settings.SaveSettings(Set);
             Close();
         }
 
@@ -51,5 +60,35 @@ namespace Hots
         {
             Close();
         }
+
+        private void but_BrowseFolder_Click(object sender, EventArgs e)
+        {
+            if (sender.ToString().Contains("Watched"))
+            {
+                fb.SelectedPath = Set.WchRoot;
+            }
+            else
+            {
+                fb.SelectedPath = "";
+            }
+
+            var result = fb.ShowDialog();
+            if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fb.SelectedPath))
+            {
+                if (sender.ToString().Contains("Watched"))
+                {
+                    txtBox_WatchedFolder.Text = fb.SelectedPath.Substring(Set.WchRoot.Length+1);
+                }
+                if (sender.ToString().Contains("Read"))
+                {
+                    txtBox_ReadFolder.Text = fb.SelectedPath;
+                }
+                if (sender.ToString().Contains("Output"))
+                {
+                    txtBox_OutputFolder.Text = fb.SelectedPath;
+                }
+            }
+        }
+
     }
 }
