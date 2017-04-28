@@ -21,7 +21,7 @@ namespace Hots
                 ConnString = "server=69.89.31.188;user=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;";
         }
 
-        public UInt32 SaveNewOrderHeader(ReadRoesIncomingOrderFile _fl)
+        public UInt32 SaveNewOrderHeader(Order _fl)
         {
             string sql;
             {
@@ -109,7 +109,7 @@ namespace Hots
             }
         }
 
-        private void SaveNewOrderItems(uint mySqlId, ReadRoesIncomingOrderFile _fl)
+        private void SaveNewOrderItems(uint mySqlId, Order _fl)
         {
             using (var conn = new MySqlConnection(ConnString))
             {

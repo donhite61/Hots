@@ -3,20 +3,20 @@
   <WchRoot>C:\DonsScripts\Hots Folder System\WatchedFolder\NewOrders</WchRoot>
   <ListOrdSys>
     <OrderSystem xsi:type="OrdSysRoes">
-      <Active>false</Active>
+      <Active>true</Active>
       <Name>Roes</Name>
-      <WatchFldr>RoesIn</WatchFldr>
+      <WatchFldr>C:\DonsScripts\Hots folder System\WatchedFolder\NewOrders\RoesIn</WatchFldr>
       <Ext>pov</Ext>
       <ReadFld>C:\DonsScripts\Hots Folder System\WatchedFolder\ReadOrders</ReadFld>
-      <OutFldr>C:\DonsScripts\Hots Folder System\RoesOutput</OutFldr>
+      <OutFldr>C:\DonsScripts\Hots Folder System\Roes Output Folder</OutFldr>
       <PrdSubFldr />
       <WaitFile>Originals</WaitFile>
       <WaitIsFldr>true</WaitIsFldr>
     </OrderSystem>
     <OrderSystem xsi:type="OrdSysDakis">
-      <Active>true</Active>
+      <Active>false</Active>
       <Name>Dakis</Name>
-      <WatchFldr>DakisIn</WatchFldr>
+      <WatchFldr>C:\DonsScripts\Hots folder System\WatchedFolder\NewOrders\DakisIn</WatchFldr>
       <Ext>xml</Ext>
       <ReadFld>C:\DonsScripts\Hots Folder System\WatchedFolder\ReadOrders</ReadFld>
       <OutFldr>C:\DonsScripts\Hots Folder System\DakisOutput</OutFldr>
@@ -25,9 +25,9 @@
       <WaitIsFldr>false</WaitIsFldr>
     </OrderSystem>
     <OrderSystem xsi:type="OrdSysDGift">
-      <Active>true</Active>
+      <Active>false</Active>
       <Name>DGift</Name>
-      <WatchFldr>DGiftIn</WatchFldr>
+      <WatchFldr>C:\DonsScripts\Hots folder System\WatchedFolder\NewOrders\DGift</WatchFldr>
       <Ext>xml</Ext>
       <ReadFld>C:\DonsScripts\Hots Folder System\WatchedFolder\ReadOrders</ReadFld>
       <OutFldr>C:\DonsScripts\Hots Folder System\DakisOutput</OutFldr>

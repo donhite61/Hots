@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Hots
 {
@@ -36,12 +37,6 @@ namespace Hots
 
         }
 
-        private void but_Update_Click(object sender, EventArgs e)
-        {
-
-            processUpdateForm();
-        }
-
         private void processUpdateForm()
         {
             Set.ListOrdSys[index].Active = chkBox_Active.Checked;
@@ -56,38 +51,49 @@ namespace Hots
             Close();
         }
 
+        private void but_Update_Click(object sender, EventArgs e)
+        {
+            processUpdateForm();
+        }
+
         private void but_Cancel_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void but_BrowseFolder_Click(object sender, EventArgs e)
+        private void but_WatchFolder_Click(object sender, EventArgs e)
         {
-            if (sender.ToString().Contains("Watched"))
-            {
-                fb.SelectedPath = Set.WchRoot;
-            }
-            else
-            {
-                fb.SelectedPath = "";
-            }
-
+            fb.SelectedPath = Set.WchRoot;
             var result = fb.ShowDialog();
             if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fb.SelectedPath))
             {
-                if (sender.ToString().Contains("Watched"))
+                if (fb.SelectedPath.ToUpper().Contains(Set.WchRoot.ToUpper()) && Directory.Exists(fb.SelectedPath))
                 {
-                    txtBox_WatchedFolder.Text = fb.SelectedPath.Substring(Set.WchRoot.Length+1);
+                    txtBox_WatchedFolder.Text = fb.SelectedPath;
+                    txtBox_WatchedFolder.BackColor = Color.White;
                 }
-                if (sender.ToString().Contains("Read"))
+                else
                 {
-                    txtBox_ReadFolder.Text = fb.SelectedPath;
-                }
-                if (sender.ToString().Contains("Output"))
-                {
-                    txtBox_OutputFolder.Text = fb.SelectedPath;
+                    txtBox_WatchedFolder.BackColor = Color.Pink;
+                    txtBox_WatchedFolder.Text = "Folder must exist inside 'watched root' folder";
                 }
             }
+        }
+
+        private void but_ReadFolder_Click(object sender, EventArgs e)
+        {
+            fb.SelectedPath = "";
+            var result = fb.ShowDialog();
+            if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fb.SelectedPath))
+                txtBox_ReadFolder.Text = fb.SelectedPath;
+        }
+
+        private void but_OutFolder_Click(object sender, EventArgs e)
+        {
+            fb.SelectedPath = "";
+            var result = fb.ShowDialog();
+            if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fb.SelectedPath))
+                txtBox_OutputFolder.Text = fb.SelectedPath;
         }
 
     }

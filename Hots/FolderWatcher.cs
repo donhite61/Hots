@@ -9,7 +9,9 @@ namespace Hots
 {
     public class FolderWatcher
     {
-        public FileSystemWatcher fwatch;
+        FileSystemWatcher fwatch;
+        OrderSystem OrdSys;
+
 
         public FolderWatcher(string _wchRoot)
         {
@@ -41,9 +43,10 @@ namespace Hots
             String FilePath = Path.GetFullPath(e.FullPath);
             if (FileIsReady(FilePath))
             {
-                var FullOrder = new ReadRoesIncomingOrderFile(Filename);
-                var localDB = new LData("Web");
-                localDB.SaveNewOrderHeader(FullOrder);
+                OrdSys = OrderSystem.GetOrdSysByInputFolder(FilePath);
+                var newOrder = OrdSys.ReadIncomingOrderFile(FilePath);
+                var localDB = new LData("Local");
+                localDB.SaveNewOrderHeader(newOrder);
             }
             else
             {
