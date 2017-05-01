@@ -11,31 +11,33 @@ namespace Hots
 {
     class LData
     {
-        private string ConnString;
+        private static string ConnString;
         public LData(string source)
         {
-            if (source == "Local")
-                ConnString = "server=localhost;user=root;database=hots;port=3306;password=6716;";
-
-            if (source == "Web")
-                ConnString = "server=69.89.31.188;user=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;";
         }
 
-        public UInt32 SaveNewOrderHeader(Order _fl)
+#region Save Order
+        public static UInt32 SaveOrdertoSqlServer(Order _fl, string _source)
         {
+            if (_source == "Local")
+                ConnString = "server=localhost;user=root;database=hots;port=3306;password=6716;";
+
+            if (_source == "Web")
+                ConnString = "server=69.89.31.188;user=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;";
+
             string sql;
             {
                 sql = "INSERT INTO orderheaders " +
-                    "(Ord_HiteId,Ord_AltId,Ord_TimeIn,Ord_PreTaxTotal,Ord_PromoCode,Ord_DiscAmount,Ord_SalesTax," +
-                    "Ord_TotalPrice,Ord_PrePaid,Ord_labLabel,Ord_Catalog,Ord_FullfillmentStore,Ord_ServiceTime," +
+                    "(Ord_OrdStatus,Ord_HiteId,Ord_AltId,Ord_TimeIn,Ord_TimeDue,Ord_PreTaxTotal,Ord_PromoCode,Ord_DiscAmount,Ord_SalesTax," +
+                    "Ord_TotalPrice,Ord_PrePaid,Ord_labLabel,Ord_Catalog,Ord_FullfillmentStore,Ord_Location,Ord_ServiceTime," +
                     "Ord_OrderSystem,Ord_Products,Ord_CusId,Ord_CusName,Ord_CusAddress1,Ord_CusAddress2," +
                     "Ord_CusCity,Ord_CusState,Ord_CusZip,Ord_CusCountry,Ord_CusPhone,Ord_CusEmail,Ord_BillTo," +
                     "Ord_BillCCName,Ord_BillCCCity,Ord_BillCCState,Ord_BillCCZip,Ord_ShipMethod,Ord_ShipCost," +
                     "Ord_ShipTo,Ord_ShipName,Ord_ShipAddress,Ord_ShipCity,Ord_ShipState,Ord_ShipZip," +
                     "Ord_ShipPhone,Ord_ShipEmail,Ord_PayCCType,Ord_PayCCNumber,Ord_PayCCCvv,Ord_PayCCExp)" +
 
-                    "VALUES(?HiteId,?AltId,?Timein,?PreTaxTotal,?PromoCode,?DiscAmount,?SalesTax," +
-                    "?TotalPrice,?PrePaid,?LabLabel,?Catalog,?Fullfillment,?ServiceTime," +
+                    "VALUES(?OrdStatus,?HiteId,?AltId,?Timein,?TimeDue,?PreTaxTotal,?PromoCode,?DiscAmount,?SalesTax," +
+                    "?TotalPrice,?PrePaid,?LabLabel,?Catalog,?Fullfillment,?OrdLocation,?ServiceTime," +
                     "?OrderSystem,?Products,?CusId,?CusName,?CusAddress1,?CusAddress2," +
                     "?CusCity,?CusState,?CusZip,?CusCountry,?CusPhone,?CusEmail,?BillTo," +
                     "?BillCCName,?BillCCCity,?BillCCState,?BillCCZip,?ShipMethod,?ShipCost," +
@@ -46,9 +48,13 @@ namespace Hots
             using (var conn = new MySqlConnection(ConnString))
             using (var cmd = new MySqlCommand(sql, conn))
             {
+                
+                cmd.Parameters.AddWithValue("@?OrdLocation", _fl.OrdLocation);
+                cmd.Parameters.AddWithValue("@?OrdStatus", _fl.OrdStatus);
                 cmd.Parameters.AddWithValue("@?HiteId", _fl.HiteId);
                 cmd.Parameters.AddWithValue("@?AltId", _fl.AlternateId);
                 cmd.Parameters.AddWithValue("@?Timein", _fl.TimeIn);
+                cmd.Parameters.AddWithValue("@?TimeDue", _fl.TimeDue);
                 cmd.Parameters.AddWithValue("@?PreTaxTotal", _fl.PreTaxTotal);
                 cmd.Parameters.AddWithValue("@?PromoCode", _fl.PromoCode);
                 cmd.Parameters.AddWithValue("@?DiscAmount", _fl.DiscAmount);
@@ -59,7 +65,7 @@ namespace Hots
                 cmd.Parameters.AddWithValue("@?Catalog", _fl.Catalog);
                 cmd.Parameters.AddWithValue("@?Fullfillment", _fl.Fullfillment);
                 cmd.Parameters.AddWithValue("@?ServiceTime", _fl.ServiceTime);
-                cmd.Parameters.AddWithValue("@?OrderSystem", _fl.OrderSystem);
+                cmd.Parameters.AddWithValue("@?OrderSystem", _fl.OrdSys.Name);
                 cmd.Parameters.AddWithValue("@?Products", _fl.Products);
                 cmd.Parameters.AddWithValue("@?CusId", _fl.CusId);
                 cmd.Parameters.AddWithValue("@?CusName", _fl.CusName);
@@ -109,7 +115,7 @@ namespace Hots
             }
         }
 
-        private void SaveNewOrderItems(uint mySqlId, Order _fl)
+        private static void SaveNewOrderItems(uint mySqlId, Order _fl)
         {
             using (var conn = new MySqlConnection(ConnString))
             {
@@ -138,7 +144,7 @@ namespace Hots
             
         }
 
-        private void SaveNewOrderItemOptions(uint mySqlId, OrderItems item)
+        private static void SaveNewOrderItemOptions(uint mySqlId, OrderItems item)
         {
             using (var conn = new MySqlConnection(ConnString))
             {
@@ -162,7 +168,7 @@ namespace Hots
             }
         }
 
-        private void SaveNewOrderOptions(uint mySqlId, List<OrderOptions> options)
+        private static void SaveNewOrderOptions(uint mySqlId, List<OrderOptions> options)
         {
             using (var conn = new MySqlConnection(ConnString))
             {
@@ -186,5 +192,45 @@ namespace Hots
                 }
             }
         }
+        #endregion Save Order
+
+        #region Get Orders
+        public static DataTable GetShortOrderList(string _status, string _source)
+        {
+            if (_source == "Local")
+                ConnString = "server=localhost;user=root;database=hots;port=3306;password=6716;";
+
+            if (_source == "Web")
+                ConnString = "server=69.89.31.188;user=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;";
+
+            string sql = "select Ord_MySqlId, Ord_HiteId, Ord_CusName, Ord_TimeDue, Ord_OrdStatus, " +
+                         "Ord_Location, Ord_ShipMethod, Ord_TimeIn, Ord_Products FROM orderheaders";
+            sql = sql + " where Ord_OrdStatus = '" + _status + "'";
+            sql = sql + " ORDER BY Ord_HiteId";
+
+            DataTable ordtable = new DataTable();
+            using (var conn = new MySqlConnection(ConnString))
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                conn.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    ordtable.Load(reader);
+                }
+            }
+
+            ordtable.Columns["Ord_MySqlId"].ColumnName = "Sql Id";
+            ordtable.Columns["Ord_HiteId"].ColumnName = "Order#";
+            ordtable.Columns["Ord_CusName"].ColumnName = "Name";
+            ordtable.Columns["Ord_TimeDue"].ColumnName = "Due";
+            ordtable.Columns["Ord_OrdStatus"].ColumnName = "Status";
+            ordtable.Columns["Ord_Location"].ColumnName = "Location";
+            ordtable.Columns["Ord_ShipMethod"].ColumnName = "Pickup";
+            ordtable.Columns["Ord_TimeIn"].ColumnName = "Time In";
+            ordtable.Columns["Ord_Products"].ColumnName = "Products";
+            return ordtable;
+        }
+        #endregion Get Orders
+
     }
 }

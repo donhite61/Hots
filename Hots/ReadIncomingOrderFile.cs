@@ -122,7 +122,7 @@ namespace Hots
         private List<string> FileLineList { get; set; }
         public List<OrderItems> ItemsList { get; set; }
         public List<OrderOptions> OrderOptionsList { get; set; }
-        int i = 0;
+        //int i = 0;
 
         //public ReadRoesIncomingOrderFile(string _hiteId)
         //{

@@ -10,11 +10,11 @@ namespace Hots
     public class FolderWatcher
     {
         FileSystemWatcher fwatch;
-        OrderSystem OrdSys;
+        Form1 form;
 
-
-        public FolderWatcher(string _wchRoot)
+        public FolderWatcher(string _wchRoot, Form1 _form)
         {
+            form = _form;
             fwatch = new FileSystemWatcher(_wchRoot);
 
             fwatch.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
@@ -39,18 +39,12 @@ namespace Hots
 
         private void OnChanged(object sender, FileSystemEventArgs e)
         {
-            String Filename = Path.GetFileName(e.FullPath);
-            String FilePath = Path.GetFullPath(e.FullPath);
-            if (FileIsReady(FilePath))
+            String filePath = Path.GetFullPath(e.FullPath);
+            if (FileIsReady(filePath))
             {
-                OrdSys = OrderSystem.GetOrdSysByInputFolder(FilePath);
-                var newOrder = OrdSys.ReadIncomingOrderFile(FilePath);
-                var localDB = new LData("Local");
-                localDB.SaveNewOrderHeader(newOrder);
-            }
-            else
-            {
-                // start scan of folder to pick up missed file
+                form.FolderWatcherFoundOrder(true);
+                Order.ProcessNewOrder(filePath);
+                form.FolderWatcherFoundOrder(false);
             }
         }
 

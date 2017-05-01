@@ -11,14 +11,17 @@ using System.Windows.Forms;
 
 namespace Hots
 {
+    delegate void dToggleIncOrdLbl(bool incOrd_Visable);
     public partial class Form1 : Form
     {
         Label[] oSIlable;
         Settings set = Settings.GetSettings();
         BindingList<OrderSystem> bindingList;
+        BindingList<Order> OrdBindingList;
         public FolderWatcher fw;
         FolderBrowserDialog fDB = new FolderBrowserDialog();
         public frm_UpdOrdSys frm_UpdOrdSys;
+        private delegate void showReceivingOrder(bool _status);
 
         public Form1()
         {
@@ -28,8 +31,48 @@ namespace Hots
         private void Form1_Load(object sender, EventArgs e)
         {
             makeLables();
-            fillFormFromSettings();
+            fillOSFormFromSettings();
             checkPaths();
+        }
+
+        private void ToggleIncOrdLbl(bool incOrd_Visable)// called by FolderWatcherFoundOrder
+        {
+            lbl_RcvOrder.Visible = incOrd_Visable;
+            if (!incOrd_Visable)
+            {
+                DataTable dt = LData.GetShortOrderList("new", "Web");
+                Gridview_OrderList.DataSource = dt;
+                Gridview_OrderList.Columns["Sql Id"].Visible = false;
+            }
+
+            this.Refresh();
+        }
+
+        private void addNewOrdertoNewOrdList(Order _newOrder)
+        {
+            var list = ListofOrders.AddOrdertoList(_newOrder);
+            fillOrderGridviewfromList(list);
+        }
+
+        private void fillOrderGridviewfromList(List<Order> _list)
+        {
+            OrdBindingList = new BindingList<Order>(_list);
+            var source = new BindingSource(OrdBindingList, null);
+            Gridview_OrderList.DataSource = source;
+        }
+
+        public void FolderWatcherFoundOrder(bool incOrd_Visable)//called by new fle in watched folder
+        {
+            if (lbl_RcvOrder.InvokeRequired)
+            {
+                dToggleIncOrdLbl d = new dToggleIncOrdLbl(ToggleIncOrdLbl);
+                Invoke(d, new object[] { incOrd_Visable });
+            }
+            else
+            {
+                ToggleIncOrdLbl(incOrd_Visable);
+            }
+            
         }
 
         private void makeLables()
@@ -91,7 +134,7 @@ namespace Hots
             }
         }
 
-        private void fillFormFromSettings()
+        private void fillOSFormFromSettings()
         {
             txtBox_WchRoot.Text = set.WchRoot;
             bindingList = new BindingList<OrderSystem>(set.ListOrdSys);
@@ -101,7 +144,7 @@ namespace Hots
 
         private void but_StartWatch_Click(object sender, EventArgs e)
         {
-            fw = new FolderWatcher(set.WchRoot);
+            fw = new FolderWatcher(set.WchRoot, this);
             if (but_StartWatch.Text == "Start Watch")
             {
                 fw.StartWatching();
@@ -116,7 +159,7 @@ namespace Hots
 
         private void frm_UpdOrdSys_FormClosed(object sender, FormClosedEventArgs e)
         {
-            fillFormFromSettings();
+            fillOSFormFromSettings();
             checkPaths();
         }
 
@@ -142,6 +185,13 @@ namespace Hots
                 checkPaths();
 
             }
+        }
+
+        private void but_GetOrders_Click(object sender, EventArgs e)
+        {
+            DataTable dt = LData.GetShortOrderList("new", "Web");
+            Gridview_OrderList.DataSource = dt;
+            Gridview_OrderList.Columns["Sql Id"].Visible = false;
         }
     }
 }

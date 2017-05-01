@@ -10,9 +10,12 @@ namespace Hots
     public class Order
     {
         public uint mysqlId { get; set; }
+        public string OrdStatus { get; set; }
+        public  OrderSystem OrdSys { get; set; }
         public string HiteId { get; set; }
         public string AlternateId { get; set; }
         public DateTime TimeIn { get; set; }
+        public DateTime TimeDue { get; set; }
         public Decimal PreTaxTotal { get; set; }
         public string PromoCode { get; set; }
         public Decimal DiscAmount { get; set; }
@@ -22,8 +25,9 @@ namespace Hots
         public string LabLabel { get; set; }
         public string Catalog { get; set; }
         public string Fullfillment { get; set; }
+        public string OrdLocation { get; set; }
+        
         public string ServiceTime { get; set; }
-        public string OrderSystem { get; set; }
         public string Products { get; set; }
 
         public string CusId { get; set; }
@@ -64,7 +68,7 @@ namespace Hots
         public List<OrderItems> ItemsList { get; set; }
         public List<OrderOptions> OrderOptionsList { get; set; }
 
-        public List<string> MakeListFromFile(string _path)
+        private List<string> MakeListFromFile(string _path)
         {
             List<string> readFileList = new List<string>();
 
@@ -77,6 +81,14 @@ namespace Hots
                 }
             }
             return readFileList;
+        }
+
+        public static void ProcessNewOrder(string _filePath)
+        {
+            var newOrder = new Order();
+            newOrder.OrdSys = OrderSystem.GetOrdSysByInputFolder(_filePath);
+            newOrder = newOrder.OrdSys.ReadIncomingOrderFile(newOrder, _filePath);
+            LData.SaveOrdertoSqlServer(newOrder, "Web");
         }
     }
 
@@ -168,5 +180,30 @@ namespace Hots
         public string PayCCNumber { get; set; }
         public string PayCCcvv { get; set; }
         public string PayCCExp { get; set; }
+    }
+
+    public class ListofOrders
+    {
+        public static List<Order> instance;
+
+        protected ListofOrders()
+        {
+        }
+
+        public static List<Order> GetOrderList()
+        {
+            if (instance == null)
+            {
+                instance = new List<Order>();
+            }
+            return instance;
+        }
+
+        public static List<Order> AddOrdertoList(Order _newOrder)
+        {
+            instance = GetOrderList();
+            instance.Add(_newOrder);
+            return instance;
+        }
     }
 }

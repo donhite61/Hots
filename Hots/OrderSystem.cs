@@ -21,28 +21,45 @@ namespace Hots
         public string WaitFile { get; set; }
         public bool WaitIsFldr { get; set; }
 
-        internal static OrderSystem GetOrdSysByInputFolder(string filePath)
+        public static OrderSystem GetOrdSysByInputFolder(string _filePath)
         {
             Settings set = Settings.GetSettings();
             OrderSystem OrdSys = null;
-            if (filePath.ToUpper().Contains(set.ListOrdSys[0].WatchFldr.ToUpper()))
+            if (_filePath.ToUpper().Contains(set.ListOrdSys[0].WatchFldr.ToUpper()))
             {
                 OrdSys = new OrdSysRoes();
             }
-            else if (filePath.ToUpper().Contains(set.ListOrdSys[1].WatchFldr.ToUpper()))
+            else if (_filePath.ToUpper().Contains(set.ListOrdSys[1].WatchFldr.ToUpper()))
             {
                 OrdSys = new OrdSysDakis();
             }
-            else if (filePath.ToUpper().Contains(set.ListOrdSys[2].WatchFldr.ToUpper()))
+            else if (_filePath.ToUpper().Contains(set.ListOrdSys[2].WatchFldr.ToUpper()))
             {
                 OrdSys = new OrdSysDGift();
             }
             return OrdSys;
         }
 
-        public abstract Order ReadIncomingOrderFile(string filename);
+        internal List<string> MakeListFromFile(string _filePath)
+        {
+            var newRoesfile = _filePath;
+            List<string> lines = new List<string>();
+
+            using (StreamReader sr = new StreamReader(newRoesfile))
+            {
+                string line;
+                while ((line = sr.ReadLine()) != null)
+                {
+                    lines.Add(line);
+                }
+            }
+            return lines;
+        }
+
+        public abstract Order ReadIncomingOrderFile(Order _newOrder, string filename);
     }
 
+ #region Roes Order System
     public class OrdSysRoes : OrderSystem
     {
         int i;
@@ -59,46 +76,54 @@ namespace Hots
             WaitIsFldr = true;
         }
 
-        public override Order ReadIncomingOrderFile(string _filePath)
+        public override Order ReadIncomingOrderFile(Order _order, string _filePath)
         {
-            var newOrder = new Order();
             i = 0;
-            newOrder.FileLineList = newOrder.MakeListFromFile(_filePath);
+            _order.FileLineList = MakeListFromFile(_filePath);
+            _order.OrdStatus = "new";
+            while (_order.FileLineList[i] != "</Order>")
             {
-                newOrder.FileLineList = MakeListForFile(_filePath);
-                while (newOrder.FileLineList[i] != "</Order>")
+                switch (_order.FileLineList[i])
                 {
-                    switch (newOrder.FileLineList[i])
-                    {
-                        case "<Order Info>":
-                            newOrder = fillOrderInfo(newOrder);
-                            break;
-                        case "<Customer>":
-                            newOrder = fillCustomerInfo(newOrder);
-                            break;
-                        case "<Billing>":
-                            newOrder = fillBillingInfo(newOrder);
-                            break;
-                        case "<Shipping>":
-                            newOrder = fillShippingInfo(newOrder);
-                            break;
-                        case "<Payment>":
-                            newOrder = fillPaymentInfo(newOrder);
-                            break;
-                        case "<OrderItems>":
-                            newOrder.ItemsList = fillOrderItems(newOrder);
-                            newOrder.ItemsList = addUpIdenticalItems(newOrder.ItemsList);
-                            break;
-                        case "<OrderOptions>":
-                            newOrder.OrderOptionsList = fillOrderOptions(newOrder);
-                            break;
-                        default:
-                            break;
-                    }
-                    i++;
+                    case "<Order Info>":
+                        _order = fillOrderInfo(_order);
+                        break;
+                    case "<Customer>":
+                        _order = fillCustomerInfo(_order);
+                        break;
+                    case "<Billing>":
+                        _order = fillBillingInfo(_order);
+                        break;
+                    case "<Shipping>":
+                        _order = fillShippingInfo(_order);
+                        break;
+                    case "<Payment>":
+                        _order = fillPaymentInfo(_order);
+                        break;
+                    case "<OrderItems>":
+                        _order.ItemsList = fillOrderItems(_order);
+                        _order.ItemsList = addUpIdenticalItems(_order.ItemsList);
+                        _order.Products = makeTextFieldFromItemsList(_order.ItemsList);
+                        break;
+                    case "<OrderOptions>":
+                        _order.OrderOptionsList = fillOrderOptions(_order);
+                        break;
+                    default:
+                        break;
                 }
+                i++;
             }
-            return newOrder;
+            return _order;
+        }
+
+        private string makeTextFieldFromItemsList(List<OrderItems> itemsList)
+        {
+            string prodField = "";
+            foreach (var item in itemsList)
+            {
+                prodField = (prodField == "") ? item.ItemCode : prodField + "," + item.ItemCode;
+            }
+            return prodField;
         }
 
         private Order fillOrderInfo(Order _newOrder)
@@ -447,23 +472,10 @@ namespace Hots
             return list;
         }
 
-        private List<string> MakeListForFile(string _filePath)
-        {
-            var newRoesfile = _filePath;
-            List<string> lines = new List<string>();
-
-            using (StreamReader sr = new StreamReader(newRoesfile))
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    lines.Add(line);
-                }
-            }
-            return lines;
-        }
     }
+ #endregion Roes Order System
 
+ #region Dakis Order System
     public class OrdSysDakis : OrderSystem
     {
         public OrdSysDakis()
@@ -479,13 +491,12 @@ namespace Hots
             WaitIsFldr = false;
         }
 
-        public override Order ReadIncomingOrderFile(string filename)
+        public override Order ReadIncomingOrderFile(Order _order, string _filePath)
         {
-            var NewOrder = new Order();
-
-            return NewOrder;
+            return _order;
         }
     }
+#endregion
 
     public class OrdSysDGift : OrderSystem
     {
@@ -502,11 +513,9 @@ namespace Hots
             WaitIsFldr = false;
         }
 
-        public override Order ReadIncomingOrderFile(string filename)
+        public override Order ReadIncomingOrderFile(Order order, string _filePath)
         {
-            var NewOrder = new Order();
-
-            return NewOrder;
+            return order;
         }
     }
 }
