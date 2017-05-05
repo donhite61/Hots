@@ -32,16 +32,15 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tab_NewOrders = new System.Windows.Forms.TabPage();
             this.tab_OrdSys = new System.Windows.Forms.TabPage();
-            this.Gridview_OS = new System.Windows.Forms.DataGridView();
             this.but_SetWchGen = new System.Windows.Forms.Button();
             this.txtBox_WchRoot = new System.Windows.Forms.TextBox();
             this.lbl_RcvOrder = new System.Windows.Forms.Label();
-            this.Gridview_OrderList = new System.Windows.Forms.DataGridView();
+            this.Gridview_OS = new System.Windows.Forms.DataGridView();
+            this.txtBox_Log = new System.Windows.Forms.TextBox();
             this.tabControl1.SuspendLayout();
             this.tab_NewOrders.SuspendLayout();
             this.tab_OrdSys.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Gridview_OS)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Gridview_OrderList)).BeginInit();
             this.SuspendLayout();
             // 
             // but_StartWatch
@@ -60,7 +59,7 @@
             this.tabControl1.Controls.Add(this.tab_NewOrders);
             this.tabControl1.Controls.Add(this.tab_OrdSys);
             this.tabControl1.Location = new System.Drawing.Point(11, 39);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(1291, 389);
@@ -68,11 +67,11 @@
             // 
             // tab_NewOrders
             // 
-            this.tab_NewOrders.Controls.Add(this.Gridview_OrderList);
+            this.tab_NewOrders.Controls.Add(this.txtBox_Log);
             this.tab_NewOrders.Location = new System.Drawing.Point(4, 25);
-            this.tab_NewOrders.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tab_NewOrders.Margin = new System.Windows.Forms.Padding(4);
             this.tab_NewOrders.Name = "tab_NewOrders";
-            this.tab_NewOrders.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.tab_NewOrders.Padding = new System.Windows.Forms.Padding(4);
             this.tab_NewOrders.Size = new System.Drawing.Size(1283, 360);
             this.tab_NewOrders.TabIndex = 0;
             this.tab_NewOrders.Text = "New Orders";
@@ -92,25 +91,10 @@
             this.tab_OrdSys.Text = "Order Systems";
             this.tab_OrdSys.UseVisualStyleBackColor = true;
             // 
-            // Gridview_OS
-            // 
-            this.Gridview_OS.AllowUserToAddRows = false;
-            this.Gridview_OS.AllowUserToDeleteRows = false;
-            this.Gridview_OS.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Gridview_OS.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.Gridview_OS.Location = new System.Drawing.Point(11, 69);
-            this.Gridview_OS.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.Gridview_OS.Name = "Gridview_OS";
-            this.Gridview_OS.ReadOnly = true;
-            this.Gridview_OS.ShowEditingIcon = false;
-            this.Gridview_OS.Size = new System.Drawing.Size(1259, 226);
-            this.Gridview_OS.TabIndex = 20;
-            this.Gridview_OS.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ordSysGrid_DblClicked);
-            // 
             // but_SetWchGen
             // 
             this.but_SetWchGen.Location = new System.Drawing.Point(21, 30);
-            this.but_SetWchGen.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.but_SetWchGen.Margin = new System.Windows.Forms.Padding(4);
             this.but_SetWchGen.Name = "but_SetWchGen";
             this.but_SetWchGen.Size = new System.Drawing.Size(139, 33);
             this.but_SetWchGen.TabIndex = 18;
@@ -121,7 +105,7 @@
             // txtBox_WchRoot
             // 
             this.txtBox_WchRoot.Location = new System.Drawing.Point(172, 33);
-            this.txtBox_WchRoot.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtBox_WchRoot.Margin = new System.Windows.Forms.Padding(4);
             this.txtBox_WchRoot.Name = "txtBox_WchRoot";
             this.txtBox_WchRoot.ReadOnly = true;
             this.txtBox_WchRoot.Size = new System.Drawing.Size(649, 22);
@@ -139,15 +123,29 @@
             this.lbl_RcvOrder.Text = "Rcv Order";
             this.lbl_RcvOrder.Visible = false;
             // 
-            // Gridview_OrderList
+            // Gridview_OS
             // 
-            this.Gridview_OrderList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.Gridview_OrderList.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Gridview_OrderList.Location = new System.Drawing.Point(4, 4);
-            this.Gridview_OrderList.Name = "Gridview_OrderList";
-            this.Gridview_OrderList.RowTemplate.Height = 24;
-            this.Gridview_OrderList.Size = new System.Drawing.Size(1275, 352);
-            this.Gridview_OrderList.TabIndex = 0;
+            this.Gridview_OS.AllowUserToAddRows = false;
+            this.Gridview_OS.AllowUserToDeleteRows = false;
+            this.Gridview_OS.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.Gridview_OS.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.Gridview_OS.Location = new System.Drawing.Point(11, 69);
+            this.Gridview_OS.Margin = new System.Windows.Forms.Padding(4);
+            this.Gridview_OS.Name = "Gridview_OS";
+            this.Gridview_OS.ReadOnly = true;
+            this.Gridview_OS.ShowEditingIcon = false;
+            this.Gridview_OS.Size = new System.Drawing.Size(1259, 226);
+            this.Gridview_OS.TabIndex = 20;
+            this.Gridview_OS.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.ordSysGrid_DblClicked);
+            // 
+            // txtBox_Log
+            // 
+            this.txtBox_Log.Location = new System.Drawing.Point(15, 16);
+            this.txtBox_Log.Multiline = true;
+            this.txtBox_Log.Name = "txtBox_Log";
+            this.txtBox_Log.ReadOnly = true;
+            this.txtBox_Log.Size = new System.Drawing.Size(549, 333);
+            this.txtBox_Log.TabIndex = 0;
             // 
             // Form1
             // 
@@ -163,10 +161,10 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tab_NewOrders.ResumeLayout(false);
+            this.tab_NewOrders.PerformLayout();
             this.tab_OrdSys.ResumeLayout(false);
             this.tab_OrdSys.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.Gridview_OS)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.Gridview_OrderList)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -180,9 +178,9 @@
         private System.Windows.Forms.TabPage tab_OrdSys;
         private System.Windows.Forms.Button but_SetWchGen;
         private System.Windows.Forms.TextBox txtBox_WchRoot;
-        private System.Windows.Forms.DataGridView Gridview_OS;
         private System.Windows.Forms.Label lbl_RcvOrder;
-        private System.Windows.Forms.DataGridView Gridview_OrderList;
+        private System.Windows.Forms.TextBox txtBox_Log;
+        private System.Windows.Forms.DataGridView Gridview_OS;
     }
 }
 

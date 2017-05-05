@@ -47,6 +47,7 @@ namespace Hots
             Set.ListOrdSys[index].WaitFile = txtBox_WaitForFile.Text;
             Set.ListOrdSys[index].WaitIsFldr = chkBox_WaitFileIsFldr.Checked;
             Set.SaveSettings();
+
             Close();
         }
 

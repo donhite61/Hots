@@ -13,12 +13,10 @@ namespace Hots
 {
     public partial class Form1 : Form
     {
-        Label[] oSIlable;
-        BindingList<OrderSystem> bindingList;
+        Label[] osIlabels;
+        BindingList<OrderSystem> osBindingList;
         public FolderWatcher fw;
-        FolderBrowserDialog fDB = new FolderBrowserDialog();
-        public frm_UpdOrdSys frm_UpdOrdSys;
-        delegate void showReceivingOrder(string text, Color color);
+        delegate void UpdateStausWindowDelegate(string text);
 
         public Form1()
         {
@@ -27,48 +25,53 @@ namespace Hots
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            addToLog("Hots order uploader started");
             Set.LoadSettings();
             makeLables();
             fillOSFormFromSettings();
+            addToLog("Local settings loaded");
             checkPaths();
+            addToLog("Local paths checked\r\n");
         }
 
-        private void changeStatusText(string text, Color color)// called by FolderWatcherFoundOrder
+        public void UpdateStatusWindow(string text)
         {
-            lbl_RcvOrder.Text = text;
-            lbl_RcvOrder.ForeColor = color;
-            this.Refresh();
+            if (txtBox_Log.InvokeRequired)
+            {
+                var d = new UpdateStausWindowDelegate(addToLog);
+                Invoke(d, new object[] { text });
+            }
+            else
+            {
+                addToLog(text);
+            }
+        }//called by new fle in watched folder
+
+        private void addToLog(string text)// called by FolderWatcherFoundOrder
+        {
+            if (txtBox_Log.Lines.Length > 500)
+            {
+                txtBox_Log.Lines = txtBox_Log.Lines.Skip(txtBox_Log.Lines.Length - 500).ToArray();
+            }
+            txtBox_Log.AppendText(DateTime.Now.ToString("MM/dd h:mm:ss tt  ") + text + "\r\n");
         }
 
         public void fillOrderGridviewfromList(DataTable dt)
         {
             var source = new BindingSource(dt, null);
-            Gridview_OrderList.DataSource = source;
+           // Gridview_OrderList.DataSource = source;
         }
-
-        public void FolderWatcherFoundOrder(string text, Color color)
-        {
-            if (lbl_RcvOrder.InvokeRequired)
-            {
-                showReceivingOrder d = new showReceivingOrder(changeStatusText);
-                Invoke(d, new object[] {text, color });
-            }
-            else
-            {
-                changeStatusText(text, color);
-            }
-        }//called by new fle in watched folder
 
         private void makeLables()
         {
-            oSIlable = new Label[Set.ListOrdSys.Count];
+            osIlabels = new Label[Set.ListOrdSys.Count];
             for (int i = 0; i < Set.ListOrdSys.Count; i++)
             {
-                oSIlable[i] = new Label();
-                oSIlable[i].Text = Set.ListOrdSys[i].Name;
-                oSIlable[i].Visible = true;
-                oSIlable[i].Location = new Point(100 + (i * 100), 8);
-                Controls.Add(oSIlable[i]);
+                osIlabels[i] = new Label();
+                osIlabels[i].Text = Set.ListOrdSys[i].Name;
+                osIlabels[i].Visible = true;
+                osIlabels[i].Location = new Point(100 + (i * 100), 8);
+                Controls.Add(osIlabels[i]);
             }
         }
 
@@ -108,11 +111,11 @@ namespace Hots
 
                     if (Set.ListOrdSys[i].Active == true)
                     {
-                        oSIlable[i].ForeColor = Color.Green;
+                        osIlabels[i].ForeColor = Color.Green;
                     }
                     else
                     {
-                        oSIlable[i].ForeColor = Color.LightGray;
+                        osIlabels[i].ForeColor = Color.LightGray;
                     }
                 }
             }
@@ -121,8 +124,8 @@ namespace Hots
         private void fillOSFormFromSettings()
         {
             txtBox_WchRoot.Text = Set.WchRoot;
-            bindingList = new BindingList<OrderSystem>(Set.ListOrdSys);
-            var source = new BindingSource(bindingList, null);
+            osBindingList = new BindingList<OrderSystem>(Set.ListOrdSys);
+            var source = new BindingSource(osBindingList, null);
             Gridview_OS.DataSource = source;
         }
 
@@ -133,11 +136,13 @@ namespace Hots
             {
                 fw.StartWatching();
                 but_StartWatch.Text = "Stop Watch";
+                addToLog("Folder watch started");
             }
             else
             {
                 fw.StopWatching();
                 but_StartWatch.Text = "Start Watch";
+                addToLog("Folder watch stopped");
             }
         }
 

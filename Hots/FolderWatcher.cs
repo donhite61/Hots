@@ -21,14 +21,12 @@ namespace Hots
 
         void bWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            form.FolderWatcherFoundOrder("New order added", System.Drawing.Color.Gray);
             processOrder();
         }
 
-        void m_oWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        void bWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-          //  progressBar1.Value = e.ProgressPercentage;
-          //  lblStatus.Text = "Processing......" + progressBar1.Value.ToString() + "%";
+            form.UpdateStatusWindow(e.UserState as String);
         }
 
         void bWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -36,12 +34,16 @@ namespace Hots
             var orderQueue = (Queue<string>)e.Argument;
             foreach (string ordPath in orderQueue)
             {
-                form.FolderWatcherFoundOrder("Receiving Order", System.Drawing.Color.Green);
+                string[] words = ordPath.Split('\\');
+                var ordName = words[words.Length - 1];
+                bWorker.ReportProgress(1, ordName + "  Found");
                 if (FileIsReady(ordPath))
                 {
                     var newOrder = new Order(ordPath);
                     newOrder = newOrder.FillProperties(newOrder, ordPath);
+                    bWorker.ReportProgress(1, ordName + "  Read");
                     LData.SaveOrdertoSqlServer(newOrder);
+                    bWorker.ReportProgress(1, ordName + "  Uploaded\r\n");
                 }
             }
         }
@@ -52,6 +54,8 @@ namespace Hots
         {
             bWorker = new BackgroundWorker();
             bWorker.DoWork += new DoWorkEventHandler(bWorker_DoWork);
+            bWorker.ProgressChanged += new ProgressChangedEventHandler(bWorker_ProgressChanged);
+            bWorker.WorkerReportsProgress = true;
             bWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bWorker_RunWorkerCompleted);
 
             form = _form;
@@ -101,7 +105,7 @@ namespace Hots
             }
         }
 
-            private static bool FileIsReady(string path)
+        private static bool FileIsReady(string path)
         {
             var fileIdle = false;
             const int MaximumAttemptsAllowed = 30;
