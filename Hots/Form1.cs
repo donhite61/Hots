@@ -11,17 +11,15 @@ using System.Windows.Forms;
 
 namespace Hots
 {
-    delegate void dToggleIncOrdLbl(bool incOrd_Visable);
     public partial class Form1 : Form
     {
         Label[] oSIlable;
         Settings set = Settings.GetSettings();
         BindingList<OrderSystem> bindingList;
-        BindingList<Order> OrdBindingList;
         public FolderWatcher fw;
         FolderBrowserDialog fDB = new FolderBrowserDialog();
         public frm_UpdOrdSys frm_UpdOrdSys;
-        private delegate void showReceivingOrder(bool _status);
+        delegate void showReceivingOrder(string text, Color color);
 
         public Form1()
         {
@@ -35,45 +33,31 @@ namespace Hots
             checkPaths();
         }
 
-        private void ToggleIncOrdLbl(bool incOrd_Visable)// called by FolderWatcherFoundOrder
+        private void changeStatusText(string text, Color color)// called by FolderWatcherFoundOrder
         {
-            lbl_RcvOrder.Visible = incOrd_Visable;
-            if (!incOrd_Visable)
-            {
-                DataTable dt = LData.GetShortOrderList("new", "Web");
-                Gridview_OrderList.DataSource = dt;
-                Gridview_OrderList.Columns["Sql Id"].Visible = false;
-            }
-
+            lbl_RcvOrder.Text = text;
+            lbl_RcvOrder.ForeColor = color;
             this.Refresh();
         }
 
-        private void addNewOrdertoNewOrdList(Order _newOrder)
+        public void fillOrderGridviewfromList(DataTable dt)
         {
-            var list = ListofOrders.AddOrdertoList(_newOrder);
-            fillOrderGridviewfromList(list);
-        }
-
-        private void fillOrderGridviewfromList(List<Order> _list)
-        {
-            OrdBindingList = new BindingList<Order>(_list);
-            var source = new BindingSource(OrdBindingList, null);
+            var source = new BindingSource(dt, null);
             Gridview_OrderList.DataSource = source;
         }
 
-        public void FolderWatcherFoundOrder(bool incOrd_Visable)//called by new fle in watched folder
+        public void FolderWatcherFoundOrder(string text, Color color)
         {
             if (lbl_RcvOrder.InvokeRequired)
             {
-                dToggleIncOrdLbl d = new dToggleIncOrdLbl(ToggleIncOrdLbl);
-                Invoke(d, new object[] { incOrd_Visable });
+                showReceivingOrder d = new showReceivingOrder(changeStatusText);
+                Invoke(d, new object[] {text, color });
             }
             else
             {
-                ToggleIncOrdLbl(incOrd_Visable);
+                changeStatusText(text, color);
             }
-            
-        }
+        }//called by new fle in watched folder
 
         private void makeLables()
         {
@@ -185,13 +169,6 @@ namespace Hots
                 checkPaths();
 
             }
-        }
-
-        private void but_GetOrders_Click(object sender, EventArgs e)
-        {
-            DataTable dt = LData.GetShortOrderList("new", "Web");
-            Gridview_OrderList.DataSource = dt;
-            Gridview_OrderList.Columns["Sql Id"].Visible = false;
         }
     }
 }

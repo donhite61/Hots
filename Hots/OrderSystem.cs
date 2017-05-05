@@ -57,6 +57,14 @@ namespace Hots
         }
 
         public abstract Order ReadIncomingOrderFile(Order _newOrder, string filename);
+
+        enum OrdSysName
+        {
+            Roes,
+            Dakis,
+            DGift,
+            PrntWizrd
+        }
     }
 
  #region Roes Order System
@@ -80,7 +88,6 @@ namespace Hots
         {
             i = 0;
             _order.FileLineList = MakeListFromFile(_filePath);
-            _order.OrdStatus = "new";
             while (_order.FileLineList[i] != "</Order>")
             {
                 switch (_order.FileLineList[i])
@@ -103,7 +110,6 @@ namespace Hots
                     case "<OrderItems>":
                         _order.ItemsList = fillOrderItems(_order);
                         _order.ItemsList = addUpIdenticalItems(_order.ItemsList);
-                        _order.Products = makeTextFieldFromItemsList(_order.ItemsList);
                         break;
                     case "<OrderOptions>":
                         _order.OrderOptionsList = fillOrderOptions(_order);
@@ -114,16 +120,6 @@ namespace Hots
                 i++;
             }
             return _order;
-        }
-
-        private string makeTextFieldFromItemsList(List<OrderItems> itemsList)
-        {
-            string prodField = "";
-            foreach (var item in itemsList)
-            {
-                prodField = (prodField == "") ? item.ItemCode : prodField + "," + item.ItemCode;
-            }
-            return prodField;
         }
 
         private Order fillOrderInfo(Order _newOrder)

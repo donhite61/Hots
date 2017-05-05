@@ -18,6 +18,7 @@ Order System
 &lt;List&gt; Order Options
 --
 Get Order System
+--
 Read Order File
 
 
@@ -216,7 +217,7 @@ Create New Order
       <w>90</w>
       <h>30</h>
     </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <panel_attributes>lt=&lt;&lt;-&gt;&gt;</panel_attributes>
     <additional_attributes>70.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>

@@ -83,12 +83,15 @@ namespace Hots
             return readFileList;
         }
 
-        public static void ProcessNewOrder(string _filePath)
+        public Order(string _filePath)
         {
-            var newOrder = new Order();
-            newOrder.OrdSys = OrderSystem.GetOrdSysByInputFolder(_filePath);
-            newOrder = newOrder.OrdSys.ReadIncomingOrderFile(newOrder, _filePath);
-            LData.SaveOrdertoSqlServer(newOrder, "Web");
+            OrdSys = OrderSystem.GetOrdSysByInputFolder(_filePath);
+            OrdStatus = "new";
+        }
+
+        public Order FillProperties(Order _ord, string _filePath)
+        {
+            return _ord.OrdSys.ReadIncomingOrderFile(_ord, _filePath);
         }
     }
 
@@ -182,28 +185,4 @@ namespace Hots
         public string PayCCExp { get; set; }
     }
 
-    public class ListofOrders
-    {
-        public static List<Order> instance;
-
-        protected ListofOrders()
-        {
-        }
-
-        public static List<Order> GetOrderList()
-        {
-            if (instance == null)
-            {
-                instance = new List<Order>();
-            }
-            return instance;
-        }
-
-        public static List<Order> AddOrdertoList(Order _newOrder)
-        {
-            instance = GetOrderList();
-            instance.Add(_newOrder);
-            return instance;
-        }
-    }
 }

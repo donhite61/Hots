@@ -11,20 +11,19 @@ namespace Hots
 {
     class LData
     {
-        private static string ConnString;
+        private string ConnString;
         public LData(string source)
         {
+            if (source == "Local")
+                ConnString = "server=localhost;user=root;database=hots;port=3306;password=6716;";
+
+            if (source == "Web")
+                ConnString = "server=69.89.31.188;user=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;";
         }
 
 #region Save Order
-        public static UInt32 SaveOrdertoSqlServer(Order _fl, string _source)
+        public UInt32 SaveOrdertoSqlServer(Order _fl)
         {
-            if (_source == "Local")
-                ConnString = "server=localhost;user=root;database=hots;port=3306;password=6716;";
-
-            if (_source == "Web")
-                ConnString = "server=69.89.31.188;user=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;";
-
             string sql;
             {
                 sql = "INSERT INTO orderheaders " +
@@ -115,7 +114,7 @@ namespace Hots
             }
         }
 
-        private static void SaveNewOrderItems(uint mySqlId, Order _fl)
+        private void SaveNewOrderItems(uint mySqlId, Order _fl)
         {
             using (var conn = new MySqlConnection(ConnString))
             {
@@ -144,7 +143,7 @@ namespace Hots
             
         }
 
-        private static void SaveNewOrderItemOptions(uint mySqlId, OrderItems item)
+        private void SaveNewOrderItemOptions(uint mySqlId, OrderItems item)
         {
             using (var conn = new MySqlConnection(ConnString))
             {
@@ -168,7 +167,7 @@ namespace Hots
             }
         }
 
-        private static void SaveNewOrderOptions(uint mySqlId, List<OrderOptions> options)
+        private void SaveNewOrderOptions(uint mySqlId, List<OrderOptions> options)
         {
             using (var conn = new MySqlConnection(ConnString))
             {
@@ -195,18 +194,12 @@ namespace Hots
         #endregion Save Order
 
         #region Get Orders
-        public static DataTable GetShortOrderList(string _status, string _source)
+        public DataTable GetShortOrderList(string _status)
         {
-            if (_source == "Local")
-                ConnString = "server=localhost;user=root;database=hots;port=3306;password=6716;";
-
-            if (_source == "Web")
-                ConnString = "server=69.89.31.188;user=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;";
-
-            string sql = "select Ord_MySqlId, Ord_HiteId, Ord_CusName, Ord_TimeDue, Ord_OrdStatus, " +
-                         "Ord_Location, Ord_ShipMethod, Ord_TimeIn, Ord_Products FROM orderheaders";
-            sql = sql + " where Ord_OrdStatus = '" + _status + "'";
-            sql = sql + " ORDER BY Ord_HiteId";
+            string sql = "select Ord_HiteId,Ord_TimeIn,Ord_Location " +
+                         "Ord_CusName,Ord_TimeDue, Ord_Products, Ord_ShipMethod";
+          //  sql = sql + " Where Ord_OrdStatus = " + _status;
+          //  sql = sql + " ORDER BY Ord_HiteId";
 
             DataTable ordtable = new DataTable();
             using (var conn = new MySqlConnection(ConnString))
@@ -219,15 +212,16 @@ namespace Hots
                 }
             }
 
-            ordtable.Columns["Ord_MySqlId"].ColumnName = "Sql Id";
+            ordtable.Columns["Ord_OrdStatus"].ColumnName = "Status";
             ordtable.Columns["Ord_HiteId"].ColumnName = "Order#";
+            ordtable.Columns["Ord_TimeIn"].ColumnName = "Time In";
             ordtable.Columns["Ord_CusName"].ColumnName = "Name";
             ordtable.Columns["Ord_TimeDue"].ColumnName = "Due";
-            ordtable.Columns["Ord_OrdStatus"].ColumnName = "Status";
+            ordtable.Columns["Ord_Products"].ColumnName = "Products";
             ordtable.Columns["Ord_Location"].ColumnName = "Location";
             ordtable.Columns["Ord_ShipMethod"].ColumnName = "Pickup";
-            ordtable.Columns["Ord_TimeIn"].ColumnName = "Time In";
-            ordtable.Columns["Ord_Products"].ColumnName = "Products";
+            ordtable.Columns["strPhone"].ColumnName = "Phone";
+            ordtable.Columns["strInactive"].ColumnName = "Inactive";
             return ordtable;
         }
         #endregion Get Orders
