@@ -41,8 +41,7 @@ namespace Hots
                 {
                     var newOrder = new Order(ordPath);
                     newOrder = newOrder.FillProperties(newOrder, ordPath);
-                    var DB = new LData("Web");
-                    DB.SaveOrdertoSqlServer(newOrder);
+                    LData.SaveOrdertoSqlServer(newOrder);
                 }
             }
         }

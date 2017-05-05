@@ -14,7 +14,6 @@ namespace Hots
     public partial class frm_UpdOrdSys : Form
     {
         int index;
-        Settings Set = Settings.GetSettings();
         FolderBrowserDialog fb = new FolderBrowserDialog();
 
         public frm_UpdOrdSys(DataGridViewRow _selectedRow)
@@ -47,7 +46,7 @@ namespace Hots
             Set.ListOrdSys[index].PrdSubFldr = txtBox_ProdSubFldr.Text;
             Set.ListOrdSys[index].WaitFile = txtBox_WaitForFile.Text;
             Set.ListOrdSys[index].WaitIsFldr = chkBox_WaitFileIsFldr.Checked;
-            Settings.SaveSettings(Set);
+            Set.SaveSettings();
             Close();
         }
 

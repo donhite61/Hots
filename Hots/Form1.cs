@@ -14,7 +14,6 @@ namespace Hots
     public partial class Form1 : Form
     {
         Label[] oSIlable;
-        Settings set = Settings.GetSettings();
         BindingList<OrderSystem> bindingList;
         public FolderWatcher fw;
         FolderBrowserDialog fDB = new FolderBrowserDialog();
@@ -28,6 +27,7 @@ namespace Hots
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            Set.LoadSettings();
             makeLables();
             fillOSFormFromSettings();
             checkPaths();
@@ -61,11 +61,11 @@ namespace Hots
 
         private void makeLables()
         {
-            oSIlable = new Label[set.ListOrdSys.Count];
-            for (int i = 0; i < set.ListOrdSys.Count; i++)
+            oSIlable = new Label[Set.ListOrdSys.Count];
+            for (int i = 0; i < Set.ListOrdSys.Count; i++)
             {
                 oSIlable[i] = new Label();
-                oSIlable[i].Text = set.ListOrdSys[i].Name;
+                oSIlable[i].Text = Set.ListOrdSys[i].Name;
                 oSIlable[i].Visible = true;
                 oSIlable[i].Location = new Point(100 + (i * 100), 8);
                 Controls.Add(oSIlable[i]);
@@ -74,7 +74,7 @@ namespace Hots
 
         private void checkPaths()
         {
-            if (!Directory.Exists(set.WchRoot))
+            if (!Directory.Exists(Set.WchRoot))
             {
                 txtBox_WchRoot.BackColor = Color.Pink;
                 Gridview_OS.Visible = false;
@@ -83,30 +83,30 @@ namespace Hots
             {
                 txtBox_WchRoot.BackColor = Color.White;
                 Gridview_OS.Visible = true;
-                for (int i = 0; i < set.ListOrdSys.Count; i++)
+                for (int i = 0; i < Set.ListOrdSys.Count; i++)
                 {
-                    if (set.ListOrdSys[i].Active == true)
+                    if (Set.ListOrdSys[i].Active == true)
                     {
-                        if (!set.ListOrdSys[i].WatchFldr.ToUpper().Contains(txtBox_WchRoot.Text.ToUpper()) ||
-                            !Directory.Exists(set.ListOrdSys[i].WatchFldr))
+                        if (!Set.ListOrdSys[i].WatchFldr.ToUpper().Contains(txtBox_WchRoot.Text.ToUpper()) ||
+                            !Directory.Exists(Set.ListOrdSys[i].WatchFldr))
                         {
-                            set.ListOrdSys[i].Active = false;
+                            Set.ListOrdSys[i].Active = false;
                             Gridview_OS.Rows[i].Cells[2].Style.BackColor = Color.Pink;
                             Gridview_OS.Rows[i].Cells[2].Value = "Folder must exist inside 'watched root' folder";
                         }
-                        if (!Directory.Exists(set.ListOrdSys[i].ReadFld))
+                        if (!Directory.Exists(Set.ListOrdSys[i].ReadFld))
                         {
-                            set.ListOrdSys[i].Active = false;
+                            Set.ListOrdSys[i].Active = false;
                             Gridview_OS.Rows[i].Cells[4].Style.BackColor = Color.Pink;
                         }
-                        if (!Directory.Exists(set.ListOrdSys[i].OutFldr))
+                        if (!Directory.Exists(Set.ListOrdSys[i].OutFldr))
                         {
-                            set.ListOrdSys[i].Active = false;
+                            Set.ListOrdSys[i].Active = false;
                             Gridview_OS.Rows[i].Cells[5].Style.BackColor = Color.Pink;
                         }
                     }
 
-                    if (set.ListOrdSys[i].Active == true)
+                    if (Set.ListOrdSys[i].Active == true)
                     {
                         oSIlable[i].ForeColor = Color.Green;
                     }
@@ -120,15 +120,15 @@ namespace Hots
 
         private void fillOSFormFromSettings()
         {
-            txtBox_WchRoot.Text = set.WchRoot;
-            bindingList = new BindingList<OrderSystem>(set.ListOrdSys);
+            txtBox_WchRoot.Text = Set.WchRoot;
+            bindingList = new BindingList<OrderSystem>(Set.ListOrdSys);
             var source = new BindingSource(bindingList, null);
             Gridview_OS.DataSource = source;
         }
 
         private void but_StartWatch_Click(object sender, EventArgs e)
         {
-            fw = new FolderWatcher(set.WchRoot, this);
+            fw = new FolderWatcher(Set.WchRoot, this);
             if (but_StartWatch.Text == "Start Watch")
             {
                 fw.StartWatching();
@@ -165,7 +165,8 @@ namespace Hots
             if (result == DialogResult.OK && !string.IsNullOrWhiteSpace(fb.SelectedPath))
             {
                 txtBox_WchRoot.Text = fb.SelectedPath;
-                set.WchRoot = txtBox_WchRoot.Text;
+                Set.WchRoot = txtBox_WchRoot.Text;
+                Set.SaveSettings();
                 checkPaths();
 
             }

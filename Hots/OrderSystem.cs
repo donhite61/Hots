@@ -23,17 +23,16 @@ namespace Hots
 
         public static OrderSystem GetOrdSysByInputFolder(string _filePath)
         {
-            Settings set = Settings.GetSettings();
             OrderSystem OrdSys = null;
-            if (_filePath.ToUpper().Contains(set.ListOrdSys[0].WatchFldr.ToUpper()))
+            if (_filePath.ToUpper().Contains(Set.ListOrdSys[0].WatchFldr.ToUpper()))
             {
                 OrdSys = new OrdSysRoes();
             }
-            else if (_filePath.ToUpper().Contains(set.ListOrdSys[1].WatchFldr.ToUpper()))
+            else if (_filePath.ToUpper().Contains(Set.ListOrdSys[1].WatchFldr.ToUpper()))
             {
                 OrdSys = new OrdSysDakis();
             }
-            else if (_filePath.ToUpper().Contains(set.ListOrdSys[2].WatchFldr.ToUpper()))
+            else if (_filePath.ToUpper().Contains(Set.ListOrdSys[2].WatchFldr.ToUpper()))
             {
                 OrdSys = new OrdSysDGift();
             }
@@ -75,7 +74,7 @@ namespace Hots
         {
             Active = false;
             Name = "Roes";
-            WatchFldr = @"NewOrders\RoesIn";
+            WatchFldr = "";
             Ext = "pov";
             ReadFld = "";
             OutFldr = "";

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <WchRoot>C:\DonsScripts\Hots folder System\WatchedFolder\NewOrders</WchRoot>
-  <ListOrdSys>
+<Set xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <prvWchRoot>C:\DonsScripts\Hots Folder System\WatchedFolder\NewOrders</prvWchRoot>
+  <prvConnString>server=69.89.31.188;user=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;</prvConnString>
+  <prvListOrdSys>
     <OrderSystem xsi:type="OrdSysRoes">
       <Active>true</Active>
       <Name>Roes</Name>
-      <WatchFldr>C:\DonsScripts\Hots folder System\WatchedFolder\NewOrders\RoesIn</WatchFldr>
+      <WatchFldr>C:\DonsScripts\Hots Folder System\WatchedFolder\NewOrders\RoesIn</WatchFldr>
       <Ext>pov</Ext>
-      <ReadFld>C:\DonsScripts\Hots folder System\WatchedFolder\ReadOrders</ReadFld>
-      <OutFldr>C:\DonsScripts\Hots folder System\Roes Output Folder</OutFldr>
+      <ReadFld>C:\DonsScripts\Hots Folder System\WatchedFolder\ReadOrders</ReadFld>
+      <OutFldr>C:\DonsScripts\Hots Folder System\Roes Output Folder</OutFldr>
       <PrdSubFldr />
       <WaitFile>Originals</WaitFile>
       <WaitIsFldr>true</WaitIsFldr>
@@ -16,7 +17,7 @@
     <OrderSystem xsi:type="OrdSysDakis">
       <Active>false</Active>
       <Name>Dakis</Name>
-      <WatchFldr>C:\DonsScripts\Hots folder System\WatchedFolder\NewOrders\DakisIn</WatchFldr>
+      <WatchFldr>NewOrders\DakisIn</WatchFldr>
       <Ext>xml</Ext>
       <ReadFld />
       <OutFldr />
@@ -35,5 +36,5 @@
       <WaitFile>download_complete</WaitFile>
       <WaitIsFldr>false</WaitIsFldr>
     </OrderSystem>
-  </ListOrdSys>
-</Settings>
+  </prvListOrdSys>
+</Set>

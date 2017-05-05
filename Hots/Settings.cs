@@ -10,81 +10,77 @@ using System.Windows.Forms;
 namespace Hots
 {
     [Serializable]
-    public class Settings
+    public class Set
     {
-        protected static Settings instance;
-        protected static string iniFile = Directory.GetCurrentDirectory() + @"\HotsSettings.xml";
+        public static string WchRoot { get; set; }
+        public static string ConnString { get; set; }
+        public static List<OrderSystem> ListOrdSys { get; set; }
 
-        public string WchRoot { get; set; }
-        public List<OrderSystem> ListOrdSys { get; set; }
+        public static string iniFile = Directory.GetCurrentDirectory() + @"\HotsSettings.xml";
+        public string prvWchRoot;
+        public string prvConnString;
+        public List<OrderSystem> prvListOrdSys;
 
-        protected Settings()
+        protected Set()
         {
         }
 
-        public static Settings GetSettings()
+        public static void SaveSettings()
         {
-            if (instance == null)
-            {
-                try
-                {
-                    readSettingsfromDisk();
-                }
-                catch
-                {
-                    CreateDefaultSettings();
-                }
-            }
-            return instance;
-        }
+            var instance = new Set();
+            instance.prvWchRoot = WchRoot;
+            instance.prvConnString = ConnString;
+            instance.prvListOrdSys = ListOrdSys;
 
-        public static void SaveSettings(Settings _set)
-        {
-            instance.WchRoot = _set.WchRoot;
-            for (var i=0; i< instance.ListOrdSys.Count; i++)
-            {
-                instance.ListOrdSys[i].Active = _set.ListOrdSys[i].Active;
-                instance.ListOrdSys[i].WatchFldr = _set.ListOrdSys[i].WatchFldr;
-                instance.ListOrdSys[i].Ext = _set.ListOrdSys[i].Ext;
-                instance.ListOrdSys[i].ReadFld = _set.ListOrdSys[i].ReadFld;
-                instance.ListOrdSys[i].OutFldr = _set.ListOrdSys[i].OutFldr;
-                instance.ListOrdSys[i].PrdSubFldr = _set.ListOrdSys[i].PrdSubFldr;
-                instance.ListOrdSys[i].WaitFile = _set.ListOrdSys[i].WaitFile;
-                instance.ListOrdSys[i].WaitIsFldr = _set.ListOrdSys[i].WaitIsFldr;
-            }
-            writeSettingstoDisk();
-        }
-
-        private static void CreateDefaultSettings()
-        {
-            instance = new Settings();
-            instance.ListOrdSys = new List<OrderSystem>();
-            instance.WchRoot = "";
-            var RoesOrdSys = new OrdSysRoes();
-            var DakisOrdSys = new OrdSysDakis();
-            var DGiftOrdSys = new OrdSysDGift();
-            instance.ListOrdSys.Add(RoesOrdSys);
-            instance.ListOrdSys.Add(DakisOrdSys);
-            instance.ListOrdSys.Add(DGiftOrdSys);
-            writeSettingstoDisk();
-        }
-
-        private static void writeSettingstoDisk()
-        {
-            var serializer = new XmlSerializer(typeof(Settings));
+            var serializer = new XmlSerializer(typeof(Set));
             using (var stream = new StreamWriter(iniFile))
             {
                 serializer.Serialize(stream, instance);
             }
         }
 
+        public static void LoadSettings()
+        {
+            try
+            {
+                readSettingsfromDisk();
+            }
+            catch
+            {
+                CreateDefaultSettings();
+                SaveSettings();
+            }
+        }
+
         private static void readSettingsfromDisk()
         {
-            var serializer = new XmlSerializer(typeof(Settings));
+            var serializer = new XmlSerializer(typeof(Set));
             using (var stream = new StreamReader(iniFile))
             {
-                instance = (Settings)(serializer.Deserialize(stream));
+                Set instance = (Set)(serializer.Deserialize(stream));
+                WchRoot = instance.prvWchRoot;
+                if (WchRoot == null)
+                    throw new Exception();
+                ConnString = instance.prvConnString;
+                if (ConnString == null)
+                    throw new Exception();
+                ListOrdSys = instance.prvListOrdSys;
+                if (ListOrdSys == null)
+                    throw new Exception();
             }
+        }
+
+        private static void CreateDefaultSettings()
+        {
+            ListOrdSys = new List<OrderSystem>();
+            WchRoot = "Set this folder to start";
+            ConnString = "server=69.89.31.188;user=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;";
+            var roesOrdSys = new OrdSysRoes();
+            var dakisOrdSys = new OrdSysDakis();
+            var dGiftOrdSys = new OrdSysDGift();
+            ListOrdSys.Add(roesOrdSys);
+            ListOrdSys.Add(dakisOrdSys);
+            ListOrdSys.Add(dGiftOrdSys);
         }
     }
 }
