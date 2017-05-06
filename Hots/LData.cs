@@ -98,7 +98,6 @@ namespace Hots
                 }
                 catch (MySqlException ex)
                 {
-                    MessageBox.Show("Unknown error occured updating store database \r\n \r n" + ex.Number + "\r\n" + ex);
                     return 0;
                 }
             }
@@ -198,6 +197,5 @@ namespace Hots
             return ordtable;
         }
         #endregion Get Orders
-
     }
 }

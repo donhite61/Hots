@@ -26,7 +26,8 @@ namespace Hots
 
         void bWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            form.UpdateStatusWindow(e.UserState as String);
+            var status = e.ProgressPercentage;
+            form.UpdateStatusWindow(status, e.UserState as String);
         }
 
         void bWorker_DoWork(object sender, DoWorkEventArgs e)
@@ -40,10 +41,37 @@ namespace Hots
                 if (FileIsReady(ordPath))
                 {
                     var newOrder = new Order(ordPath);
+                    if(newOrder.OrdSys == null)
+                    {
+                        bWorker.ReportProgress(0, ordName + " skipped, unknown file ext");
+                        continue;
+                    }
+                    else
+                    {
+                        bWorker.ReportProgress(1, ordName + "  Ext matched " + newOrder.OrdSys.Name + " order system");
+                        newOrder.OrdStatus = "unread";
+                    }
+
                     newOrder = newOrder.FillProperties(newOrder, ordPath);
-                    bWorker.ReportProgress(1, ordName + "  Read");
-                    LData.SaveOrdertoSqlServer(newOrder);
-                    bWorker.ReportProgress(1, ordName + "  Uploaded\r\n");
+                    if (newOrder.OrdStatus == "error reading file")
+                    {
+                        bWorker.ReportProgress(0, ordName + "  failed to read dropped file");
+                        continue;
+                    }
+                    else
+                    {
+                        bWorker.ReportProgress(1, ordName + "  successfully read dropped file");
+                    }
+                    var sqlId = LData.SaveOrdertoSqlServer(newOrder);
+                    if (sqlId == 0)
+                    {
+                        bWorker.ReportProgress(0, ordName + "  failed to save to server");
+                        continue;
+                    }
+                    else
+                    {
+                        bWorker.ReportProgress(1, ordName + "  saved to server SqlId is " + sqlId);
+                    }
                 }
             }
         }

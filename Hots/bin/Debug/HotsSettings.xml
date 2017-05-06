@@ -7,7 +7,7 @@
       <Active>true</Active>
       <Name>Roes</Name>
       <WatchFldr>C:\DonsScripts\Hots Folder System\WatchedFolder\NewOrders\RoesIn</WatchFldr>
-      <Ext>pov</Ext>
+      <Ext>.pof</Ext>
       <ReadFld>C:\DonsScripts\Hots Folder System\WatchedFolder\ReadOrders</ReadFld>
       <OutFldr>C:\DonsScripts\Hots Folder System\Roes Output Folder</OutFldr>
       <PrdSubFldr />

@@ -16,7 +16,7 @@ namespace Hots
         Label[] osIlabels;
         BindingList<OrderSystem> osBindingList;
         public FolderWatcher fw;
-        delegate void UpdateStausWindowDelegate(string text);
+        delegate void UpdateStausWindowDelegate(int status, string text);
 
         public Form1()
         {
@@ -25,35 +25,44 @@ namespace Hots
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            addToLog("Hots order uploader started");
+            addToLog(1, "Hots order uploader started");
             Set.LoadSettings();
             makeLables();
             fillOSFormFromSettings();
-            addToLog("Local settings loaded");
+            addToLog(1, "Local settings loaded");
             checkPaths();
-            addToLog("Local paths checked\r\n");
+            addToLog(1, "Local paths checked\r\n");
         }
 
-        public void UpdateStatusWindow(string text)
+        public void UpdateStatusWindow(int status, string text)
         {
             if (txtBox_Log.InvokeRequired)
             {
                 var d = new UpdateStausWindowDelegate(addToLog);
-                Invoke(d, new object[] { text });
+                Invoke(d, new object[] {status, text });
             }
             else
             {
-                addToLog(text);
+                addToLog(status, text);
             }
         }//called by new fle in watched folder
 
-        private void addToLog(string text)// called by FolderWatcherFoundOrder
+        private void addToLog(int status, string text)// called by FolderWatcherFoundOrder
         {
             if (txtBox_Log.Lines.Length > 500)
             {
                 txtBox_Log.Lines = txtBox_Log.Lines.Skip(txtBox_Log.Lines.Length - 500).ToArray();
             }
             txtBox_Log.AppendText(DateTime.Now.ToString("MM/dd h:mm:ss tt  ") + text + "\r\n");
+
+            if (status == 0)
+            {
+                if (txtBox_Errors.Lines.Length > 500)
+                {
+                    txtBox_Errors.Lines = txtBox_Errors.Lines.Skip(txtBox_Errors.Lines.Length - 500).ToArray();
+                }
+                txtBox_Errors.AppendText(DateTime.Now.ToString("MM/dd h:mm:ss tt  ") + text + "\r\n");
+            }
         }
 
         public void fillOrderGridviewfromList(DataTable dt)
@@ -136,13 +145,13 @@ namespace Hots
             {
                 fw.StartWatching();
                 but_StartWatch.Text = "Stop Watch";
-                addToLog("Folder watch started");
+                addToLog(1, "Folder watch started");
             }
             else
             {
                 fw.StopWatching();
                 but_StartWatch.Text = "Start Watch";
-                addToLog("Folder watch stopped");
+                addToLog(1, "Folder watch stopped");
             }
         }
 

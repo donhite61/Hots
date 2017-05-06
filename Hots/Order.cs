@@ -86,7 +86,6 @@ namespace Hots
         public Order(string _filePath)
         {
             OrdSys = OrderSystem.GetOrdSysByInputFolder(_filePath);
-            OrdStatus = "new";
         }
 
         public Order FillProperties(Order _ord, string _filePath)

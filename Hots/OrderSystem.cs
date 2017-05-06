@@ -26,15 +26,20 @@ namespace Hots
             OrderSystem OrdSys = null;
             if (_filePath.ToUpper().Contains(Set.ListOrdSys[0].WatchFldr.ToUpper()))
             {
-                OrdSys = new OrdSysRoes();
+                var path = Path.GetExtension(_filePath);
+                var ext = Set.ListOrdSys[0].Ext;
+                if (Path.GetExtension(_filePath) == Set.ListOrdSys[0].Ext)
+                    OrdSys = new OrdSysRoes();
             }
             else if (_filePath.ToUpper().Contains(Set.ListOrdSys[1].WatchFldr.ToUpper()))
             {
-                OrdSys = new OrdSysDakis();
+                if (Path.GetExtension(_filePath) == Set.ListOrdSys[1].Ext)
+                    OrdSys = new OrdSysDakis();
             }
             else if (_filePath.ToUpper().Contains(Set.ListOrdSys[2].WatchFldr.ToUpper()))
             {
-                OrdSys = new OrdSysDGift();
+                if (Path.GetExtension(_filePath) == Set.ListOrdSys[2].Ext)
+                    OrdSys = new OrdSysDGift();
             }
             return OrdSys;
         }
@@ -85,38 +90,46 @@ namespace Hots
 
         public override Order ReadIncomingOrderFile(Order _order, string _filePath)
         {
-            i = 0;
-            _order.FileLineList = MakeListFromFile(_filePath);
-            while (_order.FileLineList[i] != "</Order>")
+            try
             {
-                switch (_order.FileLineList[i])
+                i = 0;
+                _order.FileLineList = MakeListFromFile(_filePath);
+                while (_order.FileLineList[i] != "</Order>")
                 {
-                    case "<Order Info>":
-                        _order = fillOrderInfo(_order);
-                        break;
-                    case "<Customer>":
-                        _order = fillCustomerInfo(_order);
-                        break;
-                    case "<Billing>":
-                        _order = fillBillingInfo(_order);
-                        break;
-                    case "<Shipping>":
-                        _order = fillShippingInfo(_order);
-                        break;
-                    case "<Payment>":
-                        _order = fillPaymentInfo(_order);
-                        break;
-                    case "<OrderItems>":
-                        _order.ItemsList = fillOrderItems(_order);
-                        _order.ItemsList = addUpIdenticalItems(_order.ItemsList);
-                        break;
-                    case "<OrderOptions>":
-                        _order.OrderOptionsList = fillOrderOptions(_order);
-                        break;
-                    default:
-                        break;
+                    switch (_order.FileLineList[i])
+                    {
+                        case "<Order Info>":
+                            _order = fillOrderInfo(_order);
+                            break;
+                        case "<Customer>":
+                            _order = fillCustomerInfo(_order);
+                            break;
+                        case "<Billing>":
+                            _order = fillBillingInfo(_order);
+                            break;
+                        case "<Shipping>":
+                            _order = fillShippingInfo(_order);
+                            break;
+                        case "<Payment>":
+                            _order = fillPaymentInfo(_order);
+                            break;
+                        case "<OrderItems>":
+                            _order.ItemsList = fillOrderItems(_order);
+                            _order.ItemsList = addUpIdenticalItems(_order.ItemsList);
+                            break;
+                        case "<OrderOptions>":
+                            _order.OrderOptionsList = fillOrderOptions(_order);
+                            break;
+                        default:
+                            break;
+                    }
+                    i++;
                 }
-                i++;
+                _order.OrdStatus = "new";
+            }
+            catch
+            {
+                _order.OrdStatus = "error reading file";
             }
             return _order;
         }
