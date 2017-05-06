@@ -26,7 +26,7 @@ namespace Hots
         private void Form1_Load(object sender, EventArgs e)
         {
             addToLog(1, "Hots order uploader started");
-            Set.LoadSettings();
+            Set.LoadSettings(this);
             makeLables();
             fillOSFormFromSettings();
             addToLog(1, "Local settings loaded");

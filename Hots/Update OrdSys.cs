@@ -36,7 +36,7 @@ namespace Hots
 
         }
 
-        private void processUpdateForm()
+        private bool processUpdateForm()
         {
             Set.ListOrdSys[index].Active = chkBox_Active.Checked;
             Set.ListOrdSys[index].WatchFldr = txtBox_WatchedFolder.Text;
@@ -46,9 +46,15 @@ namespace Hots
             Set.ListOrdSys[index].PrdSubFldr = txtBox_ProdSubFldr.Text;
             Set.ListOrdSys[index].WaitFile = txtBox_WaitForFile.Text;
             Set.ListOrdSys[index].WaitIsFldr = chkBox_WaitFileIsFldr.Checked;
-            Set.SaveSettings();
-
             Close();
+            if (Set.SaveSettings())
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         private void but_Update_Click(object sender, EventArgs e)

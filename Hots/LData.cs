@@ -96,7 +96,7 @@ namespace Hots
                     SaveNewOrderOptions(conn, mySqlId, _fl.OrderOptionsList);
                     return mySqlId;
                 }
-                catch (MySqlException ex)
+                catch (MySqlException)
                 {
                     return 0;
                 }

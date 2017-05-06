@@ -25,30 +25,41 @@ namespace Hots
         {
         }
 
-        public static void SaveSettings()
+        public static bool SaveSettings()
         {
-            var instance = new Set();
-            instance.prvWchRoot = WchRoot;
-            instance.prvConnString = ConnString;
-            instance.prvListOrdSys = ListOrdSys;
-
-            var serializer = new XmlSerializer(typeof(Set));
-            using (var stream = new StreamWriter(iniFile))
+            try
             {
-                serializer.Serialize(stream, instance);
+                var instance = new Set();
+                instance.prvWchRoot = WchRoot;
+                instance.prvConnString = ConnString;
+                instance.prvListOrdSys = ListOrdSys;
+
+                var serializer = new XmlSerializer(typeof(Set));
+                using (var stream = new StreamWriter(iniFile))
+                {
+                    serializer.Serialize(stream, instance);
+                }
+                return true;
+            }
+            catch
+            {
+                MessageBox.Show("There was an error saving settings");
+                return false;
             }
         }
 
-        public static void LoadSettings()
+        public static void LoadSettings(Form1 _form)
         {
             try
             {
                 readSettingsfromDisk();
+                _form.UpdateStatusWindow(1, "Settings load successful");
             }
             catch
             {
                 CreateDefaultSettings();
                 SaveSettings();
+                _form.UpdateStatusWindow(0, "Error reading settings, default settings created");
             }
         }
 
