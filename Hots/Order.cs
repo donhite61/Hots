@@ -11,7 +11,7 @@ namespace Hots
     {
         public uint mysqlId { get; set; }
         public string OrdStatus { get; set; }
-        public  OrderSystem OrdSys { get; set; }
+        public OrderSystem.OrdSysName OrdSysName { get; set; }
         public string HiteId { get; set; }
         public string AlternateId { get; set; }
         public DateTime TimeIn { get; set; }
@@ -64,33 +64,84 @@ namespace Hots
         public string PayCCcvv { get; set; }
         public string PayCCExp { get; set; }
 
-        public List<string> FileLineList { get; set; }
         public List<OrderItems> ItemsList { get; set; }
         public List<OrderOptions> OrderOptionsList { get; set; }
 
-        private List<string> MakeListFromFile(string _path)
+        private Order()
         {
-            List<string> readFileList = new List<string>();
+        }
 
-            using (StreamReader sr = new StreamReader(_path))
+        public static void CreateNewOrderFromDroppedFile(string filePath)
+        {
+            string[] words = filePath.Split('\\');
+            var fileName = words[words.Length - 1];
+
+            var ordSysName = GetOrdSysNameFromFilepath(filePath);
+            if (ordSysName == OrderSystem.OrdSysName.Null)
             {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    readFileList.Add(line);
-                }
+                Data.LogEvents(0, "Unknown filetype " + fileName + " skipped");
+                return;
             }
-            return readFileList;
+
+            var fileLineList = makeListFromFile(filePath);
+            if (fileLineList == null)
+            {
+                Data.LogEvents(0, "Error reading " + fileName + " from disk");
+                return;
+            }
+
+            var newOrder = new Order();
+            newOrder.OrdLocation = Set.SelectedStore;
+            newOrder = OrderSystem.MakeOrderFromFileList(ordSysName, fileLineList, newOrder);
+            if (newOrder.OrdStatus == "error parsing file")
+            {
+                Data.LogEvents(0, "Error parsing " + fileName);
+                return;
+            }
+
+            var sqlId = Data.SaveOrdertoSqlServer(newOrder);
+            if (sqlId == 0)
+            {
+                Data.LogEvents(0, "Error uploading to server " + fileName);
+            }
+            else
+            {
+                Data.LogEvents(1, fileName +" Uploaded to server ");
+            }
         }
 
-        public Order(string _filePath)
+        private static OrderSystem.OrdSysName GetOrdSysNameFromFilepath(string filepath)
         {
-            OrdSys = OrderSystem.GetOrdSysByInputFolder(_filePath);
+            OrderSystem.OrdSysName osn = OrderSystem.OrdSysName.Null;
+            foreach (var os in Set.ListOrdSys)
+            {
+                if(os.fwActive == true)
+                    if (filepath.Contains(os.WatchFldr))
+                        osn = os.Name;
+            }
+            return osn;
         }
 
-        public Order FillProperties(Order _ord, string _filePath)
+        private static List<string> makeListFromFile(string _path)
         {
-            return _ord.OrdSys.ReadIncomingOrderFile(_ord, _filePath);
+            try
+            {
+                List<string> readFileList = new List<string>();
+                using (StreamReader sr = new StreamReader(_path))
+                {
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        readFileList.Add(line);
+                    }
+                }
+                return readFileList;
+            }
+            catch
+            {
+                return null;
+            }
+           
         }
     }
 

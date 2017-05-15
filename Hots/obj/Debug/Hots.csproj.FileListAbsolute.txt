@@ -12,7 +12,6 @@ C:\Csharp\Hots\Hots\bin\Debug\Hots.exe.config
 C:\Csharp\Hots\Hots\bin\Debug\Hots.exe
 C:\Csharp\Hots\Hots\bin\Debug\Hots.pdb
 C:\Csharp\Hots\Hots\bin\Debug\MySql.Data.dll
-C:\Csharp\Hots\Hots\obj\Debug\Hots.csprojResolveAssemblyReference.cache
 C:\Csharp\Hots\Hots\obj\Debug\Hots.Form1.resources
 C:\Csharp\Hots\Hots\obj\Debug\Hots.Properties.Resources.resources
 C:\Csharp\Hots\Hots\obj\Debug\Hots.csproj.GenerateResource.Cache
@@ -31,3 +30,46 @@ C:\Csharp\Hots\Hots\Hots\obj\Debug\Hots.frm_UpdOrdSys.resources
 C:\Csharp\Hots\Hots\Hots\obj\Debug\Hots.csprojResolveAssemblyReference.cache
 D:\Dad\Documents\CSharp\2017\Hots\Hots\obj\Debug\Hots.frm_UpdOrdSys.resources
 C:\Csharp\Hots\Hots\obj\Debug\Hots.frm_UpdOrdSys.resources
+D:\Dad\Documents\CSharp\2017\Hots\Hots\obj\Debug\Hots.EditStoreForm.resources
+C:\Csharp\Hots\Hots\obj\Debug\Hots.EditStoreForm.resources
+C:\Csharp\Hots\Hots\bin\Debug\Hots.exe.manifest
+C:\Csharp\Hots\Hots\bin\Debug\Hots.application
+C:\Csharp\Hots\Hots\obj\Debug\Hots.exe.manifest
+C:\Csharp\Hots\Hots\obj\Debug\Hots.application
+C:\Csharp\Hots\Hots\obj\Debug\Hots.csprojResolveAssemblyReference.cache
+D:\Dad\Documents\CSharp\2017\Hots\Hots\bin\Debug\Hots.exe.manifest
+D:\Dad\Documents\CSharp\2017\Hots\Hots\bin\Debug\Hots.application
+D:\Dad\Documents\CSharp\2017\Hots\Hots\obj\Debug\Hots.exe.manifest
+D:\Dad\Documents\CSharp\2017\Hots\Hots\obj\Debug\Hots.application
+C:\Csharp\hots not working 05-10 from laptop\Hots\bin\Debug\Hots.exe.config
+C:\Csharp\hots not working 05-10 from laptop\Hots\bin\Debug\Hots.exe.manifest
+C:\Csharp\hots not working 05-10 from laptop\Hots\bin\Debug\Hots.application
+C:\Csharp\hots not working 05-10 from laptop\Hots\bin\Debug\Hots.exe
+C:\Csharp\hots not working 05-10 from laptop\Hots\bin\Debug\Hots.pdb
+C:\Csharp\hots not working 05-10 from laptop\Hots\bin\Debug\MySql.Data.dll
+C:\Csharp\hots not working 05-10 from laptop\Hots\obj\Debug\Hots.csprojResolveAssemblyReference.cache
+C:\Csharp\hots not working 05-10 from laptop\Hots\obj\Debug\Hots.EditStoreForm.resources
+C:\Csharp\hots not working 05-10 from laptop\Hots\obj\Debug\Hots.Form1.resources
+C:\Csharp\hots not working 05-10 from laptop\Hots\obj\Debug\Hots.Properties.Resources.resources
+C:\Csharp\hots not working 05-10 from laptop\Hots\obj\Debug\Hots.frm_UpdOrdSys.resources
+C:\Csharp\hots not working 05-10 from laptop\Hots\obj\Debug\Hots.csproj.GenerateResource.Cache
+C:\Csharp\hots not working 05-10 from laptop\Hots\obj\Debug\Hots.exe.manifest
+C:\Csharp\hots not working 05-10 from laptop\Hots\obj\Debug\Hots.application
+C:\Csharp\hots not working 05-10 from laptop\Hots\obj\Debug\Hots.exe
+C:\Csharp\hots not working 05-10 from laptop\Hots\obj\Debug\Hots.pdb
+C:\Csharp\Hots laptop 051417\Hots\obj\Debug\Hots.csprojResolveAssemblyReference.cache
+C:\Csharp\Hots laptop 051417\Hots\obj\Debug\Hots.EditStoreForm.resources
+C:\Csharp\Hots laptop 051417\Hots\obj\Debug\Hots.Form1.resources
+C:\Csharp\Hots laptop 051417\Hots\obj\Debug\Hots.Properties.Resources.resources
+C:\Csharp\Hots laptop 051417\Hots\obj\Debug\Hots.frm_UpdOrdSys.resources
+C:\Csharp\Hots laptop 051417\Hots\obj\Debug\Hots.csproj.GenerateResource.Cache
+C:\Csharp\Hots laptop 051417\Hots\obj\Debug\Hots.exe
+C:\Csharp\Hots laptop 051417\Hots\obj\Debug\Hots.pdb
+C:\Csharp\Hots laptop 051417\Hots\bin\Debug\Hots.exe.config
+C:\Csharp\Hots laptop 051417\Hots\bin\Debug\Hots.exe.manifest
+C:\Csharp\Hots laptop 051417\Hots\bin\Debug\Hots.application
+C:\Csharp\Hots laptop 051417\Hots\bin\Debug\Hots.exe
+C:\Csharp\Hots laptop 051417\Hots\bin\Debug\Hots.pdb
+C:\Csharp\Hots laptop 051417\Hots\bin\Debug\MySql.Data.dll
+C:\Csharp\Hots laptop 051417\Hots\obj\Debug\Hots.exe.manifest
+C:\Csharp\Hots laptop 051417\Hots\obj\Debug\Hots.application

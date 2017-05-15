@@ -1,97 +1,152 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.IO;
 using System.Xml.Serialization;
 using System.Windows.Forms;
 
 namespace Hots
 {
-    [Serializable]
-    public class Set
+    static class Set
     {
-        public static string WchRoot { get; set; }
-        public static string ConnString { get; set; }
+        private static string iniFile = Directory.GetCurrentDirectory() + @"\HotsSavedData.xml";
+        public static Form1 MainForm;
+        public static string ConnString = "server=69.89.31.188;user=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;";
+        public static string SelectedStore { get; set; }
         public static List<OrderSystem> ListOrdSys { get; set; }
 
-        public static string iniFile = Directory.GetCurrentDirectory() + @"\HotsSettings.xml";
-        public string prvWchRoot;
-        public string prvConnString;
-        public List<OrderSystem> prvListOrdSys;
-
-        protected Set()
+        public static void CreateDefaultSettings()
         {
+            DialogResult result = MessageBox.Show("create default settings file?",
+                            "Settings file read error", MessageBoxButtons.YesNo);
+            if (result == DialogResult.No)
+                Environment.Exit(1);
+
+            SelectedStore = "Please select Store";
+            ListOrdSys = new List<OrderSystem>();
+            foreach (OrderSystem.OrdSysName name in Enum.GetValues(typeof(OrderSystem.OrdSysName)))
+            {
+                if (name.ToString() != "Null")
+                {
+                    var os = new OrderSystem();
+                    os.Name = name;
+                    ListOrdSys.Add(os);
+                }
+            }
+        }
+
+        public static bool LoadSettings()
+        {
+            SaveSettings savedSet = Hots.SaveSettings.readSettingsfromDisk(iniFile);
+            if (savedSet != null)
+            {
+                ConnString = savedSet.ConnString;
+                SelectedStore = savedSet.SelectedStore;
+                ListOrdSys = new List<OrderSystem>();
+                foreach (var savedOrdSys in savedSet.OrdSysList)
+                {
+                    var os = new OrderSystem();
+                    os.Name = savedOrdSys.Name;
+                    os.Active = savedOrdSys.Active;
+                    os.WatchFldr = savedOrdSys.WchFldr;
+                    os.Ext = savedOrdSys.Ext;
+                    os.OutFldr = savedOrdSys.OutFldr;
+                    os.PrdSubFldr = savedOrdSys.PrdSubFldr;
+                    os.WaitFile = savedOrdSys.WaitFile;
+                    os.WaitIsFldr = savedOrdSys.WaitIsFldr;
+                    ListOrdSys.Add(os);
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
         public static bool SaveSettings()
         {
+            SaveSettings saveSet = new SaveSettings();
+            saveSet.ConnString = Set.ConnString;
+            saveSet.SelectedStore = Set.SelectedStore;
+            saveSet.OrdSysList = new List<SaveOrdSystems>();
+            foreach (var os in Set.ListOrdSys)
+            {
+                var sOs = new SaveOrdSystems();
+                sOs.Name = os.Name;
+                sOs.Active = os.Active;
+                sOs.WchFldr = os.WatchFldr;
+                sOs.Ext = os.Ext;
+                sOs.OutFldr = os.OutFldr;
+                sOs.PrdSubFldr = os.PrdSubFldr;
+                sOs.WaitFile = os.WaitFile;
+                sOs.WaitIsFldr = os.WaitIsFldr;
+                saveSet.OrdSysList.Add(sOs);
+            }
+            if(Hots.SaveSettings.WriteSettingsToDisk(saveSet, Set.iniFile))
+            {
+                return true;
+
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
+    
+
+
+    [Serializable]
+     public class SaveSettings
+    {
+        public string ConnString;
+        public string SelectedStore;
+        public List<SaveOrdSystems> OrdSysList { get; set; }
+
+        public static SaveSettings readSettingsfromDisk(string iniFile)
+        {
             try
             {
-                var instance = new Set();
-                instance.prvWchRoot = WchRoot;
-                instance.prvConnString = ConnString;
-                instance.prvListOrdSys = ListOrdSys;
+                var serializer = new XmlSerializer(typeof(SaveSettings));
+                using (var stream = new StreamReader(iniFile))
+                {
+                    return (SaveSettings)(serializer.Deserialize(stream));
+                }
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
-                var serializer = new XmlSerializer(typeof(Set));
+        public static bool WriteSettingsToDisk(SaveSettings locSet, string iniFile)
+        {
+            try
+            {
+                var serializer = new XmlSerializer(typeof(SaveSettings));
                 using (var stream = new StreamWriter(iniFile))
                 {
-                    serializer.Serialize(stream, instance);
+                    serializer.Serialize(stream, locSet);
                 }
                 return true;
             }
             catch
             {
-                MessageBox.Show("There was an error saving settings");
                 return false;
             }
         }
+    }
 
-        public static void LoadSettings(Form1 _form)
-        {
-            try
-            {
-                readSettingsfromDisk();
-                _form.UpdateStatusWindow(1, "Settings load successful");
-            }
-            catch
-            {
-                CreateDefaultSettings();
-                SaveSettings();
-                _form.UpdateStatusWindow(0, "Error reading settings, default settings created");
-            }
-        }
-
-        private static void readSettingsfromDisk()
-        {
-            var serializer = new XmlSerializer(typeof(Set));
-            using (var stream = new StreamReader(iniFile))
-            {
-                Set instance = (Set)(serializer.Deserialize(stream));
-                WchRoot = instance.prvWchRoot;
-                if (WchRoot == null)
-                    throw new Exception();
-                ConnString = instance.prvConnString;
-                if (ConnString == null)
-                    throw new Exception();
-                ListOrdSys = instance.prvListOrdSys;
-                if (ListOrdSys == null)
-                    throw new Exception();
-            }
-        }
-
-        private static void CreateDefaultSettings()
-        {
-            ListOrdSys = new List<OrderSystem>();
-            WchRoot = "Set this folder to start";
-            ConnString = "server=69.89.31.188;user=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;";
-            var roesOrdSys = new OrdSysRoes();
-            var dakisOrdSys = new OrdSysDakis();
-            var dGiftOrdSys = new OrdSysDGift();
-            ListOrdSys.Add(roesOrdSys);
-            ListOrdSys.Add(dakisOrdSys);
-            ListOrdSys.Add(dGiftOrdSys);
-        }
+    [XmlInclude(typeof(SaveOrdSystems))]
+    public class SaveOrdSystems
+    {
+        public OrderSystem.OrdSysName Name;
+        public bool Active;
+        public string WchFldr;
+        public string Ext;
+        public string OutFldr;
+        public string PrdSubFldr;
+        public string WaitFile;
+        public bool WaitIsFldr;
     }
 }

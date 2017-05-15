@@ -8,140 +8,92 @@ using System.Xml.Serialization;
 
 namespace Hots
 {
-    [XmlInclude(typeof(OrdSysRoes)), XmlInclude(typeof(OrdSysDakis)), XmlInclude(typeof(OrdSysDGift))]
-    public abstract class OrderSystem
+    public class OrderSystem
     {
+        public OrdSysName Name { get; set; }
         public bool Active { get; set; }
-        public string Name { get; set; }
         public string WatchFldr { get; set; }
         public string Ext { get; set; }
-        public string ReadFld { get; set; }
         public string OutFldr { get; set; }
         public string PrdSubFldr { get; set; }
         public string WaitFile { get; set; }
         public bool WaitIsFldr { get; set; }
+        public FileSystemWatcher fW { get; set; }
+        public bool fwActive { get; set; }
+        public enum OrdSysName { Null, Roes, Dakis, DGift }
+        static int i;
 
-        public static OrderSystem GetOrdSysByInputFolder(string _filePath)
+        public static Order MakeOrderFromFileList(OrdSysName ordSysName, List<string> orderLineList, Order order)
         {
-            OrderSystem OrdSys = null;
-            if (_filePath.ToUpper().Contains(Set.ListOrdSys[0].WatchFldr.ToUpper()))
+            switch (ordSysName)
             {
-                var path = Path.GetExtension(_filePath);
-                var ext = Set.ListOrdSys[0].Ext;
-                if (Path.GetExtension(_filePath) == Set.ListOrdSys[0].Ext)
-                    OrdSys = new OrdSysRoes();
+                case OrdSysName.Roes:
+                    order = RoesReadListFile(orderLineList, order);
+                    break;
+                case OrdSysName.Dakis:
+                    break;
+                case OrdSysName.DGift:
+                    break;
             }
-            else if (_filePath.ToUpper().Contains(Set.ListOrdSys[1].WatchFldr.ToUpper()))
-            {
-                if (Path.GetExtension(_filePath) == Set.ListOrdSys[1].Ext)
-                    OrdSys = new OrdSysDakis();
-            }
-            else if (_filePath.ToUpper().Contains(Set.ListOrdSys[2].WatchFldr.ToUpper()))
-            {
-                if (Path.GetExtension(_filePath) == Set.ListOrdSys[2].Ext)
-                    OrdSys = new OrdSysDGift();
-            }
-            return OrdSys;
+            return order;
         }
 
-        internal List<string> MakeListFromFile(string _filePath)
-        {
-            var newRoesfile = _filePath;
-            List<string> lines = new List<string>();
+        #region Roes Order System
 
-            using (StreamReader sr = new StreamReader(newRoesfile))
-            {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    lines.Add(line);
-                }
-            }
-            return lines;
-        }
-
-        public abstract Order ReadIncomingOrderFile(Order _newOrder, string filename);
-
-        enum OrdSysName
-        {
-            Roes,
-            Dakis,
-            DGift,
-            PrntWizrd
-        }
-    }
-
- #region Roes Order System
-    public class OrdSysRoes : OrderSystem
-    {
-        int i;
-        public OrdSysRoes()
-        {
-            Active = false;
-            Name = "Roes";
-            WatchFldr = "";
-            Ext = "pov";
-            ReadFld = "";
-            OutFldr = "";
-            PrdSubFldr = "";
-            WaitFile = "Originals";
-            WaitIsFldr = true;
-        }
-
-        public override Order ReadIncomingOrderFile(Order _order, string _filePath)
+        private static Order RoesReadListFile(List<string> orderLineList, Order order)
         {
             try
             {
                 i = 0;
-                _order.FileLineList = MakeListFromFile(_filePath);
-                while (_order.FileLineList[i] != "</Order>")
+                while (orderLineList[i] != "</Order>")
                 {
-                    switch (_order.FileLineList[i])
+                    switch (orderLineList[i])
                     {
                         case "<Order Info>":
-                            _order = fillOrderInfo(_order);
+                            order = fillOrderInfo(orderLineList, order);
                             break;
                         case "<Customer>":
-                            _order = fillCustomerInfo(_order);
+                            order = fillCustomerInfo(orderLineList, order);
                             break;
                         case "<Billing>":
-                            _order = fillBillingInfo(_order);
+                            order = fillBillingInfo(orderLineList, order);
                             break;
                         case "<Shipping>":
-                            _order = fillShippingInfo(_order);
+                            order = fillShippingInfo(orderLineList, order);
                             break;
                         case "<Payment>":
-                            _order = fillPaymentInfo(_order);
+                            order = fillPaymentInfo(orderLineList, order);
                             break;
                         case "<OrderItems>":
-                            _order.ItemsList = fillOrderItems(_order);
-                            _order.ItemsList = addUpIdenticalItems(_order.ItemsList);
+                            order.ItemsList = fillOrderItems(orderLineList, order);
+                            order.ItemsList = addUpIdenticalItems(order.ItemsList);
+                            order.Products = makeTextFieldFromItemsList(order.ItemsList);
                             break;
                         case "<OrderOptions>":
-                            _order.OrderOptionsList = fillOrderOptions(_order);
+                            order.OrderOptionsList = fillOrderOptions(orderLineList, order);
                             break;
                         default:
                             break;
                     }
                     i++;
                 }
-                _order.OrdStatus = "new";
+                order.OrdStatus = "new";
             }
             catch
             {
-                _order.OrdStatus = "error reading file";
+                order.OrdStatus = "error parsing file";
             }
-            return _order;
+            return order;
         }
 
-        private Order fillOrderInfo(Order _newOrder)
+        private static Order fillOrderInfo(List<string> orderLineList, Order _newOrder)
         {
             string orderDate = "";
             string orderTime = "";
-            while (_newOrder.FileLineList[i] != "</Order Info>")
+            while (orderLineList[i] != "</Order Info>")
             {
                 i++;
-                var aLineSplit = _newOrder.FileLineList[i].Split('=');
+                var aLineSplit = orderLineList[i].Split('=');
                 switch (aLineSplit[0])
                 {
                     case "Lab Order ID":
@@ -192,12 +144,12 @@ namespace Hots
             return _newOrder;
         }
 
-        private Order fillCustomerInfo(Order _newOrder)
+        private static Order fillCustomerInfo(List<string> orderLineList, Order _newOrder)
         {
-            while (_newOrder.FileLineList[i] != "</Customer>")
+            while (orderLineList[i] != "</Customer>")
             {
                 i++;
-                var aLineSplit = _newOrder.FileLineList[i].Split('=');
+                var aLineSplit = orderLineList[i].Split('=');
 
                 switch (aLineSplit[0])
                 {
@@ -235,12 +187,12 @@ namespace Hots
             return _newOrder;
         }
 
-        private Order fillBillingInfo(Order _newOrder)
+        private static Order fillBillingInfo(List<string> orderLineList, Order _newOrder)
         {
-            while (_newOrder.FileLineList[i] != "</Billing>")
+            while (orderLineList[i] != "</Billing>")
             {
                 i++;
-                var aLineSplit = _newOrder.FileLineList[i].Split('=');
+                var aLineSplit = orderLineList[i].Split('=');
 
                 switch (aLineSplit[0])
                 {
@@ -269,12 +221,12 @@ namespace Hots
             return _newOrder;
         }
 
-        private Order fillShippingInfo(Order _newOrder)
+        private static Order fillShippingInfo(List<string> orderLineList, Order _newOrder)
         {
-            while (_newOrder.FileLineList[i] != "</Shipping>")
+            while (orderLineList[i] != "</Shipping>")
             {
                 i++;
-                var aLineSplit = _newOrder.FileLineList[i].Split('=');
+                var aLineSplit = orderLineList[i].Split('=');
 
                 switch (aLineSplit[0])
                 {
@@ -317,12 +269,12 @@ namespace Hots
             return _newOrder;
         }
 
-        private Order fillPaymentInfo(Order _newOrder)
+        private static Order fillPaymentInfo(List<string> orderLineList, Order _newOrder)
         {
-            while (_newOrder.FileLineList[i] != "</Payment>")
+            while (orderLineList[i] != "</Payment>")
             {
                 i++;
-                var aLineSplit = _newOrder.FileLineList[i].Split('=');
+                var aLineSplit = orderLineList[i].Split('=');
 
                 switch (aLineSplit[0])
                 {
@@ -345,22 +297,22 @@ namespace Hots
             return _newOrder;
         }
 
-        private List<OrderItems> fillOrderItems(Order _newOrder)
+        private static List<OrderItems> fillOrderItems(List<string> orderLineList, Order _newOrder)
         {
             OrderItems item = new OrderItems();
             var itemList = new List<OrderItems>();
             var itemOptionList = new List<ItemOptions>();
-            while (_newOrder.FileLineList[i] != "</OrderItems>")
+            while (orderLineList[i] != "</OrderItems>")
             {
                 i++;
-                if (_newOrder.FileLineList[i] == "</OrderItemInfo>")
+                if (orderLineList[i] == "</OrderItemInfo>")
                 {
                     item.OptionsList = itemOptionList;
                     itemList.Add(item);
                     item = new OrderItems();
                     itemOptionList = new List<ItemOptions>();
                 }
-                var aLineSplit = _newOrder.FileLineList[i].Split('=');
+                var aLineSplit = orderLineList[i].Split('=');
                 switch (aLineSplit[0])
                 {
                     case "Item Product Code":
@@ -383,7 +335,7 @@ namespace Hots
                             item.LineTotal = value2;
                         break;
                     case "<OrderItemOption>":
-                        var itemOpt = fillItemOptions(_newOrder);
+                        var itemOpt = fillItemOptions(orderLineList, _newOrder);
                         item.Description = item.Description + "-" + itemOpt.Description;
                         itemOptionList.Add(itemOpt);
                         break;
@@ -394,13 +346,13 @@ namespace Hots
             return itemList;
         }
 
-        private ItemOptions fillItemOptions(Order _newOrder)
+        private static ItemOptions fillItemOptions(List<string> orderLineList, Order _newOrder)
         {
             ItemOptions ItemOption = new ItemOptions();
-            while (_newOrder.FileLineList[i] != "</OrderItemOption>")
+            while (orderLineList[i] != "</OrderItemOption>")
             {
                 i++;
-                var aLineSplit = _newOrder.FileLineList[i].Split('=');
+                var aLineSplit = orderLineList[i].Split('=');
                 switch (aLineSplit[0])
                 {
                     case "Item Option ID":
@@ -424,7 +376,7 @@ namespace Hots
             return ItemOption;
         }
 
-        private List<OrderItems> addUpIdenticalItems(List<OrderItems> itemsList)
+        private static List<OrderItems> addUpIdenticalItems(List<OrderItems> itemsList)
         {
             var sortedItemList = new List<OrderItems>();
             sortedItemList = itemsList.OrderBy(o => o.Description).ToList();
@@ -441,19 +393,29 @@ namespace Hots
             return sortedItemList;
         }
 
-        private List<OrderOptions> fillOrderOptions(Order _newOrder)
+        private static string makeTextFieldFromItemsList(List<OrderItems> itemsList)
+        {
+            string prodField = "";
+            foreach (var item in itemsList)
+            {
+                prodField = (prodField == "") ? item.ItemCode : prodField + "," + item.ItemCode;
+            }
+            return prodField;
+        }
+
+        private static List<OrderOptions> fillOrderOptions(List<string> orderLineList, Order _newOrder)
         {
             OrderOptions OrderOption = new OrderOptions();
             var list = new List<OrderOptions>();
-            while (_newOrder.FileLineList[i] != "</OrderOptions>")
+            while (orderLineList[i] != "</OrderOptions>")
             {
                 i++;
-                if (_newOrder.FileLineList[i] == "</OrderOptionInfo>")
+                if (orderLineList[i] == "</OrderOptionInfo>")
                 {
                     list.Add(OrderOption);
                     OrderOption = new OrderOptions();
                 }
-                var aLineSplit = _newOrder.FileLineList[i].Split('=');
+                var aLineSplit = orderLineList[i].Split('=');
                 switch (aLineSplit[0])
                 {
                     case "Order Option ID":
@@ -479,52 +441,7 @@ namespace Hots
             }
             return list;
         }
-
     }
- #endregion Roes Order System
-
- #region Dakis Order System
-    public class OrdSysDakis : OrderSystem
-    {
-        public OrdSysDakis()
-        {
-            Active = false;
-            Name = "Dakis";
-            WatchFldr = @"NewOrders\DakisIn";
-            Ext = "xml";
-            ReadFld = "";
-            OutFldr = "";
-            PrdSubFldr = "";
-            WaitFile = "download_complete";
-            WaitIsFldr = false;
-        }
-
-        public override Order ReadIncomingOrderFile(Order _order, string _filePath)
-        {
-            return _order;
-        }
-    }
-#endregion
-
-    public class OrdSysDGift : OrderSystem
-    {
-        public OrdSysDGift()
-        {
-            Active = false;
-            Name = "DGift";
-            WatchFldr = @"NewOrders\DGiftIn";
-            Ext = "xml";
-            ReadFld = "";
-            OutFldr = "";
-            PrdSubFldr = "";
-            WaitFile = "download_complete";
-            WaitIsFldr = false;
-        }
-
-        public override Order ReadIncomingOrderFile(Order order, string _filePath)
-        {
-            return order;
-        }
-    }
+    #endregion Roes Order System
 }
 

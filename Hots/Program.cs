@@ -14,9 +14,11 @@ namespace Hots
         [STAThread]
         static void Main()
         {
+            Startup.DoStartUp();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            Application.Run(Set.MainForm = new Form1());
+
         }
     }
 }
