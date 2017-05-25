@@ -11,7 +11,7 @@ namespace Hots
     {
         public uint mysqlId { get; set; }
         public string OrdStatus { get; set; }
-        public OrderSystem.OrdSysName OrdSysName { get; set; }
+        public Set.OrdSysName OrdSysName { get; set; }
         public string HiteId { get; set; }
         public string AlternateId { get; set; }
         public DateTime TimeIn { get; set; }
@@ -77,7 +77,7 @@ namespace Hots
             var fileName = words[words.Length - 1];
 
             var ordSysName = GetOrdSysNameFromFilepath(filePath);
-            if (ordSysName == OrderSystem.OrdSysName.Null)
+            if (ordSysName == Set.OrdSysName.Null)
             {
                 Data.LogEvents(0, "Unknown filetype " + fileName + " skipped");
                 return;
@@ -91,7 +91,7 @@ namespace Hots
             }
 
             var newOrder = new Order();
-            newOrder.OrdLocation = Set.SelectedStore;
+            newOrder.OrdLocation = Set.PickupLoc;
             newOrder = OrderSystem.MakeOrderFromFileList(ordSysName, fileLineList, newOrder);
             if (newOrder.OrdStatus == "error parsing file")
             {
@@ -110,10 +110,10 @@ namespace Hots
             }
         }
 
-        private static OrderSystem.OrdSysName GetOrdSysNameFromFilepath(string filepath)
+        private static Set.OrdSysName GetOrdSysNameFromFilepath(string filepath)
         {
-            OrderSystem.OrdSysName osn = OrderSystem.OrdSysName.Null;
-            foreach (var os in Set.ListOrdSys)
+            Set.OrdSysName osn = Set.OrdSysName.Null;
+            foreach (var os in Set.OrdSysList)
             {
                 if(os.fwActive == true)
                     if (filepath.Contains(os.WatchFldr))

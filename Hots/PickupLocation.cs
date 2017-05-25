@@ -4,18 +4,18 @@ using System.Data;
 
 namespace Hots
 {
-    public class Stores
+    public class PickupLocation
     {
-        public UInt32 StrId { get; set; }
-        public string StrNicName { get; set; }
-        public string StrName { get; set; }
-        public string StrAddress { get; set; }
-        public string StrCity { get; set; }
-        public string StrState { get; set; }
-        public string StrZip { get; set; }
-        public string StrPhone { get; set; }
-        public bool StrInactive { get; set; }
-        public string StrShipCode { get; set; }
+        public UInt32 PuId { get; set; }
+        public string PuNicName { get; set; }
+        public string PuName { get; set; }
+        public string PuAddress { get; set; }
+        public string PuCity { get; set; }
+        public string PuState { get; set; }
+        public string PuZip { get; set; }
+        public string PuPhone { get; set; }
+        public bool PuInactive { get; set; }
+        public string PuShipCode { get; set; }
 
         public static DataTable GetStoreDataTable()
         {

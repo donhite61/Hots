@@ -10,29 +10,31 @@ namespace Hots
 {
     public class OrderSystem
     {
-        public OrdSysName Name { get; set; }
+        public UInt32 Id { get; set; }
+        public Set.OrdSysName Name { get; set; }
         public bool Active { get; set; }
         public string WatchFldr { get; set; }
         public string Ext { get; set; }
         public string OutFldr { get; set; }
+        public string LabInFldr { get; set; }
         public string PrdSubFldr { get; set; }
         public string WaitFile { get; set; }
         public bool WaitIsFldr { get; set; }
+        public List<PickupKeywords> PuKeyWords { get; set; }
         public FileSystemWatcher fW { get; set; }
         public bool fwActive { get; set; }
-        public enum OrdSysName { Null, Roes, Dakis, DGift }
         static int i;
 
-        public static Order MakeOrderFromFileList(OrdSysName ordSysName, List<string> orderLineList, Order order)
+        public static Order MakeOrderFromFileList(Set.OrdSysName ordSysName, List<string> orderLineList, Order order)
         {
             switch (ordSysName)
             {
-                case OrdSysName.Roes:
+                case Set.OrdSysName.Roes:
                     order = RoesReadListFile(orderLineList, order);
                     break;
-                case OrdSysName.Dakis:
+                case Set.OrdSysName.Dakis:
                     break;
-                case OrdSysName.DGift:
+                case Set.OrdSysName.DGift:
                     break;
             }
             return order;

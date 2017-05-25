@@ -3,16 +3,19 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using System.Windows.Forms;
+using System.Data;
 
 namespace Hots
 {
-    static class Set
+    public static class Set
     {
         private static string iniFile = Directory.GetCurrentDirectory() + @"\HotsSavedData.xml";
+        public enum OrdSysName { Null, Roes, Dakis, DGift }
         public static Form1 MainForm;
-        public static string ConnString = "server=69.89.31.188;user=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;";
-        public static string SelectedStore { get; set; }
-        public static List<OrderSystem> ListOrdSys { get; set; }
+        public static string ConnString { get; private set; }
+        public static string PickupLoc { get; set; }
+        public static List<PickupLocation> PickupLocList { get; set; }
+        public static List<OrderSystem> OrdSysList { get; set; }
 
         public static void CreateDefaultSettings()
         {
@@ -21,39 +24,42 @@ namespace Hots
             if (result == DialogResult.No)
                 Environment.Exit(1);
 
-            SelectedStore = "Please select Store";
-            ListOrdSys = new List<OrderSystem>();
-            foreach (OrderSystem.OrdSysName name in Enum.GetValues(typeof(OrderSystem.OrdSysName)))
+            ConnString = "server=69.89.31.188;uid=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;";
+            PickupLoc = "Please select Store";
+            OrdSysList = new List<OrderSystem>();
+            foreach (Set.OrdSysName name in Enum.GetValues(typeof(Set.OrdSysName)))
             {
                 if (name.ToString() != "Null")
                 {
                     var os = new OrderSystem();
                     os.Name = name;
-                    ListOrdSys.Add(os);
+                    OrdSysList.Add(os);
                 }
             }
         }
 
+        public static void SetConnString(LocalSettings savedSet)
+        {
+            ConnString = savedSet.ConnString;
+        }
+
         public static bool LoadSettings()
         {
-            SaveSettings savedSet = Hots.SaveSettings.readSettingsfromDisk(iniFile);
+            LocalSettings savedSet = Hots.LocalSettings.readSettingsfromDisk(iniFile);
             if (savedSet != null)
             {
                 ConnString = savedSet.ConnString;
-                SelectedStore = savedSet.SelectedStore;
-                ListOrdSys = new List<OrderSystem>();
-                foreach (var savedOrdSys in savedSet.OrdSysList)
+                PickupLoc = savedSet.SelectedPickupLocation;
+                OrdSysList = new List<OrderSystem>();
+                foreach (var savedOrdSys in savedSet.LocOrdSysSetList)
                 {
                     var os = new OrderSystem();
-                    os.Name = savedOrdSys.Name;
-                    os.Active = savedOrdSys.Active;
+                    os.Id = savedOrdSys.Id;
                     os.WatchFldr = savedOrdSys.WchFldr;
-                    os.Ext = savedOrdSys.Ext;
                     os.OutFldr = savedOrdSys.OutFldr;
-                    os.PrdSubFldr = savedOrdSys.PrdSubFldr;
-                    os.WaitFile = savedOrdSys.WaitFile;
-                    os.WaitIsFldr = savedOrdSys.WaitIsFldr;
-                    ListOrdSys.Add(os);
+                    os.LabInFldr = savedOrdSys.LabInFldr;
+                    os.Active = savedOrdSys.Active;
+                    OrdSysList.Add(os);
                 }
                 return true;
             }
@@ -65,52 +71,47 @@ namespace Hots
 
         public static bool SaveSettings()
         {
-            SaveSettings saveSet = new SaveSettings();
+            LocalSettings saveSet = new LocalSettings();
             saveSet.ConnString = Set.ConnString;
-            saveSet.SelectedStore = Set.SelectedStore;
-            saveSet.OrdSysList = new List<SaveOrdSystems>();
-            foreach (var os in Set.ListOrdSys)
+            saveSet.SelectedPickupLocation = Set.PickupLoc;
+            saveSet.LocOrdSysSetList = new List<LocOrdSysSettings>();
+            foreach (var os in Set.OrdSysList)
             {
-                var sOs = new SaveOrdSystems();
-                sOs.Name = os.Name;
-                sOs.Active = os.Active;
-                sOs.WchFldr = os.WatchFldr;
-                sOs.Ext = os.Ext;
-                sOs.OutFldr = os.OutFldr;
-                sOs.PrdSubFldr = os.PrdSubFldr;
-                sOs.WaitFile = os.WaitFile;
-                sOs.WaitIsFldr = os.WaitIsFldr;
-                saveSet.OrdSysList.Add(sOs);
+                var locOrdSysSet = new LocOrdSysSettings();
+                locOrdSysSet.Id = os.Id;
+                locOrdSysSet.WchFldr = os.WatchFldr;
+                locOrdSysSet.OutFldr = os.OutFldr;
+                locOrdSysSet.LabInFldr = os.PrdSubFldr;
+                locOrdSysSet.Active = os.Active;
             }
-            if(Hots.SaveSettings.WriteSettingsToDisk(saveSet, Set.iniFile))
-            {
-                return true;
-
-            }
-            else
-            {
-                return false;
-            }
+            return Hots.LocalSettings.WriteSettingsToDisk(saveSet, Set.iniFile) ? true : false;
+            //if (Hots.LocalSettings.WriteSettingsToDisk(saveSet, Set.iniFile))
+            //{
+            //    return true;
+            //}
+            //else
+            //{
+            //    return false;
+            //}
         }
     }
-    
 
 
     [Serializable]
-     public class SaveSettings
+     public class LocalSettings
     {
         public string ConnString;
-        public string SelectedStore;
-        public List<SaveOrdSystems> OrdSysList { get; set; }
+        public string SelectedPickupLocation;
+        public List<LocOrdSysSettings> LocOrdSysSetList { get; set; }
 
-        public static SaveSettings readSettingsfromDisk(string iniFile)
+        public static LocalSettings readSettingsfromDisk(string iniFile)
         {
             try
             {
-                var serializer = new XmlSerializer(typeof(SaveSettings));
+                var serializer = new XmlSerializer(typeof(LocalSettings));
                 using (var stream = new StreamReader(iniFile))
                 {
-                    return (SaveSettings)(serializer.Deserialize(stream));
+                    return (LocalSettings)(serializer.Deserialize(stream));
                 }
             }
             catch
@@ -119,11 +120,11 @@ namespace Hots
             }
         }
 
-        public static bool WriteSettingsToDisk(SaveSettings locSet, string iniFile)
+        public static bool WriteSettingsToDisk(LocalSettings locSet, string iniFile)
         {
             try
             {
-                var serializer = new XmlSerializer(typeof(SaveSettings));
+                var serializer = new XmlSerializer(typeof(LocalSettings));
                 using (var stream = new StreamWriter(iniFile))
                 {
                     serializer.Serialize(stream, locSet);
@@ -137,16 +138,13 @@ namespace Hots
         }
     }
 
-    [XmlInclude(typeof(SaveOrdSystems))]
-    public class SaveOrdSystems
+    [XmlInclude(typeof(LocOrdSysSettings))]
+    public class LocOrdSysSettings
     {
-        public OrderSystem.OrdSysName Name;
-        public bool Active;
+        public UInt32 Id;
         public string WchFldr;
-        public string Ext;
         public string OutFldr;
-        public string PrdSubFldr;
-        public string WaitFile;
-        public bool WaitIsFldr;
+        public string LabInFldr;
+        public bool Active;
     }
 }

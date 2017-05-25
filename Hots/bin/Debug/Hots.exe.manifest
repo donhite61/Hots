@@ -43,14 +43,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Hots.exe" size="101840">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Hots.exe" size="109520">
       <assemblyIdentity name="Hots" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>uEyejCF/ZSDWBtVr4g+Ovaj9cBJCEXvH09tbuqwN+mc=</dsig:DigestValue>
+        <dsig:DigestValue>JKPom0r0G9HpfMYZZ+2w3Wq6XCq1HmIHCYF+feu4EAs=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

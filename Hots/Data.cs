@@ -195,6 +195,99 @@ namespace Hots
         }
         #endregion Save Order
 
+
+        public static DataTable GetDataTable(string sql)
+        {
+            DataTable tb = new DataTable();
+            using (var conn = new MySqlConnection(Set.ConnString))
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                conn.Open();
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+                    tb.Load(reader);
+                }
+            }
+            return tb;
+        }
+
+        public static List<OrderSystem> GetOrdSysListFromServer()
+        {
+            string sql = "select * FROM ordersystems";
+            List<OrderSystem> list = new List<OrderSystem>();
+            using (var conn = new MySqlConnection(Set.ConnString))
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                using (MySqlDataReader rd = cmd.ExecuteReader())
+                {
+                    while (rd.Read())
+                    {
+                        var os = new OrderSystem();
+                        os.Id = Convert.ToUInt32(rd[0]);
+                        Enum.TryParse(Convert.ToString(rd[1]), out Set.OrdSysName ordSysName);
+                        os.Name = ordSysName;
+                        os.Ext = Convert.ToString(rd[2]);
+                        os.PrdSubFldr = Convert.ToString(rd[3]);
+                        os.WaitFile = Convert.ToString(rd[4]);
+                        os.WaitIsFldr = Convert.ToBoolean(rd[5]);
+                        list.Add(os);
+                    }
+                }
+            }
+            return list;
+        }
+
+        public static List<PickupKeywords> GetKeywordListFromServerByOrdSys(Set.OrdSysName ordSysName)
+        {
+            string sql = "select * FROM pickupkeywords WHERE puk_OrdSysName = '"+ ordSysName.ToString() +"'";
+            List<PickupKeywords> list = new List<PickupKeywords>();
+            using (var conn = new MySqlConnection(Set.ConnString))
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                using (MySqlDataReader rd = cmd.ExecuteReader())
+                {
+                    while (rd.Read())
+                    {
+                        var puk = new PickupKeywords();
+                        puk.Id = Convert.ToUInt32(rd[0]);
+                        puk.Keyword = Convert.ToString(rd[1]);
+                        puk.PickupLocation = Convert.ToString(rd[2]);
+                        list.Add(puk);
+                    }
+                }
+            }
+            return list;
+        }
+
+        public static List<PickupLocation> GetPickupLocListFromServer()
+        {
+            string sql = "select * FROM pickuplocations";
+            List<PickupLocation> list = new List<PickupLocation>();
+            using (var conn = new MySqlConnection(Set.ConnString))
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                using (MySqlDataReader rd = cmd.ExecuteReader())
+                {
+                    while (rd.Read())
+                    {
+                        var pul = new PickupLocation();
+                        pul.PuId = Convert.ToUInt32(rd[0]);
+                        pul.PuNicName = Convert.ToString(rd[1]);
+                        pul.PuName = Convert.ToString(rd[2]);
+                        pul.PuAddress = Convert.ToString(rd[3]);
+                        pul.PuCity = Convert.ToString(rd[4]);
+                        pul.PuState = Convert.ToString(rd[5]);
+                        pul.PuZip = Convert.ToString(rd[6]);
+                        pul.PuPhone = Convert.ToString(rd[7]);
+                        pul.PuInactive = Convert.ToBoolean(rd[8]);
+                        pul.PuShipCode = Convert.ToString(rd[7]);
+                        list.Add(pul);
+                    }
+                }
+            }
+            return list;
+        }
+
 #region Get Orders
         public static DataTable GetShortOrderList()
         {
@@ -224,5 +317,6 @@ namespace Hots
             return ordtable;
         }
         #endregion Get Orders
+
     }
 }

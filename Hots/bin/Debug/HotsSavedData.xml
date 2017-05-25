@@ -6,6 +6,16 @@
     <SaveOrdSystems>
       <Name>Roes</Name>
       <Active>true</Active>
+      <WchFldr>C:\DonsScripts\Hots Folder System\WatchedFolder\NewOrders\RoesIn</WchFldr>
+      <Ext>pof</Ext>
+      <OutFldr>C:\DonsScripts\Hots Folder System\Roes Output Folder</OutFldr>
+      <PrdSubFldr />
+      <WaitFile>Originals</WaitFile>
+      <WaitIsFldr>false</WaitIsFldr>
+    </SaveOrdSystems>
+    <SaveOrdSystems>
+      <Name>Dakis</Name>
+      <Active>false</Active>
       <WchFldr />
       <Ext />
       <OutFldr />
@@ -14,13 +24,13 @@
       <WaitIsFldr>false</WaitIsFldr>
     </SaveOrdSystems>
     <SaveOrdSystems>
-      <Name>Dakis</Name>
-      <Active>false</Active>
-      <WaitIsFldr>false</WaitIsFldr>
-    </SaveOrdSystems>
-    <SaveOrdSystems>
       <Name>DGift</Name>
       <Active>false</Active>
+      <WchFldr />
+      <Ext />
+      <OutFldr />
+      <PrdSubFldr />
+      <WaitFile />
       <WaitIsFldr>false</WaitIsFldr>
     </SaveOrdSystems>
   </OrdSysList>

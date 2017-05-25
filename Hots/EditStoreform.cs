@@ -36,9 +36,9 @@ namespace Hots
         private void EditStoreForm_Load(object sender, EventArgs e)
         {
             if (!newStore)
+            {
                 fillFields();
-            
-
+            } 
         }
 
         private void fillFields()
@@ -52,6 +52,7 @@ namespace Hots
             txtBox_StoreZip.Text = Convert.ToString(sRow.Cells["Zip"].Value);
             txtBox_StorePhone.Text = Convert.ToString(sRow.Cells["Phone"].Value);
             ChkBox_StoreInactive.Checked = Convert.ToBoolean(sRow.Cells["Inactive"].Value);
+            txtBox_ShipCode.Text = Convert.ToString(sRow.Cells["Ship Code"].Value);
         }
 
         private void but_StoreAdd_Click(object sender, EventArgs e)
@@ -74,8 +75,9 @@ namespace Hots
             var sZip = txtBox_StoreZip.Text;
             var sPhone = txtBox_StorePhone.Text;
             var sIa = ChkBox_StoreInactive.Checked;
+            var sSc = txtBox_ShipCode.Text;
 
-            if (Stores.UpdateStore(storeId, sNicName, sName, sAdd, sCity, sSt, sZip, sPhone, sIa))
+            if (PickupLocation.UpdateStore(storeId, sNicName, sName, sAdd, sCity, sSt, sZip, sPhone, sIa, sSc))
             {
                 Close();
             }
@@ -92,7 +94,7 @@ namespace Hots
 
         private void processStoreDelete()
         {
-            if (Stores.DeleteStore (storeId))
+            if (PickupLocation.DeleteStore (storeId))
             {
                 Close();
             }
@@ -117,7 +119,7 @@ namespace Hots
         private void processStoreAdd()
         {
             var sNicName = txtBox_StoreNicName.Text;
-            if (Stores.DoesStoreExist(sNicName))
+            if (PickupLocation.DoesStoreExist(sNicName))
             {
                 MessageBox.Show("Store Nicname already exists, choose another name");
                 return;
@@ -129,8 +131,9 @@ namespace Hots
             var sZip = txtBox_StoreZip.Text;
             var sPhone = txtBox_StorePhone.Text;
             var sIa = ChkBox_StoreInactive.Checked;
+            var sSc = txtBox_ShipCode.Text;
 
-            if (Stores.AddStore(sNicName, sName, sAdd, sCity, sSt, sZip, sPhone, sIa))
+            if (PickupLocation.AddStore(sNicName, sName, sAdd, sCity, sSt, sZip, sPhone, sIa, sSc))
             {
                 Close();
             }

@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
 using System.Windows.Forms;
 
 namespace Hots
@@ -24,7 +20,7 @@ namespace Hots
             InitializeComponent();
         }
 
-    private void Form1_Load(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
             Data.LogEvents(1, "Interface loaded");
             makeOrdSysIndLables();
@@ -36,7 +32,7 @@ namespace Hots
         }
 
 
-        public void UpdateStatusWindow(int status, string text)//called by new file in watched folder
+        public void UpdateStatusWindow(int status, string text)//called by data logevents
         {
             if (txtBox_Log.InvokeRequired)
             {
@@ -69,11 +65,11 @@ namespace Hots
 
         private void makeOrdSysIndLables()
         {
-            osIlabels = new Label[Set.ListOrdSys.Count];
-            for (int i = 0; i < Set.ListOrdSys.Count; i++)
+            osIlabels = new Label[Set.OrdSysList.Count];
+            for (int i = 0; i < Set.OrdSysList.Count; i++)
             {
                 osIlabels[i] = new Label();
-                osIlabels[i].Text = Set.ListOrdSys[i].Name.ToString();
+                osIlabels[i].Text = Set.OrdSysList[i].Name.ToString();
                 osIlabels[i].ForeColor = Color.LightGray;
                 osIlabels[i].Visible = true;
                 osIlabels[i].Location = new Point(100 + (i * 100), 8);
@@ -83,16 +79,16 @@ namespace Hots
 
         private void StartStopWatchers()
         {
-            for (int i = 0; i < Set.ListOrdSys.Count; i++)
+            for (int i = 0; i < Set.OrdSysList.Count; i++)
             {
-                if (Set.ListOrdSys[i].Active == true)
+                if (Set.OrdSysList[i].Active == true)
                 {
-                    if (Set.SelectedStore != "Please select Store")
-                        Watchers.StartWatching(Set.ListOrdSys[i]);
+                    if (Set.PickupLoc != "Please select Store")
+                        Watchers.StartWatching(Set.OrdSysList[i]);
                 }
                 else
                 {
-                    Watchers.StopWatching(Set.ListOrdSys[i]);
+                    Watchers.StopWatching(Set.OrdSysList[i]);
                 }
 
                 UpdateWchrIndicators(i);
@@ -101,13 +97,13 @@ namespace Hots
 
         private void UpdateWchrIndicators(int i)
         {
-            if (Set.ListOrdSys[i].fwActive == true)
+            if (Set.OrdSysList[i].fwActive == true)
             {
                 osIlabels[i].ForeColor = Color.Green;
             }
             else
             {
-                if (Set.ListOrdSys[i].Active == true)
+                if (Set.OrdSysList[i].Active == true)
                 {
                     osIlabels[i].ForeColor = Color.Red;
                 }
@@ -122,7 +118,7 @@ namespace Hots
 
         private void fillOSFormFromSettings()
         {
-            osBindingList = new BindingList<OrderSystem>(Set.ListOrdSys);
+            osBindingList = new BindingList<OrderSystem>(Set.OrdSysList);
             var source = new BindingSource(osBindingList, null);
             Gridview_OS.DataSource = source;
         }
@@ -146,7 +142,7 @@ namespace Hots
         #endregion Order Systems
 
         #region Orders
-        public void fillOrderGridviewfromList()
+        private void fillOrderGridviewfromList()
         {
             OrdTable = Data.GetShortOrderList();
             Gridview_OrdHeaders.DataSource = OrdTable;
@@ -164,8 +160,8 @@ namespace Hots
 
         private void fillStoreDatatable()
         {
-            Gridview_Stores.DataSource = Stores.GetStoreDataTable();
-            lbl_SelectedStore.Text = Set.SelectedStore;
+            Gridview_Stores.DataSource = PickupLocation.GetStoreDataTable();
+            lbl_SelectedStore.Text = Set.PickupLoc;
         }
 
         private void Gridview_Stores_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -195,8 +191,8 @@ namespace Hots
             DataGridViewRow row = Gridview_Stores.Rows[selRow];
             if (selRow != -1)
             {
-                Set.SelectedStore = row.Cells[1].Value.ToString();
-                lbl_SelectedStore.Text = Set.SelectedStore;
+                Set.PickupLoc = row.Cells[1].Value.ToString();
+                lbl_SelectedStore.Text = Set.PickupLoc;
                 Set.SaveSettings();
                 StartStopWatchers();
             }

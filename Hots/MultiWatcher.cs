@@ -19,24 +19,24 @@ namespace Hots
             bWorker.WorkerReportsProgress = true;
             bWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bWorker_RunWorkerCompleted);
 
-            for (int i = 0; i < Set.ListOrdSys.Count; i++)
+            for (int i = 0; i < Set.OrdSysList.Count; i++)
             {
                 try
                 {
-                    if (Directory.Exists(Set.ListOrdSys[i].WatchFldr))
+                    if (Directory.Exists(Set.OrdSysList[i].WatchFldr))
                     {
-                        Set.ListOrdSys[i].fW = new FileSystemWatcher();
-                        Set.ListOrdSys[i].fW.Path = Set.ListOrdSys[i].WatchFldr;
-                        Set.ListOrdSys[i].fW.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
+                        Set.OrdSysList[i].fW = new FileSystemWatcher();
+                        Set.OrdSysList[i].fW.Path = Set.OrdSysList[i].WatchFldr;
+                        Set.OrdSysList[i].fW.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
                       | NotifyFilters.FileName | NotifyFilters.DirectoryName;
-                        Set.ListOrdSys[i].fW.Filter = "*."+Set.ListOrdSys[i].Ext;
-                        Set.ListOrdSys[i].fW.Created += new FileSystemEventHandler(OnChanged);
-                        Data.LogEvents(1, Set.ListOrdSys[i].Name.ToString()+" Folder watcher created");
+                        Set.OrdSysList[i].fW.Filter = "*."+Set.OrdSysList[i].Ext;
+                        Set.OrdSysList[i].fW.Created += new FileSystemEventHandler(OnChanged);
+                        Data.LogEvents(1, Set.OrdSysList[i].Name.ToString()+" Folder watcher created");
                     }
                 }
                 catch
                 {
-                    Data.LogEvents(1, Set.ListOrdSys[i].Name.ToString() + " Folder watcher creation FAILED");
+                    Data.LogEvents(1, Set.OrdSysList[i].Name.ToString() + " Folder watcher creation FAILED");
                 }
             }
         }
