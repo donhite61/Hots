@@ -9,7 +9,7 @@ namespace Hots
 {
     public static class Set
     {
-        private static string iniFile = Directory.GetCurrentDirectory() + @"\HotsSavedData.xml";
+        private static string iniFile;
         public enum OrdSysName { Null, Roes, Dakis, DGift }
         public static Form1 MainForm;
         public static string ConnString { get; private set; }
@@ -17,14 +17,15 @@ namespace Hots
         public static List<PickupLocation> PickupLocList { get; set; }
         public static List<OrderSystem> OrdSysList { get; set; }
 
-        public static void CreateDefaultSettings()
+        public static void CreateDefaultSettings(string _iniFile, string _connString)
         {
             DialogResult result = MessageBox.Show("create default settings file?",
                             "Settings file read error", MessageBoxButtons.YesNo);
             if (result == DialogResult.No)
-                Environment.Exit(1);
+                throw new Exception();
 
-            ConnString = "server=69.89.31.188;uid=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;";
+            ConnString = _connString;
+            iniFile = _iniFile;
             PickupLoc = "Please select Store";
             OrdSysList = new List<OrderSystem>();
             foreach (Set.OrdSysName name in Enum.GetValues(typeof(Set.OrdSysName)))
@@ -43,33 +44,26 @@ namespace Hots
             ConnString = savedSet.ConnString;
         }
 
-        public static bool LoadSettings()
+        internal static void FillOrdSysWithSavedPaths(List<OrderSystem> ordSysList, LocalSettings savedSet)
         {
-            LocalSettings savedSet = Hots.LocalSettings.readSettingsfromDisk(iniFile);
-            if (savedSet != null)
+            foreach (LocOrdSysSettings locOs in savedSet.LocOrdSysSetList)
             {
-                ConnString = savedSet.ConnString;
-                PickupLoc = savedSet.SelectedPickupLocation;
-                OrdSysList = new List<OrderSystem>();
-                foreach (var savedOrdSys in savedSet.LocOrdSysSetList)
+                foreach (OrderSystem os in Set.OrdSysList)
                 {
-                    var os = new OrderSystem();
-                    os.Id = savedOrdSys.Id;
-                    os.WatchFldr = savedOrdSys.WchFldr;
-                    os.OutFldr = savedOrdSys.OutFldr;
-                    os.LabInFldr = savedOrdSys.LabInFldr;
-                    os.Active = savedOrdSys.Active;
-                    OrdSysList.Add(os);
+                    if (os.Id == locOs.Id)
+                    {
+                        os.WatchFldr = locOs.WchFldr;
+                        os.OutFldr = locOs.OutFldr;
+                        os.LabInFldr = locOs.LabInFldr;
+                        os.Active = locOs.Active;
+                        os.PuKeyWords = Data.GetKeywordListFromServerByOrdSys(os.Name);
+
+                    }
                 }
-                return true;
-            }
-            else
-            {
-                return false;
             }
         }
 
-        public static bool SaveSettings()
+        public static void SaveSettings()
         {
             LocalSettings saveSet = new LocalSettings();
             saveSet.ConnString = Set.ConnString;
@@ -84,15 +78,7 @@ namespace Hots
                 locOrdSysSet.LabInFldr = os.PrdSubFldr;
                 locOrdSysSet.Active = os.Active;
             }
-            return Hots.LocalSettings.WriteSettingsToDisk(saveSet, Set.iniFile) ? true : false;
-            //if (Hots.LocalSettings.WriteSettingsToDisk(saveSet, Set.iniFile))
-            //{
-            //    return true;
-            //}
-            //else
-            //{
-            //    return false;
-            //}
+            Hots.LocalSettings.WriteSettingsToDisk(saveSet, Set.iniFile);
         }
     }
 
@@ -106,18 +92,13 @@ namespace Hots
 
         public static LocalSettings readSettingsfromDisk(string iniFile)
         {
-            try
+            LocalSettings lset;
+            var serializer = new XmlSerializer(typeof(LocalSettings));
+            using (var stream = new StreamReader(iniFile))
             {
-                var serializer = new XmlSerializer(typeof(LocalSettings));
-                using (var stream = new StreamReader(iniFile))
-                {
-                    return (LocalSettings)(serializer.Deserialize(stream));
-                }
+                lset = (LocalSettings)(serializer.Deserialize(stream));
             }
-            catch
-            {
-                return null;
-            }
+            return lset;
         }
 
         public static bool WriteSettingsToDisk(LocalSettings locSet, string iniFile)

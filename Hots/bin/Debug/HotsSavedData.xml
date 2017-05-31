@@ -1,37 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<SaveSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <ConnString>server=69.89.31.188;user=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;</ConnString>
-  <SelectedStore>Lahser</SelectedStore>
-  <OrdSysList>
-    <SaveOrdSystems>
-      <Name>Roes</Name>
-      <Active>true</Active>
-      <WchFldr>C:\DonsScripts\Hots Folder System\WatchedFolder\NewOrders\RoesIn</WchFldr>
-      <Ext>pof</Ext>
-      <OutFldr>C:\DonsScripts\Hots Folder System\Roes Output Folder</OutFldr>
-      <PrdSubFldr />
-      <WaitFile>Originals</WaitFile>
-      <WaitIsFldr>false</WaitIsFldr>
-    </SaveOrdSystems>
-    <SaveOrdSystems>
-      <Name>Dakis</Name>
-      <Active>false</Active>
-      <WchFldr />
-      <Ext />
-      <OutFldr />
-      <PrdSubFldr />
-      <WaitFile />
-      <WaitIsFldr>false</WaitIsFldr>
-    </SaveOrdSystems>
-    <SaveOrdSystems>
-      <Name>DGift</Name>
-      <Active>false</Active>
-      <WchFldr />
-      <Ext />
-      <OutFldr />
-      <PrdSubFldr />
-      <WaitFile />
-      <WaitIsFldr>false</WaitIsFldr>
-    </SaveOrdSystems>
-  </OrdSysList>
-</SaveSettings>
+<LocalSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ConnString>server=69.89.31.188;uid=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;</ConnString>
+  <SelectedPickupLocation>Please select Store</SelectedPickupLocation>
+  <LocOrdSysSetList />
+</LocalSettings>

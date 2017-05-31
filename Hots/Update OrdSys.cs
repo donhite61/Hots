@@ -88,10 +88,10 @@ namespace Hots
 
         private void Gridview_sskKeywords_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            var selRow = Gridview_OrdSysShipKeywords.SelectedCells[0].RowIndex;
-            var editKeyWordForm = new KeywordForm(Gridview_OrdSysShipKeywords.Rows[selRow], ordSysName);
-            editKeyWordForm.FormClosed += editKeyWordForm_FormClosed;
-            editKeyWordForm.Show();
+            //var selRow = Gridview_OrdSysShipKeywords.SelectedCells[0].RowIndex;
+            //var editKeyWordForm = new KeywordForm(Gridview_OrdSysShipKeywords.Rows[selRow], ordSysName);
+            //editKeyWordForm.FormClosed += editKeyWordForm_FormClosed;
+            //editKeyWordForm.Show();
         }
 
         private void editKeyWordForm_FormClosed(object sender, FormClosedEventArgs e)
@@ -101,7 +101,7 @@ namespace Hots
 
         private void but_AddKeyWord_Click(object sender, EventArgs e)
         {
-            editKeyWordForm = new KeywordForm(null, ordSysName);
+           // editKeyWordForm = new KeywordForm(null, ordSysName);
             editKeyWordForm.FormClosed += editKeyWordForm_FormClosed;
             editKeyWordForm.Show();
         }

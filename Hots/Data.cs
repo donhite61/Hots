@@ -218,6 +218,7 @@ namespace Hots
             using (var conn = new MySqlConnection(Set.ConnString))
             using (var cmd = new MySqlCommand(sql, conn))
             {
+                conn.Open();
                 using (MySqlDataReader rd = cmd.ExecuteReader())
                 {
                     while (rd.Read())
@@ -244,6 +245,7 @@ namespace Hots
             using (var conn = new MySqlConnection(Set.ConnString))
             using (var cmd = new MySqlCommand(sql, conn))
             {
+                conn.Open();
                 using (MySqlDataReader rd = cmd.ExecuteReader())
                 {
                     while (rd.Read())
@@ -266,6 +268,7 @@ namespace Hots
             using (var conn = new MySqlConnection(Set.ConnString))
             using (var cmd = new MySqlCommand(sql, conn))
             {
+                conn.Open();
                 using (MySqlDataReader rd = cmd.ExecuteReader())
                 {
                     while (rd.Read())
