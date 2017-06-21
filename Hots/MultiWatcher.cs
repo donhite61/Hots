@@ -23,15 +23,16 @@ namespace Hots
             {
                 try
                 {
-                    if (Directory.Exists(Set.OrdSysList[i].WatchFldr))
+                    if (Directory.Exists(Set.OrdSysList[i].WatchedFolder))
                     {
                         Set.OrdSysList[i].fW = new FileSystemWatcher();
-                        Set.OrdSysList[i].fW.Path = Set.OrdSysList[i].WatchFldr;
+                        Set.OrdSysList[i].fW.Path = Set.OrdSysList[i].WatchedFolder;
                         Set.OrdSysList[i].fW.NotifyFilter = NotifyFilters.LastAccess | NotifyFilters.LastWrite
                       | NotifyFilters.FileName | NotifyFilters.DirectoryName;
                         Set.OrdSysList[i].fW.Filter = "*."+Set.OrdSysList[i].Ext;
                         Set.OrdSysList[i].fW.Created += new FileSystemEventHandler(OnChanged);
                         Data.LogEvents(1, Set.OrdSysList[i].Name.ToString()+" Folder watcher created");
+                        StartStopWatcher(Set.OrdSysList[i]);
                     }
                 }
                 catch
@@ -39,37 +40,22 @@ namespace Hots
                     Data.LogEvents(1, Set.OrdSysList[i].Name.ToString() + " Folder watcher creation FAILED");
                 }
             }
-        }
+           
 
-        public static void StartWatching(OrderSystem  ordSys)
+        }
+        public static void StartStopWatcher(OrderSystem ordSys)
         {
-            if (ordSys.fwActive == false)
+            if (ordSys.Active == true)
             {
-                try
-                {
-                    ordSys.fW.EnableRaisingEvents = true;
-                    ordSys.fwActive = true;
-                    Data.LogEvents(1, ordSys.Name + " watch started");
-                }
-                catch
-                {
-                    ordSys.fwActive = false;
-                }
+                ordSys.fW.EnableRaisingEvents = true;
+                ordSys.fwActive = true;
+                Data.LogEvents(1, ordSys.Name + " watch started");
             }
-        }
-
-        public static void StopWatching(OrderSystem ordSys)
-        {
-            if (ordSys.fwActive == true)
-                try
+            else
             {
                 ordSys.fW.EnableRaisingEvents = false;
                 ordSys.fwActive = false;
                 Data.LogEvents(1, ordSys.Name + " watch stopped");
-            }
-            catch
-            {
-                Data.LogEvents(0, ordSys.Name + " error stopping watcher");
             }
         }
 
@@ -141,13 +127,8 @@ namespace Hots
             {
                 string[] words = ordPath.Split('\\');
                 var ordName = words[words.Length - 1];
-                if (words[words.Length - 2] != "Read")
-                {
-                    if (FileIsReady(ordPath))
-                    {
-                        Order.CreateNewOrderFromDroppedFile(ordPath);
-                    }
-                }
+                if (FileIsReady(ordPath))
+                    Order.CreateNewOrderFromDroppedFile(ordPath);
             }
         }
         #endregion Backgroundworker

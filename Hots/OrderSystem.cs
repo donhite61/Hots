@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using MySql.Data.MySqlClient;
+using System.Windows.Forms;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
@@ -13,19 +15,96 @@ namespace Hots
         public UInt32 Id { get; set; }
         public Set.OrdSysName Name { get; set; }
         public bool Active { get; set; }
-        public string WatchFldr { get; set; }
+        public string WatchedFolder { get; set; }
         public string Ext { get; set; }
-        public string OutFldr { get; set; }
+        public string OutputFolder { get; set; }
         public string LabInFldr { get; set; }
-        public string PrdSubFldr { get; set; }
+        public string ProductSubFolder { get; set; }
         public string WaitFile { get; set; }
-        public bool WaitIsFldr { get; set; }
-        public List<PickupKeywords> PuKeyWords { get; set; }
+        public bool WaitIsFolder { get; set; }
+        public List<PickupKeyword> PuKeyWordList { get; set; }
         public FileSystemWatcher fW { get; set; }
         public bool fwActive { get; set; }
         static int i;
 
-        public static Order MakeOrderFromFileList(Set.OrdSysName ordSysName, List<string> orderLineList, Order order)
+
+        #region Server Methods
+
+        public static List<OrderSystem> GetOrdSysListFromServer()
+        {
+            string sql = "select ordSys_Id,ordSys_Name,ordSys_WchExt,ordSys_PrdSubFldr,ordSys_WaitFile,ordSys_WaitIsFldr FROM ordersystems";
+            List<OrderSystem> list = new List<OrderSystem>();
+            using (var conn = new MySqlConnection(Set.ConnString))
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySqlDataReader rd = cmd.ExecuteReader())
+                    {
+                        while (rd.Read())
+                        {
+                            var os = new OrderSystem();
+                            os.Id = Convert.ToUInt32(rd[0]);
+                            Enum.TryParse(Convert.ToString(rd[1]), out Set.OrdSysName ordSysName);
+                            os.Name = ordSysName;
+                            os.Ext = Convert.ToString(rd[2]);
+                            os.ProductSubFolder = Convert.ToString(rd[3]);
+                            os.WaitFile = Convert.ToString(rd[4]);
+                            os.WaitIsFolder = Convert.ToBoolean(rd[5]);
+                            list.Add(os);
+                        }
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Error Connecting to Server");
+                }
+            }
+            return list;
+        }
+
+        public static void UpdateOrderSystemOnServer(OrderSystem ordSys)
+        {
+            int? count;
+            string sql = "select count(*) FROM ordersystems WHERE ordSys_Id = @ordSysId";
+            using (var conn = new MySqlConnection(Set.ConnString))
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+                cmd.Parameters.AddWithValue("@ordSysId", ordSys.Id);
+                conn.Open();
+                count = Convert.ToInt32(cmd.ExecuteScalar());
+            }
+            if (count > 0)
+            {
+                sql = "UPDATE ordersystems SET ordSys_Id=@ordSysId, ordSys_Name=@ordSysName, ordSys_WchExt=@ordSysExt, " +
+                        "ordSys_PrdSubFldr=@prdSubFldr, ordSys_WaitFile=@waitFile, ordSys_WaitIsFldr=@waitIsFldr " +
+                        "WHERE ordSys_Id = @ordSysId";
+            }
+            else
+            {
+                sql = "INSERT into ordersystems (ordSys_Id, ordSys_Name, ordSys_WchExt, ordSys_PrdSubFldr, ordSys_WaitFile, ordSys_WaitIsFldr )" +
+                        " VALUES (@ordSysId, @ordSysName, @ordSysExt, @prdSubFldr, @waitFile, @waitIsFldr)";
+            }
+
+            using (var conn = new MySqlConnection(Set.ConnString))
+            using (var cmd = new MySqlCommand(sql, conn))
+            {
+
+                cmd.Parameters.AddWithValue("@ordSysId", ordSys.Id);
+                cmd.Parameters.AddWithValue("@ordSysName", ordSys.Name);
+                cmd.Parameters.AddWithValue("@ordSysExt", ordSys.Ext);
+                cmd.Parameters.AddWithValue("@prdSubFldr", ordSys.ProductSubFolder);
+                cmd.Parameters.AddWithValue("@waitFile", ordSys.WaitFile);
+                cmd.Parameters.AddWithValue("@waitIsFldr", ordSys.WaitIsFolder);
+                conn.Open();
+                int rowsUpdated = cmd.ExecuteNonQuery();
+            }
+        }
+
+        #endregion Server Methods
+
+        public static Order FillOrderFromFileList(Set.OrdSysName ordSysName, List<string> orderLineList, Order order)
         {
             switch (ordSysName)
             {
@@ -33,12 +112,62 @@ namespace Hots
                     order = RoesReadListFile(orderLineList, order);
                     break;
                 case Set.OrdSysName.Dakis:
+                    DakisReadListFile(orderLineList, order);
                     break;
                 case Set.OrdSysName.DGift:
                     break;
             }
             return order;
         }
+
+        #region Dakis Order System
+        private static Order DakisReadListFile(List<string> orderLineList, Order order)
+        {
+            try
+            {
+                i = 0;
+                while (orderLineList[i] != "</Order>")
+                {
+                    switch (orderLineList[i])
+                    {
+                        case "<Order Info>":
+                            order = fillOrderInfo(orderLineList, order);
+                            break;
+                        case "<Customer>":
+                            order = fillCustomerInfo(orderLineList, order);
+                            break;
+                        case "<Billing>":
+                            order = fillBillingInfo(orderLineList, order);
+                            break;
+                        case "<Shipping>":
+                            order = fillShippingInfo(orderLineList, order);
+                            break;
+                        case "<Payment>":
+                            order = fillPaymentInfo(orderLineList, order);
+                            break;
+                        case "<OrderItems>":
+                            order.ItemsList = fillOrderItems(orderLineList, order);
+                            order.ItemsList = addUpIdenticalItems(order.ItemsList);
+                            order.Products = makeTextFieldFromItemsList(order.ItemsList);
+                            break;
+                        case "<OrderOptions>":
+                            order.OrderOptionsList = fillOrderOptions(orderLineList, order);
+                            break;
+                        default:
+                            break;
+                    }
+                    i++;
+                }
+                order.OrdStatus = "new";
+            }
+            catch
+            {
+                order.OrdStatus = "error parsing file";
+            }
+            return order;
+        }
+
+        #endregion
 
         #region Roes Order System
 
@@ -233,7 +362,8 @@ namespace Hots
                 switch (aLineSplit[0])
                 {
                     case "Shipping Method":
-                        _newOrder.ShipMethod = aLineSplit[1];
+                        var shipcode = GetShipCode(aLineSplit[1]);
+                        _newOrder.ShipMethod = shipcode;
                         break;
                     case "Shipping Cost":
                         var temp = aLineSplit[1].Remove(0, 1);
@@ -269,6 +399,23 @@ namespace Hots
                 }
             }
             return _newOrder;
+        }
+
+        private static string GetShipCode(string shipText)
+        {
+            var shipCode = shipText;
+            foreach (PickupKeyword kw in Set.OrdSysList[0].PuKeyWordList )
+            {
+                if (shipText.Contains(kw.Keyword))
+                {
+                    foreach (Location loc in Set.LocList)
+                    {
+                        if (loc.Id == kw.LocId)
+                            shipCode = loc.ShipCode;
+                    }
+                }
+            }
+            return shipCode;
         }
 
         private static Order fillPaymentInfo(List<string> orderLineList, Order _newOrder)

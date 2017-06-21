@@ -42,7 +42,8 @@ namespace Hots
             var stringToWrite = (status == 1) ? text : "ERROR  " + text;
           //todo  throw new NotImplementedException();
         }
-#region Save Order
+
+        #region Save Order
         public static UInt32 SaveOrdertoSqlServer(Order _fl)
         {
             string sql;
@@ -178,7 +179,7 @@ namespace Hots
         {
             foreach (OrderOptions option in options)
             {
-                MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand();
+                MySqlCommand cmd = new MySqlCommand();
                 cmd.Connection = conn;
                 cmd.CommandText = "INSERT INTO orderoptions(OrdOpt_OrdHdrId,OrdOpt_OptCode,OrdOpt_Description," +
                                   "OrdOpt_Quant,OrdOpt_Price,OrdOpt_Text)" +
@@ -195,7 +196,6 @@ namespace Hots
         }
         #endregion Save Order
 
-
         public static DataTable GetDataTable(string sql)
         {
             DataTable tb = new DataTable();
@@ -211,37 +211,10 @@ namespace Hots
             return tb;
         }
 
-        public static List<OrderSystem> GetOrdSysListFromServer()
-        {
-            string sql = "select * FROM ordersystems";
-            List<OrderSystem> list = new List<OrderSystem>();
-            using (var conn = new MySqlConnection(Set.ConnString))
-            using (var cmd = new MySqlCommand(sql, conn))
-            {
-                conn.Open();
-                using (MySqlDataReader rd = cmd.ExecuteReader())
-                {
-                    while (rd.Read())
-                    {
-                        var os = new OrderSystem();
-                        os.Id = Convert.ToUInt32(rd[0]);
-                        Enum.TryParse(Convert.ToString(rd[1]), out Set.OrdSysName ordSysName);
-                        os.Name = ordSysName;
-                        os.Ext = Convert.ToString(rd[2]);
-                        os.PrdSubFldr = Convert.ToString(rd[3]);
-                        os.WaitFile = Convert.ToString(rd[4]);
-                        os.WaitIsFldr = Convert.ToBoolean(rd[5]);
-                        list.Add(os);
-                    }
-                }
-            }
-            return list;
-        }
-
-        public static List<PickupKeywords> GetKeywordListFromServerByOrdSys(Set.OrdSysName ordSysName)
+        public static List<PickupKeyword> GetKeywordListFromServerByOrdSys(Set.OrdSysName ordSysName)
         {
             string sql = "select * FROM pickupkeywords WHERE puk_OrdSysName = '"+ ordSysName.ToString() +"'";
-            List<PickupKeywords> list = new List<PickupKeywords>();
+            List<PickupKeyword> list = new List<PickupKeyword>();
             using (var conn = new MySqlConnection(Set.ConnString))
             using (var cmd = new MySqlCommand(sql, conn))
             {
@@ -250,10 +223,10 @@ namespace Hots
                 {
                     while (rd.Read())
                     {
-                        var puk = new PickupKeywords();
+                        var puk = new PickupKeyword();
                         puk.Id = Convert.ToUInt32(rd[0]);
                         puk.Keyword = Convert.ToString(rd[1]);
-                        puk.PickupLocation = Convert.ToString(rd[2]);
+                        puk.LocId = Convert.ToUInt32(rd[2]);
                         list.Add(puk);
                     }
                 }
@@ -261,31 +234,38 @@ namespace Hots
             return list;
         }
 
-        public static List<PickupLocation> GetPickupLocListFromServer()
+        public static List<Location> GetPickupLocListFromServer()
         {
             string sql = "select * FROM pickuplocations";
-            List<PickupLocation> list = new List<PickupLocation>();
+            List<Location> list = new List<Location>();
             using (var conn = new MySqlConnection(Set.ConnString))
             using (var cmd = new MySqlCommand(sql, conn))
             {
-                conn.Open();
-                using (MySqlDataReader rd = cmd.ExecuteReader())
+                try
                 {
-                    while (rd.Read())
+                    conn.Open();
+                    using (MySqlDataReader rd = cmd.ExecuteReader())
                     {
-                        var pul = new PickupLocation();
-                        pul.PuId = Convert.ToUInt32(rd[0]);
-                        pul.PuNicName = Convert.ToString(rd[1]);
-                        pul.PuName = Convert.ToString(rd[2]);
-                        pul.PuAddress = Convert.ToString(rd[3]);
-                        pul.PuCity = Convert.ToString(rd[4]);
-                        pul.PuState = Convert.ToString(rd[5]);
-                        pul.PuZip = Convert.ToString(rd[6]);
-                        pul.PuPhone = Convert.ToString(rd[7]);
-                        pul.PuInactive = Convert.ToBoolean(rd[8]);
-                        pul.PuShipCode = Convert.ToString(rd[7]);
-                        list.Add(pul);
+                        while (rd.Read())
+                        {
+                            var pul = new Location();
+                            pul.Id = Convert.ToUInt32(rd[0]);
+                            pul.NicName = Convert.ToString(rd[1]);
+                            pul.Name = Convert.ToString(rd[2]);
+                            pul.Address = Convert.ToString(rd[3]);
+                            pul.City = Convert.ToString(rd[4]);
+                            pul.State = Convert.ToString(rd[5]);
+                            pul.Zip = Convert.ToString(rd[6]);
+                            pul.Phone = Convert.ToString(rd[7]);
+                            pul.Inactive = Convert.ToBoolean(rd[8]);
+                            pul.ShipCode = Convert.ToString(rd[9]);
+                            list.Add(pul);
+                        }
                     }
+                }
+                catch
+                {
+                    MessageBox.Show("Error connecting to server");
                 }
             }
             return list;

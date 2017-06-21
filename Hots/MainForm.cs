@@ -12,7 +12,6 @@ namespace Hots
     {
         Label[] osIlabels;
         DataTable OrdTable;
-        BindingList<OrderSystem> osBindingList;
         delegate void UpdateStausWindowDelegate(int status, string text);
 
         public Form1()
@@ -24,9 +23,9 @@ namespace Hots
         {
             Data.LogEvents(1, "Interface loaded");
             makeOrdSysIndLables();
-            StartStopWatchers();
-
+            UpdateWchrIndicators();
             fillOSFormFromSettings();
+
             fillStoreDatatable();
            // Data.LogEvents(1, "Local paths checked");
         }
@@ -77,68 +76,50 @@ namespace Hots
             }
         }
 
-        private void StartStopWatchers()
+        private void UpdateWchrIndicators()
         {
             for (int i = 0; i < Set.OrdSysList.Count; i++)
             {
-                if (Set.OrdSysList[i].Active == true)
+                if (Set.OrdSysList[i].fwActive == true)
                 {
-                    if (Set.PickupLoc != "Please select Store")
-                        Watchers.StartWatching(Set.OrdSysList[i]);
+                    osIlabels[i].ForeColor = Color.Green;
                 }
                 else
                 {
-                    Watchers.StopWatching(Set.OrdSysList[i]);
-                }
-
-                UpdateWchrIndicators(i);
-            }
-        }
-
-        private void UpdateWchrIndicators(int i)
-        {
-            if (Set.OrdSysList[i].fwActive == true)
-            {
-                osIlabels[i].ForeColor = Color.Green;
-            }
-            else
-            {
-                if (Set.OrdSysList[i].Active == true)
-                {
-                    osIlabels[i].ForeColor = Color.Red;
-                }
-                else
-                {
-                    osIlabels[i].ForeColor = Color.LightGray;
+                    if (Set.OrdSysList[i].Active == true)
+                    {
+                        osIlabels[i].ForeColor = Color.Red;
+                    }
+                    else
+                    {
+                        osIlabels[i].ForeColor = Color.LightGray;
+                    }
                 }
             }
         }
 
         #region Order Systems
-
         private void fillOSFormFromSettings()
         {
-            osBindingList = new BindingList<OrderSystem>(Set.OrdSysList);
-            var source = new BindingSource(osBindingList, null);
-            Gridview_OS.DataSource = source;
-        }
-
-        private void frm_UpdOrdSys_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            fillOSFormFromSettings();
-            StartStopWatchers();
+            Gridview_OS.DataSource = Set.OrdSysList;
+            Gridview_OS.Columns[0].Visible = false;
+            Gridview_OS.Columns[10].Visible = false;
         }
 
         private void ordSysGrid_DblClicked(object sender, DataGridViewCellEventArgs e)
         {
             int rowIndex = e.RowIndex;
-            DataGridViewRow row = Gridview_OS.Rows[rowIndex];
-            frm_UpdOrdSys editStoreForm = new frm_UpdOrdSys(row);
+            frm_UpdOrdSys editStoreForm = new frm_UpdOrdSys(Set.OrdSysList[rowIndex]);
             editStoreForm.FormClosed += frm_UpdOrdSys_FormClosed;
             editStoreForm.Show();
 
         }
 
+        private void frm_UpdOrdSys_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Gridview_OS.DataSource = null;
+            fillOSFormFromSettings();
+        }
         #endregion Order Systems
 
         #region Orders
@@ -156,48 +137,51 @@ namespace Hots
 
         #endregion Orders
 
-        #region Stores
+        #region Location
 
         private void fillStoreDatatable()
         {
-            Gridview_Stores.DataSource = PickupLocation.GetStoreDataTable();
-            lbl_SelectedStore.Text = Set.PickupLoc;
+            Gridview_Stores.DataSource = Set.LocList;
+            Gridview_Stores.Columns[0].Visible = false;
+            lbl_SelectedStore.Text = Set.ThisLocation;
         }
 
-        private void Gridview_Stores_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void Gridview_Location_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            var selRow = Gridview_Stores.SelectedCells[0].RowIndex;
-            var editStoreForm = new EditStoreForm(Gridview_Stores.Rows[selRow]);
-            editStoreForm.FormClosed += editStoreForm_FormClosed;
+            var strIndex = Gridview_Stores.SelectedCells[0].RowIndex;
+            var editStoreForm = new EditLocationForm(Set.LocList[strIndex]);
+            editStoreForm.FormClosed += editLocationForm_FormClosed;
             editStoreForm.Show();
         }
 
         private void but_AddStore_Click(object sender, EventArgs e)
         {
-            DataGridViewRow row = null;
-            var editStoreForm = new EditStoreForm(row);
-            editStoreForm.FormClosed += editStoreForm_FormClosed;
+            var editStoreForm = new EditLocationForm(null);
+            editStoreForm.FormClosed += editLocationForm_FormClosed;
             editStoreForm.Show();
         }
 
-        private void editStoreForm_FormClosed(object sender, FormClosedEventArgs e)
+        private void editLocationForm_FormClosed(object sender, FormClosedEventArgs e)
         {
+            Gridview_Stores.DataSource = null;
             fillStoreDatatable();
         }
 
         private void but_SetStore_Click(object sender, EventArgs e)
         {
-            int selRow = Gridview_Stores.CurrentCell.RowIndex;
-            DataGridViewRow row = Gridview_Stores.Rows[selRow];
-            if (selRow != -1)
+            if (Gridview_Stores.CurrentCell != null)
             {
-                Set.PickupLoc = row.Cells[1].Value.ToString();
-                lbl_SelectedStore.Text = Set.PickupLoc;
-                Set.SaveSettings();
-                StartStopWatchers();
+                int selRow = Gridview_Stores.CurrentCell.RowIndex;
+                DataGridViewRow row = Gridview_Stores.Rows[selRow];
+                if (selRow != -1)
+                {
+                    Set.ThisLocation = row.Cells[1].Value.ToString();
+                    lbl_SelectedStore.Text = Set.ThisLocation;
+                    Set.SaveSettings();
+                }
             }
         }
-        #endregion Stores
+        #endregion Location
 
     }
 }

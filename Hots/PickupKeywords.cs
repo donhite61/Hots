@@ -1,81 +1,113 @@
 ﻿using System;
 using MySql.Data.MySqlClient;
 using System.Data;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Hots
 {
-    public class PickupKeywords
+    public class PickupKeyword
     {
-        public Set.OrdSysName OrdSysName { get; set; }
         public UInt32? Id { get; set; }
+        public UInt32 OrdSysId { get; set; }
         public string Keyword { get; set; }
-        public string PickupLocation { get; set; }
+        public UInt32 LocId { get; set; }
 
-        public static DataTable GetSPickupKeywordDTableFilterByOrdSys(string ordSysName)
+
+        public static List<PickupKeyword> GetPickupKeyListFromServer()
         {
-            string sql = "SELECT puk_Id, puk_OrdSysName, puk_KeyWord, puk_PickupLocation " +
-                         "FROM pickupkeywords "+
-                         "Where puk_OrdSysName = '" + ordSysName + 
-                         "' ORDER BY puk_KeyWord ";
-
-            DataTable pukTable = new DataTable();
+            string sql = "select * FROM pickupkeywords";
+            var list = new List<PickupKeyword>();
             using (var conn = new MySqlConnection(Set.ConnString))
             using (var cmd = new MySqlCommand(sql, conn))
             {
-                conn.Open();
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                try
                 {
-                    pukTable.Load(reader);
+                    conn.Open();
+                    using (MySqlDataReader rd = cmd.ExecuteReader())
+                    {
+                        while (rd.Read())
+                        {
+                            var puk = new PickupKeyword();
+                            puk.Id = Convert.ToUInt32(rd[0]);
+                            puk.OrdSysId = Convert.ToUInt32(rd[1]);
+                            puk.Keyword = Convert.ToString(rd[2]);
+                            puk.LocId = Convert.ToUInt32(rd[3]);
+                            list.Add(puk);
+                        }
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Error connecting to server");
                 }
             }
-            pukTable.Columns["puk_Id"].ColumnName = "Id";
-            pukTable.Columns["puk_OrdSysname"].ColumnName = "Order Sys";
-            pukTable.Columns["puk_KeyWord"].ColumnName = "Keyword";
-            pukTable.Columns["puk_PickupLocation"].ColumnName = "Pickup";
-            return pukTable;
+            return list;
         }
 
-        public static bool SaveKeyWord(PickupKeywords keyword)
+        public static bool UpdateKeywords(PickupKeyword puk)
         {
             string sql;
-            if (keyword.Id != null)
+            if (puk.Id == null)
             {
-                sql = "REPLACE INTO pickupKeywords(puk_OrdSysName,puk_KeyWord,puk_PickupLocation)" +
-                     " VALUES(?puk_OrdSysName,?puk_KeyWord,?pukPickupLocation)"+
-                      " WHERE puk_Id = " + keyword.Id ;
+                sql = "INSERT INTO pickupkeywords " +
+                    "(puk_Id,puk_OrdSysId,puk_KeyWord,puk_LocId)" +
+                    "VALUES(@Id,@OrdSysId,@KeyWord,@pukLocId)";
             }
             else
             {
-                sql = "INSERT INTO pickupkeywords(puk_OrdSysName, puk_KeyWord,puk_PickupLocation)" +
-                     " VALUES(?puk_OrdSysName,?puk_KeyWord,?puk_PickupLocation)";
+                sql = "UPDATE pickupkeywords SET " +
+                    "puk_Id=@Id, puk_OrdSysId=@OrdSysId, puk_KeyWord=@KeyWord, puk_LocId=@pukLocId, " +
+                         "WHERE puk_Id=@Id";
             }
 
             using (var conn = new MySqlConnection(Set.ConnString))
             using (var cmd = new MySqlCommand(sql, conn))
             {
-                cmd.Parameters.AddWithValue("@?puk_Id", keyword.Id);
-                cmd.Parameters.AddWithValue("@?puk_KeyWord", keyword.Keyword);
-                cmd.Parameters.AddWithValue("@?puk_OrdSysName", keyword.OrdSysName.ToString());
-                cmd.Parameters.AddWithValue("@?puk_PickupLocation", keyword.PickupLocation);
+                cmd.Parameters.AddWithValue("@Id", puk.Id);
+                cmd.Parameters.AddWithValue("@OrdSysId", puk.OrdSysId);
+                cmd.Parameters.AddWithValue("@KeyWord", puk.Keyword);
+                cmd.Parameters.AddWithValue("@pukLocId", puk.LocId);
 
                 conn.Open();
-                var success = cmd.ExecuteNonQuery() > 0 ? true : false;
-                return success;
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    if (sql.Substring(0, 6) == "INSERT")
+                    {
+                        puk.Id = Convert.ToUInt32(cmd.LastInsertedId);
+                        Set.OrdSysList[Convert.ToInt32(puk.OrdSysId)].PuKeyWordList.Add(puk);
+                    }
+                    return true;
+                }
+                catch (MySqlException)
+                {
+                    MessageBox.Show("ERROR updating pickup keyword");
+                    return false;
+                }
             }
-
         }
 
-        public static bool DelKeyWord(PickupKeywords keyword)
+        public static bool DelKeyWord(PickupKeyword puk)
         {
-            var sql = "DELETE from pickupkeywords Where strId = puk_Id = ?puk_Id";
+            var sql = "DELETE from pickupkeywords Where puk_Id = @Id";
+
             using (var conn = new MySqlConnection(Set.ConnString))
             using (var cmd = new MySqlCommand(sql, conn))
             {
-                cmd.Parameters.AddWithValue("@?puk_Id", keyword.Id);
-
+                cmd.Parameters.AddWithValue("@Id", puk.Id);
                 conn.Open();
-                var success = cmd.ExecuteNonQuery() > 0 ? true : false;
-                return success;
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    Set.OrdSysList[Convert.ToInt32(puk.OrdSysId)].PuKeyWordList.Remove(puk);
+                    return true;
+                }
+                catch (MySqlException)
+                {
+                    MessageBox.Show("ERROR deleting pickup keyword");
+                    return false;
+                }
             }
         }
     }

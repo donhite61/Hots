@@ -10,71 +10,63 @@ namespace Hots
 {
     class Startup
     {
-        private static string iniFile = Directory.GetCurrentDirectory() + @"\HotsSavedData.xml";
-        private static string connString = "server=69.89.31.188;uid=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;";
-        private static LocalSettings savedSet;
+      
 
         public static void DoStartUp()
         {
-            Data.LogEvents(1, "Hots Downloader started");
-            try
-            {
-                savedSet = Hots.LocalSettings.readSettingsfromDisk(iniFile);
-                Set.PickupLoc = savedSet.SelectedPickupLocation;
-                Set.SetConnString(savedSet);
-                Data.LogEvents(1, "Local settings loaded successfully");
-            }
-            catch
-            {
-                try
-                {
-                    Set.CreateDefaultSettings(iniFile, connString);
-                    Set.SaveSettings();
-                    Data.LogEvents(1, "Default local settings created and saved");
-                }
-                catch
-                {
-                    Data.LogEvents(0, "Error creating new settings file");
-                    MessageBox.Show("Error saving settings");
-                    Environment.Exit(1);
-                }
-            }
+        string iniFile = Directory.GetCurrentDirectory() + @"\HotsSavedData.xml";
+        string connString = "server=69.89.31.188;uid=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;";
+        LocalSettings savedSet;
+        List<OrderSystem> webOrdSysList;
+        List<PickupKeyword> pukList;
+        List<Location> locList;
 
-            try
+
+        Data.LogEvents(1, "Hots Downloader started");
+        savedSet = LocalSettings.readSettingsfromDisk(iniFile);
+        Set.SetSettingsFromReadFile(savedSet, iniFile, connString);//fills default inifile & connstring if blank
+
+        locList = Location.GetLocationList();
+        Set.LocList = locList;
+
+        Set.MakeOrdSysList();
+        webOrdSysList = OrderSystem.GetOrdSysListFromServer();
+        while (webOrdSysList.Count < 3)
+            webOrdSysList.Add(new OrderSystem());
+
+        pukList = PickupKeyword.GetPickupKeyListFromServer();
+        FillOrdSysProperties(Set.OrdSysList, webOrdSysList, pukList, savedSet);
+       
+        Watchers.MakeFolderWatchers();
+        }
+
+        private static void FillOrdSysProperties(List<OrderSystem> osList,
+                       List<OrderSystem> webOrdSysList, List<PickupKeyword> pukList, LocalSettings savedSet)
+        {
+            foreach (OrderSystem os in osList)
             {
-                Set.PickupLocList = Data.GetPickupLocListFromServer();
-            }
-            catch
-            {
-                MessageBox.Show("Error getting Pickup Loc List from server");
-                Environment.Exit(1);
-            }
-            try
-            {
-                Set.OrdSysList = Data.GetOrdSysListFromServer();
-            }
-            catch
-            {
-                MessageBox.Show("Error getting Order Sys List from server");
-                Environment.Exit(1);
-            }
-            try
-            {
-                Set.FillOrdSysWithSavedPaths(Set.OrdSysList, savedSet);
-            }
-            catch
-            {
-                MessageBox.Show("Error filling Set with web data");
-                Environment.Exit(1);
-            }
-            try
-            {
-                Watchers.MakeFolderWatchers();
-            }
-            catch
-            {
-                MessageBox.Show("Error making folder watchers");
-                Environment.Exit(1);
+                var i = Convert.ToInt32(os.Id);
+                if (savedSet != null)
+                {
+                    os.Active = (string.IsNullOrWhiteSpace(savedSet.LocOrdSysSetList[i].Active.ToString())) ? false : savedSet.LocOrdSysSetList[i].Active;
+                    os.WatchedFolder = (string.IsNullOrWhiteSpace(savedSet.LocOrdSysSetList[i].WchFldr)) ? "" : savedSet.LocOrdSysSetList[i].WchFldr;
+                    os.OutputFolder = (string.IsNullOrWhiteSpace(savedSet.LocOrdSysSetList[i].OutFldr)) ? "" : savedSet.LocOrdSysSetList[i].OutFldr;
+                    os.LabInFldr = (string.IsNullOrWhiteSpace(savedSet.LocOrdSysSetList[i].LabInFldr)) ? "" : savedSet.LocOrdSysSetList[i].LabInFldr;
+                }
+                //if (webOrdSysList.Count == osList.Count)
+                {
+                    os.ProductSubFolder = (string.IsNullOrWhiteSpace(webOrdSysList[i].ProductSubFolder)) ? "" : webOrdSysList[i].ProductSubFolder;
+                    os.WaitFile = (string.IsNullOrWhiteSpace(webOrdSysList[i].WaitFile)) ? "" : webOrdSysList[i].WaitFile;
+                    os.WaitIsFolder = (string.IsNullOrWhiteSpace(webOrdSysList[i].WaitIsFolder.ToString())) ? false : webOrdSysList[i].WaitIsFolder;
+                    os.Ext = (string.IsNullOrWhiteSpace(webOrdSysList[i].Ext)) ? "" : webOrdSysList[i].Ext;
+                }
+
+                os.PuKeyWordList = new List<PickupKeyword>();
+                foreach (PickupKeyword puk in pukList)
+                {
+                    if (puk.OrdSysId == os.Id)
+                        os.PuKeyWordList.Add(puk);
+                }
             }
         }
     }

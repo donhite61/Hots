@@ -71,7 +71,7 @@
             this.tab_Log.Controls.Add(this.txtBox_Log);
             this.tab_Log.Location = new System.Drawing.Point(4, 22);
             this.tab_Log.Name = "tab_Log";
-            this.tab_Log.Padding = new System.Windows.Forms.Padding(3, 3, 3, 3);
+            this.tab_Log.Padding = new System.Windows.Forms.Padding(3);
             this.tab_Log.Size = new System.Drawing.Size(960, 290);
             this.tab_Log.TabIndex = 0;
             this.tab_Log.Text = "Log";
@@ -81,7 +81,7 @@
             // 
             this.txtBox_Errors.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
             this.txtBox_Errors.Location = new System.Drawing.Point(484, 6);
-            this.txtBox_Errors.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtBox_Errors.Margin = new System.Windows.Forms.Padding(2);
             this.txtBox_Errors.Multiline = true;
             this.txtBox_Errors.Name = "txtBox_Errors";
             this.txtBox_Errors.ScrollBars = System.Windows.Forms.ScrollBars.Both;
@@ -91,7 +91,7 @@
             // txtBox_Log
             // 
             this.txtBox_Log.Location = new System.Drawing.Point(5, 6);
-            this.txtBox_Log.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtBox_Log.Margin = new System.Windows.Forms.Padding(2);
             this.txtBox_Log.Multiline = true;
             this.txtBox_Log.Name = "txtBox_Log";
             this.txtBox_Log.ReadOnly = true;
@@ -103,9 +103,9 @@
             // 
             this.tab_OrdSys.Controls.Add(this.Gridview_OS);
             this.tab_OrdSys.Location = new System.Drawing.Point(4, 22);
-            this.tab_OrdSys.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tab_OrdSys.Margin = new System.Windows.Forms.Padding(2);
             this.tab_OrdSys.Name = "tab_OrdSys";
-            this.tab_OrdSys.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tab_OrdSys.Padding = new System.Windows.Forms.Padding(2);
             this.tab_OrdSys.Size = new System.Drawing.Size(960, 290);
             this.tab_OrdSys.TabIndex = 6;
             this.tab_OrdSys.Text = "Order Systems";
@@ -121,6 +121,7 @@
             this.Gridview_OS.Location = new System.Drawing.Point(8, 56);
             this.Gridview_OS.Name = "Gridview_OS";
             this.Gridview_OS.ReadOnly = true;
+            this.Gridview_OS.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Gridview_OS.ShowEditingIcon = false;
             this.Gridview_OS.Size = new System.Drawing.Size(944, 232);
             this.Gridview_OS.TabIndex = 20;
@@ -133,12 +134,12 @@
             this.tab_Stores.Controls.Add(this.lbl_SelectedStore);
             this.tab_Stores.Controls.Add(this.Gridview_Stores);
             this.tab_Stores.Location = new System.Drawing.Point(4, 22);
-            this.tab_Stores.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tab_Stores.Margin = new System.Windows.Forms.Padding(2);
             this.tab_Stores.Name = "tab_Stores";
-            this.tab_Stores.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tab_Stores.Padding = new System.Windows.Forms.Padding(2);
             this.tab_Stores.Size = new System.Drawing.Size(960, 290);
             this.tab_Stores.TabIndex = 7;
-            this.tab_Stores.Text = "Stores";
+            this.tab_Stores.Text = "Locations";
             this.tab_Stores.UseVisualStyleBackColor = true;
             // 
             // but_SetStore
@@ -183,19 +184,21 @@
             this.Gridview_Stores.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.Gridview_Stores.Location = new System.Drawing.Point(9, 55);
             this.Gridview_Stores.Name = "Gridview_Stores";
+            this.Gridview_Stores.ReadOnly = true;
+            this.Gridview_Stores.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.Gridview_Stores.ShowEditingIcon = false;
             this.Gridview_Stores.Size = new System.Drawing.Size(944, 232);
             this.Gridview_Stores.TabIndex = 21;
-            this.Gridview_Stores.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Gridview_Stores_CellDoubleClick);
+            this.Gridview_Stores.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.Gridview_Location_CellDoubleClick);
             // 
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.btn_UpateOrders);
             this.tabPage1.Controls.Add(this.Gridview_OrdHeaders);
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Margin = new System.Windows.Forms.Padding(2);
             this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(2);
             this.tabPage1.Size = new System.Drawing.Size(960, 290);
             this.tabPage1.TabIndex = 8;
             this.tabPage1.Text = "Uploaded Orders";
@@ -232,7 +235,7 @@
             this.ClientSize = new System.Drawing.Size(983, 397);
             this.Controls.Add(this.tabControl1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Hots Order Uploader";
             this.Load += new System.EventHandler(this.Form1_Load);
@@ -260,11 +263,11 @@
         private System.Windows.Forms.TabPage tab_Stores;
         private System.Windows.Forms.Button but_AddStore;
         private System.Windows.Forms.Label lbl_SelectedStore;
-        private System.Windows.Forms.DataGridView Gridview_Stores;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Button btn_UpateOrders;
         private System.Windows.Forms.DataGridView Gridview_OrdHeaders;
         private System.Windows.Forms.Button but_SetStore;
+        private System.Windows.Forms.DataGridView Gridview_Stores;
     }
 }
 

@@ -17,14 +17,14 @@ namespace Hots
         public DateTime TimeIn { get; set; }
         public DateTime TimeDue { get; set; }
         public Decimal PreTaxTotal { get; set; }
-        public string PromoCode { get; set; }
+        public string PromoCode { get; set; } //should be list
         public Decimal DiscAmount { get; set; }
         public Decimal SalesTax { get; set; }
         public Decimal TotalPrice { get; set; }
         public Boolean PrePaid { get; set; }
         public string LabLabel { get; set; }
         public string Catalog { get; set; }
-        public string Fullfillment { get; set; }
+        public string Fullfillment { get; set; }//should be list
         public string OrdLocation { get; set; }
         
         public string ServiceTime { get; set; }
@@ -75,6 +75,7 @@ namespace Hots
         {
             string[] words = filePath.Split('\\');
             var fileName = words[words.Length - 1];
+            var folder = filePath.Substring(0, filePath.Length - fileName.Length);
 
             var ordSysName = GetOrdSysNameFromFilepath(filePath);
             if (ordSysName == Set.OrdSysName.Null)
@@ -91,8 +92,8 @@ namespace Hots
             }
 
             var newOrder = new Order();
-            newOrder.OrdLocation = Set.PickupLoc;
-            newOrder = OrderSystem.MakeOrderFromFileList(ordSysName, fileLineList, newOrder);
+            newOrder.OrdLocation = Set.ThisLocation;
+            newOrder = OrderSystem.FillOrderFromFileList(ordSysName, fileLineList, newOrder);
             if (newOrder.OrdStatus == "error parsing file")
             {
                 Data.LogEvents(0, "Error parsing " + fileName);
@@ -107,7 +108,19 @@ namespace Hots
             else
             {
                 Data.LogEvents(1, fileName +" Uploaded to server ");
+                //MoveFileToRead(folder, fileName);
+
             }
+        }
+
+        private static void MoveFileToRead(string folder, string fileName)
+        {
+            if (!Directory.Exists(folder + @"Read"))
+                Directory.CreateDirectory(folder + @"Read");
+
+            var from = folder + fileName;
+            var to = folder + @"Read\"+ fileName;
+            File.Move(from, to); // Try to move
         }
 
         private static Set.OrdSysName GetOrdSysNameFromFilepath(string filepath)
@@ -115,9 +128,11 @@ namespace Hots
             Set.OrdSysName osn = Set.OrdSysName.Null;
             foreach (var os in Set.OrdSysList)
             {
-                if(os.fwActive == true)
-                    if (filepath.Contains(os.WatchFldr))
-                        osn = os.Name;
+                if (os.Active == true && filepath.Contains(os.WatchedFolder))
+                {
+                    osn = os.Name;
+                    break;
+                }
             }
             return osn;
         }

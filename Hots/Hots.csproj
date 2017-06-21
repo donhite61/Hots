@@ -23,7 +23,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <AutorunEnabled>true</AutorunEnabled>
-    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationRevision>7</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -84,11 +84,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="KeywordForm.cs">
+    <Compile Include="EditKeywordForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="KeywordForm.Designer.cs">
-      <DependentUpon>KeywordForm.cs</DependentUpon>
+    <Compile Include="EditKeywordForm.Designer.cs">
+      <DependentUpon>EditKeywordForm.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -96,11 +96,11 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="EditStoreform.cs">
+    <Compile Include="EditLocationform.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EditStoreform.Designer.cs">
-      <DependentUpon>EditStoreform.cs</DependentUpon>
+    <Compile Include="EditLocationform.Designer.cs">
+      <DependentUpon>EditLocationform.cs</DependentUpon>
     </Compile>
     <Compile Include="Data.cs" />
     <Compile Include="MultiWatcher.cs" />
@@ -111,18 +111,18 @@
     <Compile Include="Settings.cs" />
     <Compile Include="PickupKeywords.cs" />
     <Compile Include="Startup.cs" />
-    <Compile Include="PickupLocation.cs" />
-    <Compile Include="Update OrdSys.cs">
+    <Compile Include="Location.cs" />
+    <Compile Include="Edit OrdSys.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Update OrdSys.Designer.cs">
-      <DependentUpon>Update OrdSys.cs</DependentUpon>
+    <Compile Include="Edit OrdSys.Designer.cs">
+      <DependentUpon>Edit OrdSys.cs</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="EditStoreform.resx">
-      <DependentUpon>EditStoreform.cs</DependentUpon>
+    <EmbeddedResource Include="EditLocationform.resx">
+      <DependentUpon>EditLocationform.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="KeywordForm.resx">
-      <DependentUpon>KeywordForm.cs</DependentUpon>
+    <EmbeddedResource Include="EditKeywordForm.resx">
+      <DependentUpon>EditKeywordForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -136,8 +136,8 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Update OrdSys.resx">
-      <DependentUpon>Update OrdSys.cs</DependentUpon>
+    <EmbeddedResource Include="Edit OrdSys.resx">
+      <DependentUpon>Edit OrdSys.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Hots_TemporaryKey.pfx" />
     <None Include="packages.config" />
