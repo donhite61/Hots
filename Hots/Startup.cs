@@ -36,8 +36,10 @@ namespace Hots
 
         pukList = PickupKeyword.GetPickupKeyListFromServer();
         FillOrdSysProperties(Set.OrdSysList, webOrdSysList, pukList, savedSet);
-       
-        Watchers.MakeFolderWatchers();
+
+           //Order.CreateNewOrderFromDroppedFile(@"C:\DonsScripts\Hots Folder System\WatchedFolder\NewOrders\DakisIn\labworks_14991212.xml");
+
+            Watchers.MakeFolderWatchers();
         }
 
         private static void FillOrdSysProperties(List<OrderSystem> osList,

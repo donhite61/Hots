@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<asmv1:assembly xsi:schemaLocation="urn:schemas-microsoft-com:asm.v1 assembly.adaptive.xsd" manifestVersion="1.0" xmlns:asmv1="urn:schemas-microsoft-com:asm.v1" xmlns="urn:schemas-microsoft-com:asm.v2" xmlns:asmv2="urn:schemas-microsoft-com:asm.v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:co.v1="urn:schemas-microsoft-com:clickonce.v1" xmlns:asmv3="urn:schemas-microsoft-com:asm.v3" xmlns:dsig="http://www.w3.org/2000/09/xmldsig#" xmlns:co.v2="urn:schemas-microsoft-com:clickonce.v2">
+  <asmv1:assemblyIdentity name="Hots.exe" version="1.0.0.8" publicKeyToken="427582ab54f77c7c" language="neutral" processorArchitecture="msil" type="win32" />
+  <description asmv2:iconFile="HiteLogo64.ico" xmlns="urn:schemas-microsoft-com:asm.v1" />
+  <application />
+  <entryPoint>
+    <assemblyIdentity name="Hots" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+    <commandLine file="Hots.exe" parameters="" />
+  </entryPoint>
+  <trustInfo>
+    <security>
+      <applicationRequestMinimum>
+        <PermissionSet Unrestricted="true" ID="Custom" SameSite="site" />
+        <defaultAssemblyRequest permissionSetReference="Custom" />
+      </applicationRequestMinimum>
+      <requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
+        <!--
+          UAC Manifest Options
+          If you want to change the Windows User Account Control level replace the 
+          requestedExecutionLevel node with one of the following.
+
+        <requestedExecutionLevel  level="asInvoker" uiAccess="false" />
+        <requestedExecutionLevel  level="requireAdministrator" uiAccess="false" />
+        <requestedExecutionLevel  level="highestAvailable" uiAccess="false" />
+
+         If you want to utilize File and Registry Virtualization for backward 
+         compatibility then delete the requestedExecutionLevel node.
+    -->
+        <requestedExecutionLevel level="asInvoker" uiAccess="false" />
+      </requestedPrivileges>
+    </security>
+  </trustInfo>
+  <dependency>
+    <dependentOS>
+      <osVersionInfo>
+        <os majorVersion="5" minorVersion="1" buildNumber="2600" servicePackMajor="0" />
+      </osVersionInfo>
+    </dependentOS>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="preRequisite" allowDelayedBinding="true">
+      <assemblyIdentity name="Microsoft.Windows.CommonLanguageRuntime" version="4.0.30319.0" />
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="Hots.exe" size="124880">
+      <assemblyIdentity name="Hots" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>TjjuPz4wzjBxeGcAoQ9gMVfyWKvkZsjHa8DlTJo0IT8=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MySql.Data.dll" size="424448">
+      <assemblyIdentity name="MySql.Data" version="6.9.9.0" publicKeyToken="C5687FC88969C44D" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>z1JCyodj5/UiC37FF0m11VPrQRt8tszqKfa8jk+yNYc=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <file name="HiteLogo64.ico" size="12862">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>8phSvdHeLZzc5FaaQ4NLui2HXcGkHZXinTzQtoNN1Mo=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Hots.exe.config" size="585">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>wtVUmOUwU+pKZOKNMs7unjvZBOsHzhbOWufIUa/5fGU=</dsig:DigestValue>
+    </hash>
+  </file>
+<publisherIdentity name="CN=DONSDESK\hitephoto" issuerKeyHash="d1921e9b947e11b80797d4e6eb56ce8bbcfae36a" /><Signature Id="StrongNameSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>l0GOc0dem9xt3USdPqrm2/aUM10L+XXwxthJRA3QlGs=</DigestValue></Reference></SignedInfo><SignatureValue>R3rNslb9tpKzwqur+yIonkIF45Uk4SWRN34sw5XerR3L+zOVl3wd8J9SUk0jM7E6fjWELgv0/c/9poJNQrGrkdNjc84j36KvVhpK+pbDBAgmecnSiwyIoaCTFeW+mMaJQToY6Z9C4UQcuarwaeLwYJB5Q0Fr/IDgSEVbgLRzCDI=</SignatureValue><KeyInfo Id="StrongNameKeyInfo"><KeyValue><RSAKeyValue><Modulus>4E0Gtt5PdZaf7QYa4Nvo0YjF44NRh7Qmse8fQ0tFEtc86GmGB/lDfL8CPUT0x1r666yJemlsWqA9302FqWMak/nC2QBxUIJhvxojb8Pk6Kg4SalGMKOlZlSSKEBY0/JRqd+sEQyKzlktUkD0WOUSo62aJgGpHBlLvjPmHmSPON0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><msrel:RelData xmlns:msrel="http://schemas.microsoft.com/windows/rel/2005/reldata"><r:license xmlns:r="urn:mpeg:mpeg21:2003:01-REL-R-NS" xmlns:as="http://schemas.microsoft.com/windows/pki/2005/Authenticode"><r:grant><as:ManifestInformation Hash="6b94d00d4449d8c6f075f90b5d3394f6dbe6aa3e9d44dd6ddc9b5e47738e4197" Description="" Url=""><as:assemblyIdentity name="Hots.exe" version="1.0.0.8" publicKeyToken="427582ab54f77c7c" language="neutral" processorArchitecture="msil" type="win32" /></as:ManifestInformation><as:SignedBy /><as:AuthenticodePublisher><as:X509SubjectName>CN=DONSDESK\hitephoto</as:X509SubjectName></as:AuthenticodePublisher></r:grant><r:issuer><Signature Id="AuthenticodeSignature" xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha256" /><Reference URI=""><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" /><DigestValue>MWaHL275tEUTz+7hLRRbcbW/KZRGpkM7e8Th1iLTX/k=</DigestValue></Reference></SignedInfo><SignatureValue>PmHdwRslsyZvZonLe+r9Hx7/uVvkBsNEqBd8N0qOqF9N0261reRftaoOC3V6WxIIj/bSuG/3Kou3Tq8JZz78Q7O4MK65R0ulKpA1SjOMv4yfkLekQqBtCGIjisueBtPbMee7L77rykw/bzEgzOub1zjz1njTNacN2CB13o0JRr8=</SignatureValue><KeyInfo><KeyValue><RSAKeyValue><Modulus>4E0Gtt5PdZaf7QYa4Nvo0YjF44NRh7Qmse8fQ0tFEtc86GmGB/lDfL8CPUT0x1r666yJemlsWqA9302FqWMak/nC2QBxUIJhvxojb8Pk6Kg4SalGMKOlZlSSKEBY0/JRqd+sEQyKzlktUkD0WOUSo62aJgGpHBlLvjPmHmSPON0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue></KeyValue><X509Data><X509Certificate>MIIB4TCCAUqgAwIBAgIQXXXpWMnaaKtOn8YR8Fs4tDANBgkqhkiG9w0BAQsFADAvMS0wKwYDVQQDHiQARABPAE4AUwBEAEUAUwBLAFwAaABpAHQAZQBwAGgAbwB0AG8wHhcNMTcwNTA4MTk0NDE3WhcNMTgwNTA5MDE0NDE3WjAvMS0wKwYDVQQDHiQARABPAE4AUwBEAEUAUwBLAFwAaABpAHQAZQBwAGgAbwB0AG8wgZ8wDQYJKoZIhvcNAQEBBQADgY0AMIGJAoGBAOBNBrbeT3WWn+0GGuDb6NGIxeODUYe0JrHvH0NLRRLXPOhphgf5Q3y/Aj1E9Mda+uusiXppbFqgPd9NhaljGpP5wtkAcVCCYb8aI2/D5OioOEmpRjCjpWZUkihAWNPyUanfrBEMis5ZLVJA9FjlEqOtmiYBqRwZS74z5h5kjzjdAgMBAAEwDQYJKoZIhvcNAQELBQADgYEAGOLsebjjQ8QauHT3Bp+maYjBYRr8eYG4u8yqOVWmPtXVpLcnSoN1ekbUcCMaCoUfL/vUvppDxlIcO+FgGzU7BIg+L3hNNc1kk1dmouQt59EkN/B6dyi409kdzJtctp1eq47GyO+JtAqNmiqbcXuzDH6grQNMeHZbcdkytKOrtko=</X509Certificate></X509Data></KeyInfo></Signature></r:issuer></r:license></msrel:RelData></KeyInfo></Signature></asmv1:assembly>

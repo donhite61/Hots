@@ -57,7 +57,7 @@ namespace Hots
             else
             {
                 sql = "UPDATE pickupkeywords SET " +
-                    "puk_Id=@Id, puk_OrdSysId=@OrdSysId, puk_KeyWord=@KeyWord, puk_LocId=@pukLocId, " +
+                    "puk_OrdSysId=@OrdSysId, puk_KeyWord=@KeyWord, puk_LocId=@pukLocId " +
                          "WHERE puk_Id=@Id";
             }
 

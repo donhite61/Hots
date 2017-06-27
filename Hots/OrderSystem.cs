@@ -104,75 +104,47 @@ namespace Hots
 
         #endregion Server Methods
 
-        public static Order FillOrderFromFileList(Set.OrdSysName ordSysName, List<string> orderLineList, Order order)
-        {
-            switch (ordSysName)
-            {
-                case Set.OrdSysName.Roes:
-                    order = RoesReadListFile(orderLineList, order);
-                    break;
-                case Set.OrdSysName.Dakis:
-                    DakisReadListFile(orderLineList, order);
-                    break;
-                case Set.OrdSysName.DGift:
-                    break;
-            }
-            return order;
-        }
 
-        #region Dakis Order System
-        private static Order DakisReadListFile(List<string> orderLineList, Order order)
+        private static List<string> makeListFromFile(string _path, string filename)
         {
             try
             {
-                i = 0;
-                while (orderLineList[i] != "</Order>")
+                List<string> readFileList = new List<string>();
+                using (StreamReader sr = new StreamReader(_path))
                 {
-                    switch (orderLineList[i])
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
                     {
-                        case "<Order Info>":
-                            order = fillOrderInfo(orderLineList, order);
-                            break;
-                        case "<Customer>":
-                            order = fillCustomerInfo(orderLineList, order);
-                            break;
-                        case "<Billing>":
-                            order = fillBillingInfo(orderLineList, order);
-                            break;
-                        case "<Shipping>":
-                            order = fillShippingInfo(orderLineList, order);
-                            break;
-                        case "<Payment>":
-                            order = fillPaymentInfo(orderLineList, order);
-                            break;
-                        case "<OrderItems>":
-                            order.ItemsList = fillOrderItems(orderLineList, order);
-                            order.ItemsList = addUpIdenticalItems(order.ItemsList);
-                            order.Products = makeTextFieldFromItemsList(order.ItemsList);
-                            break;
-                        case "<OrderOptions>":
-                            order.OrderOptionsList = fillOrderOptions(orderLineList, order);
-                            break;
-                        default:
-                            break;
+                        readFileList.Add(line);
                     }
-                    i++;
                 }
-                order.OrdStatus = "new";
+                return readFileList;
             }
             catch
             {
-                order.OrdStatus = "error parsing file";
+                Data.LogEvents(0, "Error reading file /n" + filename + "/n skipped");
+                return null;
             }
-            return order;
-        }
 
-        #endregion
+        }
 
         #region Roes Order System
 
-        private static Order RoesReadListFile(List<string> orderLineList, Order order)
+        public static Order RoesMakeOrder(string filePath, string fileName)
         {
+            Order order = new Order();
+            order.OrdLocation = Set.ThisLocation;
+            order.OrdSysName = Set.OrdSysName.Roes;
+            var split = fileName.Split(Convert.ToChar("."));
+            order.HiteId = split[0];
+
+            var orderLineList = makeListFromFile(filePath, fileName);
+            if (orderLineList == null)
+            {
+                order.OrdStatus = "error reading dropped file";
+                return order;
+            }
+
             try
             {
                 i = 0;
@@ -212,6 +184,7 @@ namespace Hots
             }
             catch
             {
+                Data.LogEvents(0, "Error parsing " + fileName);
                 order.OrdStatus = "error parsing file";
             }
             return order;
@@ -404,7 +377,7 @@ namespace Hots
         private static string GetShipCode(string shipText)
         {
             var shipCode = shipText;
-            foreach (PickupKeyword kw in Set.OrdSysList[0].PuKeyWordList )
+            foreach (PickupKeyword kw in Set.OrdSysList[0].PuKeyWordList)
             {
                 if (shipText.Contains(kw.Keyword))
                 {
@@ -590,7 +563,6 @@ namespace Hots
             }
             return list;
         }
+        #endregion Roes Order System
     }
-    #endregion Roes Order System
 }
-

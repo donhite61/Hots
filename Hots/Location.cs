@@ -22,6 +22,57 @@ namespace Hots
         public bool Inactive { get; set; }
         public string ShipCode { get; set; }
 
+        public static Location GetLocByKeyWord(Set.OrdSysName ordSysName, string text)
+        {
+            var ind = (int)ordSysName-1; //
+            foreach (PickupKeyword kw in Set.OrdSysList[ind].PuKeyWordList)
+            {
+                if (text.Contains(kw.Keyword))
+                {
+                    foreach (Location loc in Set.LocList)
+                    {
+                        if (loc.Id == kw.LocId)
+                            return  loc;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static string GetLocNicNameByCity(string city)
+        {
+            var nicName = city;
+            foreach (PickupKeyword kw in Set.OrdSysList[0].PuKeyWordList)
+            {
+                if (city.Contains(kw.Keyword))
+                {
+                    foreach (Location loc in Set.LocList)
+                    {
+                        if (loc.Id == kw.LocId)
+                            nicName = loc.NicName;
+                    }
+                }
+            }
+            return nicName;
+        }
+
+        public static string GetLocShipCodeByCity(string city)
+        {
+            var shipCode = city;
+            foreach (PickupKeyword kw in Set.OrdSysList[0].PuKeyWordList)
+            {
+                if (city.Contains(kw.Keyword))
+                {
+                    foreach (Location loc in Set.LocList)
+                    {
+                        if (loc.Id == kw.LocId)
+                            shipCode = loc.ShipCode;
+                    }
+                }
+            }
+            return shipCode;
+        }
+
         public static List<Location> GetLocationList()
         {
             var list = new List<Location>();

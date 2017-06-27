@@ -125,10 +125,12 @@ namespace Hots
                     UInt32 mySqlId = Convert.ToUInt32(cmd.LastInsertedId);
                     SaveNewOrderItems(conn, mySqlId, _fl);
                     SaveNewOrderOptions(conn, mySqlId, _fl.OrderOptionsList);
+                    Data.LogEvents(1, _fl.HiteId + " Uploaded to server ");
                     return mySqlId;
                 }
                 catch (MySqlException)
                 {
+                    Data.LogEvents(0, "Error uploading to server " + _fl.HiteId);
                     return 0;
                 }
             }
@@ -136,62 +138,71 @@ namespace Hots
 
         private static void SaveNewOrderItems(MySqlConnection conn, uint mySqlId, Order _fl)
         {
-            foreach (OrderItems item in _fl.ItemsList)
+            if (_fl.ItemsList != null)
             {
-                var cmd = new MySqlCommand();
-                cmd.Connection = conn;
-                cmd.CommandText = "INSERT INTO orderitems(OrdItem_OrdHdrId,OrdItem_ItemCode,OrdItem_Description," +
-                                                            "OrdItem_Quant,OrdItem_Price,OrdItem_LineTotal)" +
-                                                    "Values(?OrdHdrId,?ItemCode,?Description,?Quant,?Price,?Total)";
-                item.MySqlOrderId = mySqlId;
-                cmd.Parameters.AddWithValue("?OrdHdrId", mySqlId);
-                cmd.Parameters.AddWithValue("?ItemCode", Convert.ToString(item.ItemCode));
-                cmd.Parameters.AddWithValue("?Description", Convert.ToString(item.Description));
-                cmd.Parameters.AddWithValue("?Quant", Convert.ToInt32(item.Quant));
-                cmd.Parameters.AddWithValue("?Price", Convert.ToDecimal(item.Price));
-                cmd.Parameters.AddWithValue("?Total", Convert.ToDecimal(item.LineTotal));
-                cmd.ExecuteNonQuery();
+                foreach (OrderItems item in _fl.ItemsList)
+                {
+                    var cmd = new MySqlCommand();
+                    cmd.Connection = conn;
+                    cmd.CommandText = "INSERT INTO orderitems(OrdItem_OrdHdrId,OrdItem_ItemCode,OrdItem_Description," +
+                                                                "OrdItem_Quant,OrdItem_Price,OrdItem_LineTotal)" +
+                                                        "Values(?OrdHdrId,?ItemCode,?Description,?Quant,?Price,?Total)";
+                    item.MySqlOrderId = mySqlId;
+                    cmd.Parameters.AddWithValue("?OrdHdrId", mySqlId);
+                    cmd.Parameters.AddWithValue("?ItemCode", Convert.ToString(item.ItemCode));
+                    cmd.Parameters.AddWithValue("?Description", Convert.ToString(item.Description));
+                    cmd.Parameters.AddWithValue("?Quant", Convert.ToInt32(item.Quant));
+                    cmd.Parameters.AddWithValue("?Price", Convert.ToDecimal(item.Price));
+                    cmd.Parameters.AddWithValue("?Total", Convert.ToDecimal(item.LineTotal));
+                    cmd.ExecuteNonQuery();
 
-                SaveNewOrderItemOptions(conn, mySqlId, item);
+                    SaveNewOrderItemOptions(conn, mySqlId, item);
+                }
             }
         }
 
         private static void SaveNewOrderItemOptions(MySqlConnection conn, uint mySqlId, OrderItems item)
         {
-            foreach (ItemOptions iOption in item.OptionsList)
+            if (item.OptionsList != null)
             {
-                MySql.Data.MySqlClient.MySqlCommand cmd = new MySql.Data.MySqlClient.MySqlCommand();
-                cmd.Connection = conn;
-                cmd.CommandText = "INSERT INTO orderitemoptions(OrdItmOpt_OrdHdrId,OrdItmOpt_OptCode,OrdItmOpt_Description," +
-                                  "OrdItmOpt_Quant,OrdItmOpt_Price)" +
-                                  "Values(?OrdHdrId,?OptCode,?Description,?Quant,?Price)";
-                iOption.MySqlOrderId = mySqlId;
-                cmd.Parameters.AddWithValue("?OrdHdrId", mySqlId);
-                cmd.Parameters.AddWithValue("?OptCode", Convert.ToString(iOption.OptCode));
-                cmd.Parameters.AddWithValue("?Description", Convert.ToString(iOption.Description));
-                cmd.Parameters.AddWithValue("?Quant", Convert.ToInt32(iOption.Quant));
-                cmd.Parameters.AddWithValue("?Price", Convert.ToDecimal(iOption.Price));
-                cmd.ExecuteNonQuery();
+                foreach (ItemOptions iOption in item.OptionsList)
+                {
+                    MySqlCommand cmd = new MySqlCommand();
+                    cmd.Connection = conn;
+                    cmd.CommandText = "INSERT INTO orderitemoptions(OrdItmOpt_OrdHdrId,OrdItmOpt_OptCode,OrdItmOpt_Description," +
+                                      "OrdItmOpt_Quant,OrdItmOpt_Price)" +
+                                      "Values(?OrdHdrId,?OptCode,?Description,?Quant,?Price)";
+                    iOption.MySqlOrderId = mySqlId;
+                    cmd.Parameters.AddWithValue("?OrdHdrId", mySqlId);
+                    cmd.Parameters.AddWithValue("?OptCode", Convert.ToString(iOption.OptCode));
+                    cmd.Parameters.AddWithValue("?Description", Convert.ToString(iOption.Description));
+                    cmd.Parameters.AddWithValue("?Quant", Convert.ToInt32(iOption.Quant));
+                    cmd.Parameters.AddWithValue("?Price", Convert.ToDecimal(iOption.Price));
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
         private static void SaveNewOrderOptions(MySqlConnection conn, uint mySqlId, List<OrderOptions> options)
         {
-            foreach (OrderOptions option in options)
+            if (options != null)
             {
-                MySqlCommand cmd = new MySqlCommand();
-                cmd.Connection = conn;
-                cmd.CommandText = "INSERT INTO orderoptions(OrdOpt_OrdHdrId,OrdOpt_OptCode,OrdOpt_Description," +
-                                  "OrdOpt_Quant,OrdOpt_Price,OrdOpt_Text)" +
-                                  "Values(?OrdHdrId,?OptCode,?Description,?Quant,?Price,?Text)";
-                option.MySqlOrderId = mySqlId;
-                cmd.Parameters.AddWithValue("?OrdHdrId", mySqlId);
-                cmd.Parameters.AddWithValue("?OptCode", Convert.ToString(option.OptCode));
-                cmd.Parameters.AddWithValue("?Description", Convert.ToString(option.Description));
-                cmd.Parameters.AddWithValue("?Quant", Convert.ToInt32(option.Quant));
-                cmd.Parameters.AddWithValue("?Price", Convert.ToDecimal(option.Price));
-                cmd.Parameters.AddWithValue("?Text", Convert.ToString(option.Text));
-                cmd.ExecuteNonQuery();
+                foreach (OrderOptions option in options)
+                {
+                    MySqlCommand cmd = new MySqlCommand();
+                    cmd.Connection = conn;
+                    cmd.CommandText = "INSERT INTO orderoptions(OrdOpt_OrdHdrId,OrdOpt_OptCode,OrdOpt_Description," +
+                                      "OrdOpt_Quant,OrdOpt_Price,OrdOpt_Text)" +
+                                      "Values(?OrdHdrId,?OptCode,?Description,?Quant,?Price,?Text)";
+                    option.MySqlOrderId = mySqlId;
+                    cmd.Parameters.AddWithValue("?OrdHdrId", mySqlId);
+                    cmd.Parameters.AddWithValue("?OptCode", Convert.ToString(option.OptCode));
+                    cmd.Parameters.AddWithValue("?Description", Convert.ToString(option.Description));
+                    cmd.Parameters.AddWithValue("?Quant", Convert.ToInt32(option.Quant));
+                    cmd.Parameters.AddWithValue("?Price", Convert.ToDecimal(option.Price));
+                    cmd.Parameters.AddWithValue("?Text", Convert.ToString(option.Text));
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
         #endregion Save Order

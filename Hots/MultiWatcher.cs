@@ -125,8 +125,6 @@ namespace Hots
             var orderQueue = (Queue<string>)e.Argument;
             foreach (string ordPath in orderQueue)
             {
-                string[] words = ordPath.Split('\\');
-                var ordName = words[words.Length - 1];
                 if (FileIsReady(ordPath))
                     Order.CreateNewOrderFromDroppedFile(ordPath);
             }

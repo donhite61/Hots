@@ -67,50 +67,53 @@ namespace Hots
         public List<OrderItems> ItemsList { get; set; }
         public List<OrderOptions> OrderOptionsList { get; set; }
 
-        private Order()
+        public Order()
         {
+        }
+
+        private static Set.OrdSysName GetOrdSysNameFromFilepath(string folder, string fileName)
+        {
+            Set.OrdSysName osn = Set.OrdSysName.Null;
+            foreach (var os in Set.OrdSysList)
+            {
+                if (folder.ToUpper() == os.WatchedFolder.ToUpper())
+                {
+                    osn = os.Name;
+                    break;
+                }
+            }
+            if (osn == Set.OrdSysName.Null)
+                Data.LogEvents(0, "Unknown filetype " + fileName + " skipped");
+
+            return osn;
         }
 
         public static void CreateNewOrderFromDroppedFile(string filePath)
         {
             string[] words = filePath.Split('\\');
-            var fileName = words[words.Length - 1];
-            var folder = filePath.Substring(0, filePath.Length - fileName.Length);
+            var droppedFileName = words[words.Length - 1];
+            var folder = filePath.Substring(0, filePath.Length - (droppedFileName.Length + 1));
 
-            var ordSysName = GetOrdSysNameFromFilepath(filePath);
-            if (ordSysName == Set.OrdSysName.Null)
+            var ordSysName = GetOrdSysNameFromFilepath(folder, droppedFileName);
+            if (ordSysName == Set.OrdSysName.Null) return;
+
+            Order order = null;
+            switch (ordSysName)
             {
-                Data.LogEvents(0, "Unknown filetype " + fileName + " skipped");
-                return;
+                case Set.OrdSysName.Roes:
+                    order = OrderSystem.RoesMakeOrder(filePath, droppedFileName);
+                    break;
+                case Set.OrdSysName.Dakis:
+                    order = DakisOrder.DakisMakeOrder(droppedFileName);
+                    break;
+                case Set.OrdSysName.DGift:
+                    //order = DakisReadListFile(fileName);
+                    break;
             }
 
-            var fileLineList = makeListFromFile(filePath);
-            if (fileLineList == null)
-            {
-                Data.LogEvents(0, "Error reading " + fileName + " from disk");
-                return;
-            }
-
-            var newOrder = new Order();
-            newOrder.OrdLocation = Set.ThisLocation;
-            newOrder = OrderSystem.FillOrderFromFileList(ordSysName, fileLineList, newOrder);
-            if (newOrder.OrdStatus == "error parsing file")
-            {
-                Data.LogEvents(0, "Error parsing " + fileName);
-                return;
-            }
-
-            var sqlId = Data.SaveOrdertoSqlServer(newOrder);
-            if (sqlId == 0)
-            {
-                Data.LogEvents(0, "Error uploading to server " + fileName);
-            }
-            else
-            {
-                Data.LogEvents(1, fileName +" Uploaded to server ");
+            var sqlId = Data.SaveOrdertoSqlServer(order);
+            if (sqlId != 0) return;
                 //MoveFileToRead(folder, fileName);
-
-            }
         }
 
         private static void MoveFileToRead(string folder, string fileName)
@@ -121,42 +124,6 @@ namespace Hots
             var from = folder + fileName;
             var to = folder + @"Read\"+ fileName;
             File.Move(from, to); // Try to move
-        }
-
-        private static Set.OrdSysName GetOrdSysNameFromFilepath(string filepath)
-        {
-            Set.OrdSysName osn = Set.OrdSysName.Null;
-            foreach (var os in Set.OrdSysList)
-            {
-                if (os.Active == true && filepath.Contains(os.WatchedFolder))
-                {
-                    osn = os.Name;
-                    break;
-                }
-            }
-            return osn;
-        }
-
-        private static List<string> makeListFromFile(string _path)
-        {
-            try
-            {
-                List<string> readFileList = new List<string>();
-                using (StreamReader sr = new StreamReader(_path))
-                {
-                    string line;
-                    while ((line = sr.ReadLine()) != null)
-                    {
-                        readFileList.Add(line);
-                    }
-                }
-                return readFileList;
-            }
-            catch
-            {
-                return null;
-            }
-           
         }
     }
 
@@ -169,6 +136,7 @@ namespace Hots
         public int Quant { get; set; }
         public decimal Price { get; set; }
         public decimal LineTotal { get; set; }
+        public string FulfillerName { get; set; }
         public List<ItemOptions> OptionsList { get; set; }
     }
 
@@ -191,23 +159,6 @@ namespace Hots
         public string Description { get; set; }
         public decimal Price { get; set; }
         public string Text { get; set; }
-    }
-
-    public class OrderHeaderShort
-    {
-        public int mysqlId { get; set; }
-        public string HiteId { get; set; }
-        public string AlternateId { get; set; }
-        public string CusId { get; set; }
-        public string CusName { get; set; }
-        public string CusPhone { get; set; }
-        public string CusEmail { get; set; }
-        public DateTime TimeIn { get; set; }
-        public string Fullfillment { get; set; }
-        public string ServiceTime { get; set; }
-        public string OrderSystem { get; set; }
-        public string ShipMethod { get; set; }
-        public string Products { get; set; }
     }
 
     public class OrderDetails
@@ -249,5 +200,4 @@ namespace Hots
         public string PayCCcvv { get; set; }
         public string PayCCExp { get; set; }
     }
-
 }
