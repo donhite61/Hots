@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Hots
 {
-    public class Location
+    public class Locations
     {
         public UInt32? Id { get; set; }
         public string NicName { get; set; }
@@ -22,14 +22,29 @@ namespace Hots
         public bool Inactive { get; set; }
         public string ShipCode { get; set; }
 
-        public static Location GetLocByKeyWord(Set.OrdSysName ordSysName, string text)
+        public static Locations GetLocById(UInt32? id)
+        {
+            if (id != null)
+            {
+                foreach (Locations loc in Set.LocList)
+                {
+                    if (id == loc.Id)
+                    {
+                        return loc;
+                    }
+                }
+            }
+            return null;
+        }
+
+        public static Locations GetLocByKeyWord(Set.OrdSysName ordSysName, string text)
         {
             var ind = (int)ordSysName-1; //
             foreach (PickupKeyword kw in Set.OrdSysList[ind].PuKeyWordList)
             {
-                if (text.Contains(kw.Keyword))
+                if (text.ToUpper().Contains(kw.Keyword.ToUpper()))
                 {
-                    foreach (Location loc in Set.LocList)
+                    foreach (Locations loc in Set.LocList)
                     {
                         if (loc.Id == kw.LocId)
                             return  loc;
@@ -46,7 +61,7 @@ namespace Hots
             {
                 if (city.Contains(kw.Keyword))
                 {
-                    foreach (Location loc in Set.LocList)
+                    foreach (Locations loc in Set.LocList)
                     {
                         if (loc.Id == kw.LocId)
                             nicName = loc.NicName;
@@ -63,7 +78,7 @@ namespace Hots
             {
                 if (city.Contains(kw.Keyword))
                 {
-                    foreach (Location loc in Set.LocList)
+                    foreach (Locations loc in Set.LocList)
                     {
                         if (loc.Id == kw.LocId)
                             shipCode = loc.ShipCode;
@@ -73,9 +88,9 @@ namespace Hots
             return shipCode;
         }
 
-        public static List<Location> GetLocationList()
+        public static List<Locations> GetLocationList()
         {
-            var list = new List<Location>();
+            var list = new List<Locations>();
             string sql = "SELECT loc_Id,loc_NicName,loc_Name,loc_Address,loc_City,"+
                          "loc_State,loc_Zip,loc_Phone,loc_Inactive,loc_Shipcode "+
                          "FROM locations ORDER BY loc_NicName";
@@ -88,7 +103,7 @@ namespace Hots
                 {
                     while (rd.Read())
                     {
-                        var loc = new Location();
+                        var loc = new Locations();
                         loc.Id = rd.GetUInt32(0);
                         loc.NicName = rd.GetString(1);
                         loc.Name = rd.GetString(2);
@@ -109,14 +124,14 @@ namespace Hots
         public static List<KeyValuePair<UInt32, string>> GetLocDropdownList()
         {
             var list = new List<KeyValuePair<UInt32, string>>();
-            foreach (Location loc in Set.LocList)
+            foreach (Locations loc in Set.LocList)
             {
                 list.Add(new KeyValuePair<UInt32,string>(Convert.ToUInt32(loc.Id), loc.NicName));
             }
             return list;
         }
 
-        public static bool SaveLocation(Location loc)
+        public static bool SaveLocation(Locations loc)
         {
             string sql;
             if(loc.Id == null)
@@ -166,7 +181,7 @@ namespace Hots
             }
         }
 
-        public static bool DeleteLocation(Location loc)
+        public static bool DeleteLocation(Locations loc)
         {
             var sql = "DELETE from locations Where loc_Id = @Id";
 

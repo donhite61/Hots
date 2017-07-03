@@ -19,15 +19,21 @@ namespace Hots
         LocalSettings savedSet;
         List<OrderSystem> webOrdSysList;
         List<PickupKeyword> pukList;
-        List<Location> locList;
+        List<Locations> locList;
 
 
         Data.LogEvents(1, "Hots Downloader started");
         savedSet = LocalSettings.readSettingsfromDisk(iniFile);
         Set.SetSettingsFromReadFile(savedSet, iniFile, connString);//fills default inifile & connstring if blank
 
-        locList = Location.GetLocationList();
+        locList = Locations.GetLocationList();
         Set.LocList = locList;
+
+        if (savedSet != null) 
+            Set.ThisLocation = Locations.GetLocById(savedSet.SelectedPickupLocationId);
+
+
+
 
         Set.MakeOrdSysList();
         webOrdSysList = OrderSystem.GetOrdSysListFromServer();
@@ -37,9 +43,7 @@ namespace Hots
         pukList = PickupKeyword.GetPickupKeyListFromServer();
         FillOrdSysProperties(Set.OrdSysList, webOrdSysList, pukList, savedSet);
 
-           //Order.CreateNewOrderFromDroppedFile(@"C:\DonsScripts\Hots Folder System\WatchedFolder\NewOrders\DakisIn\labworks_14991212.xml");
-
-            Watchers.MakeFolderWatchers();
+        Watchers.MakeFolderWatchers();
         }
 
         private static void FillOrdSysProperties(List<OrderSystem> osList,
@@ -55,13 +59,11 @@ namespace Hots
                     os.OutputFolder = (string.IsNullOrWhiteSpace(savedSet.LocOrdSysSetList[i].OutFldr)) ? "" : savedSet.LocOrdSysSetList[i].OutFldr;
                     os.LabInFldr = (string.IsNullOrWhiteSpace(savedSet.LocOrdSysSetList[i].LabInFldr)) ? "" : savedSet.LocOrdSysSetList[i].LabInFldr;
                 }
-                //if (webOrdSysList.Count == osList.Count)
-                {
-                    os.ProductSubFolder = (string.IsNullOrWhiteSpace(webOrdSysList[i].ProductSubFolder)) ? "" : webOrdSysList[i].ProductSubFolder;
-                    os.WaitFile = (string.IsNullOrWhiteSpace(webOrdSysList[i].WaitFile)) ? "" : webOrdSysList[i].WaitFile;
-                    os.WaitIsFolder = (string.IsNullOrWhiteSpace(webOrdSysList[i].WaitIsFolder.ToString())) ? false : webOrdSysList[i].WaitIsFolder;
-                    os.Ext = (string.IsNullOrWhiteSpace(webOrdSysList[i].Ext)) ? "" : webOrdSysList[i].Ext;
-                }
+
+                os.ProductSubFolder = (string.IsNullOrWhiteSpace(webOrdSysList[i].ProductSubFolder)) ? "" : webOrdSysList[i].ProductSubFolder;
+                os.WaitFile = (string.IsNullOrWhiteSpace(webOrdSysList[i].WaitFile)) ? "" : webOrdSysList[i].WaitFile;
+                os.WaitIsFolder = (string.IsNullOrWhiteSpace(webOrdSysList[i].WaitIsFolder.ToString())) ? false : webOrdSysList[i].WaitIsFolder;
+                os.Ext = (string.IsNullOrWhiteSpace(webOrdSysList[i].Ext)) ? "" : webOrdSysList[i].Ext;
 
                 os.PuKeyWordList = new List<PickupKeyword>();
                 foreach (PickupKeyword puk in pukList)

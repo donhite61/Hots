@@ -12,9 +12,9 @@ namespace Hots
 {
     public partial class EditLocationForm : Form
     {
-        protected Location loc;
+        protected Locations loc;
 
-        public EditLocationForm(Location _loc)
+        public EditLocationForm(Locations _loc)
         {
             InitializeComponent();
             loc = _loc;
@@ -54,7 +54,7 @@ namespace Hots
         private void processStoreUpdate()
         {
             if (loc == null)
-                loc = new Location();
+                loc = new Locations();
 
             loc.NicName = txtBox_StoreNicName.Text;
             loc.Name = txtBox_StoreName.Text;
@@ -66,7 +66,7 @@ namespace Hots
             loc.Inactive = ChkBox_StoreInactive.Checked;
             loc.ShipCode = txtBox_ShipCode.Text;
 
-            if (Hots.Location.SaveLocation(loc))
+            if (Hots.Locations.SaveLocation(loc))
             {
                 Close();
             }
@@ -78,7 +78,7 @@ namespace Hots
 
         private void but_StoreDelete_Click(object sender, EventArgs e)
         {
-            if (Hots.Location.DeleteLocation(loc))
+            if (Hots.Locations.DeleteLocation(loc))
             {
                 Set.LocList.Remove(loc);
                 Close();

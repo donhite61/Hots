@@ -13,8 +13,8 @@ namespace Hots
         public enum OrdSysName { Null, Roes, Dakis, DGift }
         public static Form1 MainForm;
         public static string ConnString { get; private set; }
-        public static string ThisLocation { get; set; }
-        public static List<Location> LocList { get; set; }
+        public static Locations ThisLocation { get; set; }
+        public static List<Locations> LocList { get; set; }
         public static List<OrderSystem> OrdSysList { get; set; }
 
         internal static void SetSettingsFromReadFile(LocalSettings _savedSet, string _iniFile, string _connString)
@@ -23,12 +23,11 @@ namespace Hots
             if (_savedSet == null)
             {
                 ConnString = _connString;
-                ThisLocation = "Please select Store";
+                ThisLocation = null;
             }
            else
             {
                 ConnString = _savedSet.ConnString;
-                ThisLocation = _savedSet.SelectedPickupLocation;
             }
         }
 
@@ -55,7 +54,7 @@ namespace Hots
         {
             LocalSettings saveSet = new LocalSettings();
             saveSet.ConnString = Set.ConnString;
-            saveSet.SelectedPickupLocation = Set.ThisLocation;
+            saveSet.SelectedPickupLocationId = Set.ThisLocation.Id;
             saveSet.LocOrdSysSetList = new List<LocOrdSysSettings>();
             foreach (var os in Set.OrdSysList)
             {
@@ -76,7 +75,7 @@ namespace Hots
      public class LocalSettings
     {
         public string ConnString;
-        public string SelectedPickupLocation;
+        public UInt32? SelectedPickupLocationId;
         public List<LocOrdSysSettings> LocOrdSysSetList { get; set; }
 
         public static LocalSettings readSettingsfromDisk(string iniFile)

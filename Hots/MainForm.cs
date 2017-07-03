@@ -143,7 +143,8 @@ namespace Hots
         {
             Gridview_Stores.DataSource = Set.LocList;
             Gridview_Stores.Columns[0].Visible = false;
-            lbl_SelectedStore.Text = Set.ThisLocation;
+            if(Set.ThisLocation != null)
+                lbl_SelectedStore.Text = Set.ThisLocation.NicName;
         }
 
         private void Gridview_Location_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -175,8 +176,8 @@ namespace Hots
                 DataGridViewRow row = Gridview_Stores.Rows[selRow];
                 if (selRow != -1)
                 {
-                    Set.ThisLocation = row.Cells[1].Value.ToString();
-                    lbl_SelectedStore.Text = Set.ThisLocation;
+                    Set.ThisLocation = Locations.GetLocById(Convert.ToUInt32(row.Cells[0].Value));
+                    lbl_SelectedStore.Text = Set.ThisLocation.NicName;
                     Set.SaveSettings();
                 }
             }

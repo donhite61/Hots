@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LocalSettings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <ConnString>server=69.89.31.188;uid=hitephot_don;database=hitephot_hots;port=3306;password=Hite1985;</ConnString>
-  <SelectedPickupLocation>Lahser</SelectedPickupLocation>
+  <SelectedPickupLocationId>8</SelectedPickupLocationId>
   <LocOrdSysSetList>
     <LocOrdSysSettings>
       <Id>0</Id>
-      <WchFldr>C:\DonsScripts\Hots folder System\WatchedFolder\NewOrders\RoesIn</WchFldr>
-      <OutFldr>C:\DonsScripts\Hots folder System\Roes Output Folder</OutFldr>
-      <LabInFldr>C:\DonsScripts\Hots folder System\PG Lab Input</LabInFldr>
+      <WchFldr>C:\DonsScripts\Hots Folder System\WatchedFolder\NewOrders\RoesIn</WchFldr>
+      <OutFldr />
+      <LabInFldr />
       <Active>true</Active>
     </LocOrdSysSettings>
     <LocOrdSysSettings>
       <Id>1</Id>
-      <WchFldr>C:\DonsScripts\Hots folder System\WatchedFolder\NewOrders\DakisIn</WchFldr>
-      <OutFldr>C:\DonsScripts\Hots folder System\DakisOutput</OutFldr>
-      <LabInFldr>C:\DonsScripts\Hots folder System\PG Lab Input</LabInFldr>
-      <Active>false</Active>
+      <WchFldr>C:\DonsScripts\Hots Folder System\WatchedFolder\NewOrders\DakisIn</WchFldr>
+      <OutFldr>C:\DonsScripts\Hots Folder System\DakisOutput</OutFldr>
+      <LabInFldr />
+      <Active>true</Active>
     </LocOrdSysSettings>
     <LocOrdSysSettings>
       <Id>2</Id>

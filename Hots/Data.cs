@@ -55,7 +55,7 @@ namespace Hots
                     "Ord_CusCity,Ord_CusState,Ord_CusZip,Ord_CusCountry,Ord_CusPhone,Ord_CusEmail,Ord_BillTo," +
                     "Ord_BillCCName,Ord_BillCCCity,Ord_BillCCState,Ord_BillCCZip,Ord_ShipMethod,Ord_ShipCost," +
                     "Ord_ShipTo,Ord_ShipName,Ord_ShipAddress,Ord_ShipCity,Ord_ShipState,Ord_ShipZip," +
-                    "Ord_ShipPhone,Ord_ShipEmail,Ord_PayCCType,Ord_PayCCNumber,Ord_PayCCCvv,Ord_PayCCExp)" +
+                    "Ord_ShipPhone,Ord_ShipEmail)" +
 
                     "VALUES(?OrdStatus,?HiteId,?AltId,?Timein,?TimeDue,?PreTaxTotal,?PromoCode,?DiscAmount,?SalesTax," +
                     "?TotalPrice,?PrePaid,?LabLabel,?Catalog,?Fullfillment,?OrdLocation,?ServiceTime," +
@@ -63,7 +63,7 @@ namespace Hots
                     "?CusCity,?CusState,?CusZip,?CusCountry,?CusPhone,?CusEmail,?BillTo," +
                     "?BillCCName,?BillCCCity,?BillCCState,?BillCCZip,?ShipMethod,?ShipCost," +
                     "?ShipTo,?ShipName,?ShipAddress,?ShipCity,?ShipState,?ShipZip,?ShipPhone," +
-                    "?ShipEmail,?PayCCType,?PayCCNumber,?Paycvv,?PayCCExp)"; 
+                    "?ShipEmail)"; 
             }               
 
             using (var conn = new MySqlConnection(Set.ConnString))
@@ -84,7 +84,7 @@ namespace Hots
                 cmd.Parameters.AddWithValue("@?PrePaid", _fl.PrePaid);
                 cmd.Parameters.AddWithValue("@?LabLabel", _fl.LabLabel);
                 cmd.Parameters.AddWithValue("@?Catalog", _fl.Catalog);
-                cmd.Parameters.AddWithValue("@?Fullfillment", _fl.Fullfillment);
+                cmd.Parameters.AddWithValue("@?Fullfillment", _fl.FullfillmentLocId);
                 cmd.Parameters.AddWithValue("@?ServiceTime", _fl.ServiceTime);
                 cmd.Parameters.AddWithValue("@?OrderSystem", _fl.OrdSysName);
                 cmd.Parameters.AddWithValue("@?Products", _fl.Products);
@@ -113,10 +113,6 @@ namespace Hots
                 cmd.Parameters.AddWithValue("@?ShipZip", _fl.ShipZip);
                 cmd.Parameters.AddWithValue("@?ShipPhone", _fl.ShipPhone);
                 cmd.Parameters.AddWithValue("@?ShipEmail", _fl.ShipEmail);
-                cmd.Parameters.AddWithValue("@?PayCCType", _fl.PayCCType);
-                cmd.Parameters.AddWithValue("@?PayCCNumber", _fl.PayCCNumber);
-                cmd.Parameters.AddWithValue("@?Paycvv", _fl.PayCCcvv);
-                cmd.Parameters.AddWithValue("@?PayCCExp", _fl.PayCCExp);
 
                 conn.Open();
                 try
@@ -145,8 +141,8 @@ namespace Hots
                     var cmd = new MySqlCommand();
                     cmd.Connection = conn;
                     cmd.CommandText = "INSERT INTO orderitems(OrdItem_OrdHdrId,OrdItem_ItemCode,OrdItem_Description," +
-                                                                "OrdItem_Quant,OrdItem_Price,OrdItem_LineTotal)" +
-                                                        "Values(?OrdHdrId,?ItemCode,?Description,?Quant,?Price,?Total)";
+                                      "OrdItem_Quant,OrdItem_Price,OrdItem_Fulfiller,OrdItem_Catagory,OrdItem_SubCatagory)" +
+                                                    "Values(?OrdHdrId,?ItemCode,?Description,?Quant,?Price,?FulFiller,?Cat,?SubCat)";
                     item.MySqlOrderId = mySqlId;
                     cmd.Parameters.AddWithValue("?OrdHdrId", mySqlId);
                     cmd.Parameters.AddWithValue("?ItemCode", Convert.ToString(item.ItemCode));
@@ -154,6 +150,9 @@ namespace Hots
                     cmd.Parameters.AddWithValue("?Quant", Convert.ToInt32(item.Quant));
                     cmd.Parameters.AddWithValue("?Price", Convert.ToDecimal(item.Price));
                     cmd.Parameters.AddWithValue("?Total", Convert.ToDecimal(item.LineTotal));
+                    cmd.Parameters.AddWithValue("?FulFiller", Convert.ToString(item.FulfillerId));
+                    cmd.Parameters.AddWithValue("?Cat", Convert.ToString(item.Catagory));
+                    cmd.Parameters.AddWithValue("?SubCat", Convert.ToString(item.SubCatagory));
                     cmd.ExecuteNonQuery();
 
                     SaveNewOrderItemOptions(conn, mySqlId, item);
@@ -245,10 +244,10 @@ namespace Hots
             return list;
         }
 
-        public static List<Location> GetPickupLocListFromServer()
+        public static List<Locations> GetPickupLocListFromServer()
         {
             string sql = "select * FROM pickuplocations";
-            List<Location> list = new List<Location>();
+            List<Locations> list = new List<Locations>();
             using (var conn = new MySqlConnection(Set.ConnString))
             using (var cmd = new MySqlCommand(sql, conn))
             {
@@ -259,7 +258,7 @@ namespace Hots
                     {
                         while (rd.Read())
                         {
-                            var pul = new Location();
+                            var pul = new Locations();
                             pul.Id = Convert.ToUInt32(rd[0]);
                             pul.NicName = Convert.ToString(rd[1]);
                             pul.Name = Convert.ToString(rd[2]);

@@ -24,8 +24,8 @@ namespace Hots
         public Boolean PrePaid { get; set; }
         public string LabLabel { get; set; }
         public string Catalog { get; set; }
-        public string Fullfillment { get; set; }//should be list
-        public string OrdLocation { get; set; }
+        public UInt32? FullfillmentLocId { get; set; }//should be list
+        public UInt32? OrdLocation { get; set; }
         
         public string ServiceTime { get; set; }
         public string Products { get; set; }
@@ -59,17 +59,8 @@ namespace Hots
         public string ShipPhone { get; set; }
         public string ShipEmail { get; set; }
 
-        public string PayCCType { get; set; }
-        public string PayCCNumber { get; set; }
-        public string PayCCcvv { get; set; }
-        public string PayCCExp { get; set; }
-
         public List<OrderItems> ItemsList { get; set; }
         public List<OrderOptions> OrderOptionsList { get; set; }
-
-        public Order()
-        {
-        }
 
         private static Set.OrdSysName GetOrdSysNameFromFilepath(string folder, string fileName)
         {
@@ -82,8 +73,6 @@ namespace Hots
                     break;
                 }
             }
-            if (osn == Set.OrdSysName.Null)
-                Data.LogEvents(0, "Unknown filetype " + fileName + " skipped");
 
             return osn;
         }
@@ -104,10 +93,13 @@ namespace Hots
                     order = OrderSystem.RoesMakeOrder(filePath, droppedFileName);
                     break;
                 case Set.OrdSysName.Dakis:
-                    order = DakisOrder.DakisMakeOrder(droppedFileName);
+                    order = DakisOrder.MakeDakisOrder(droppedFileName);
                     break;
                 case Set.OrdSysName.DGift:
                     //order = DakisReadListFile(fileName);
+                    break;
+                case Set.OrdSysName.Null:
+                    Data.LogEvents(0, "Unknown filetype " + droppedFileName + " skipped");
                     break;
             }
 
@@ -136,8 +128,11 @@ namespace Hots
         public int Quant { get; set; }
         public decimal Price { get; set; }
         public decimal LineTotal { get; set; }
-        public string FulfillerName { get; set; }
+        public UInt32 FulfillerId { get; set; }
         public List<ItemOptions> OptionsList { get; set; }
+        public string Catagory { get; set; }
+        public string SubCatagory { get; set; }
+
     }
 
     public class ItemOptions

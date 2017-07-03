@@ -133,7 +133,8 @@ namespace Hots
         public static Order RoesMakeOrder(string filePath, string fileName)
         {
             Order order = new Order();
-            order.OrdLocation = Set.ThisLocation;
+            order.OrdLocation = Set.ThisLocation.Id;
+            order.FullfillmentLocId = Set.ThisLocation.Id;
             order.OrdSysName = Set.OrdSysName.Roes;
             var split = fileName.Split(Convert.ToChar("."));
             order.HiteId = split[0];
@@ -163,9 +164,6 @@ namespace Hots
                             break;
                         case "<Shipping>":
                             order = fillShippingInfo(orderLineList, order);
-                            break;
-                        case "<Payment>":
-                            order = fillPaymentInfo(orderLineList, order);
                             break;
                         case "<OrderItems>":
                             order.ItemsList = fillOrderItems(orderLineList, order);
@@ -381,7 +379,7 @@ namespace Hots
             {
                 if (shipText.Contains(kw.Keyword))
                 {
-                    foreach (Location loc in Set.LocList)
+                    foreach (Locations loc in Set.LocList)
                     {
                         if (loc.Id == kw.LocId)
                             shipCode = loc.ShipCode;
@@ -389,34 +387,6 @@ namespace Hots
                 }
             }
             return shipCode;
-        }
-
-        private static Order fillPaymentInfo(List<string> orderLineList, Order _newOrder)
-        {
-            while (orderLineList[i] != "</Payment>")
-            {
-                i++;
-                var aLineSplit = orderLineList[i].Split('=');
-
-                switch (aLineSplit[0])
-                {
-                    case "Payment Credit Card Type":
-                        _newOrder.PayCCType = aLineSplit[1];
-                        break;
-                    case "Payment Credit Card Number":
-                        _newOrder.PayCCNumber = aLineSplit[1];
-                        break;
-                    case "Payment Credit Card CVV":
-                        _newOrder.PayCCcvv = aLineSplit[1];
-                        break;
-                    case "Payment Credit Card Exp":
-                        _newOrder.PayCCExp = aLineSplit[1];
-                        break;
-                    default:
-                        break;
-                }
-            }
-            return _newOrder;
         }
 
         private static List<OrderItems> fillOrderItems(List<string> orderLineList, Order _newOrder)

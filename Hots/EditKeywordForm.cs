@@ -32,7 +32,7 @@ namespace Hots
 
         private void fillStoreCmbBox()
         {
-            var listkvPair = Hots.Location.GetLocDropdownList();
+            var listkvPair = Hots.Locations.GetLocDropdownList();
             cmbbox_KeyWord_Stores.DataSource = listkvPair;
             cmbbox_KeyWord_Stores.DisplayMember = "Value";
             cmbbox_KeyWord_Stores.ValueMember = "Key";
